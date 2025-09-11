@@ -6,13 +6,13 @@ export default function Home() {
       <div className="w-full max-w-4xl space-y-10">
         <div className="text-center space-y-4">
            <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-            Powered by Generative AI
+            Được cung cấp bởi AI thế hệ mới
           </div>
           <h1 className="font-headline font-bold tracking-tighter text-4xl sm:text-5xl md:text-6xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             Markdown Generator Pro
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
-            Instantly generate custom markdown content. Just provide your keywords, domain, and value to get started.
+            Tạo nội dung markdown tùy chỉnh ngay lập tức. Chỉ cần cung cấp từ khóa, tên miền và giá trị của bạn để bắt đầu.
           </p>
         </div>
         <MarkdownGenerator />
