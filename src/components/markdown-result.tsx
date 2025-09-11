@@ -135,7 +135,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4 overflow-hidden">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-medium text-sm break-all">
+                <p className="flex-1 font-semibold text-lg break-all text-white">
                   <TitleWithLink title={item.title} />
                 </p>
               </div>

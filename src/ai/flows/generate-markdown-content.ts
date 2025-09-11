@@ -33,15 +33,14 @@ export type GenerateMarkdownContentOutput = z.infer<
 >;
 
 const TEMPLATES = [
-  `{title}
-<p><strong>欢迎来到 {app} 官方导航页！</strong></p>
+  `<p><strong>欢迎来到 {app} 官方导航页！</strong></p>
 <p>尊敬的用户您好！为了让您能够轻松、快速地找到 {app} 的最新地址，我们特地建立了本官方导航页面。无论您是首次访问，还是长期使用我们的老用户，都能在这里第一时间获取最新、最稳定的访问链接。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>更新时间：</strong> {date}</li>
 </ul>
 <p>以下是您当前可用的访问入口，强烈建议收藏多个备用链接，以防主链路出现故障：</p>
-<h1><a href="{domain}">👉👉主站入口👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉主站入口👈👈</a></h1>
 <h3>我们的优势：</h3>
 <ul>
     <li>实时监测所有链接状态，确保每条链接均可正常访问，杜绝失效情况。</li>
@@ -60,15 +59,14 @@ const TEMPLATES = [
 <p>我们一直致力于为用户打造安全稳定的访问环境，您的支持是我们前进的动力。请务必收藏本页面，以便随时找到最新链接。如有任何疑问或建议，欢迎通过官方联系方式反馈，我们将竭诚为您服务。</p>
 <p>感谢您的信赖，祝您访问顺利，使用愉快！</p>`,
 
-  `{title}
-<p><strong>{app} - 最新可用地址合集！</strong></p>
+  `<p><strong>{app} 最新可用地址合集！</strong></p>
 <p>随着网络限制日益增多，保证稳定访问优质内容成为我们最重要的目标。为此，我们精心整理并持续更新本页面，确保您可以第一时间获得 {app} 的最新可用地址。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>页面更新日期：</strong> {date}</li>
 </ul>
 <p><strong>当前可访问地址：</strong></p>
-<h1><a href="{domain}">👉👉主入口👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉主入口👈👈</a></h1>
 <h3>为什么选择我们？</h3>
 <ul>
     <li>多线路保障，确保任一线路出现故障时能迅速切换，不影响您的观看体验。</li>
@@ -88,15 +86,14 @@ const TEMPLATES = [
 <p>如您遇到任何问题或需要协助，请通过我们的官方反馈渠道联系我们。我们拥有专业的技术团队，致力于快速响应并解决访问相关问题。</p>
 <p>感谢您一直以来的支持和理解，愿您有一个愉快的浏览体验！</p>`,
 
-  `{title}
-<p><strong>{app} 官方跳转入口说明</strong></p>
+  `<p><strong>{app} 官方跳转入口说明</strong></p>
 <p>您好，欢迎访问由我们精心维护的 {app} 官方导航页面。本页面专门提供当前最新、最安全、最稳定的访问入口，确保您能顺畅浏览所有内容。</p>
 <ul>
     <li><strong>关键词聚合：</strong> {keywords_text}</li>
     <li><strong>日期：</strong> {date}</li>
 </ul>
 <p><strong>可用地址一览：</strong></p>
-<h1><a href="{domain}">👉👉主站点👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉主站点👈👈</a></h1>
 <h3>访问建议：</h3>
 <ul>
     <li>移动设备推荐使用 Chrome 或 Safari 浏览器，获得最佳兼容性和体验。</li>
@@ -115,15 +112,14 @@ const TEMPLATES = [
 <p>我们尊重您的隐私，绝不追踪任何访问行为，所有访问均匿名处理。</p>
 <p>请务必收藏本页面，确保每次访问都能快速找到有效链接。感谢您的支持和信任！</p>`,
 
-  `{title}
-<p><strong>{app} 最新导航页正式上线！</strong></p>
+  `<p><strong>{app} 最新导航页正式上线！</strong></p>
 <p>亲爱的用户您好！在网络环境复杂多变的今天，获取稳定可靠的访问链接尤为重要。我们特别推出了这一官方导航页，让您可以轻松获取 {app} 的最新地址，保证访问不受干扰。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>页面更新：</strong> {date}</li>
 </ul>
 <p><strong>当前可用地址：</strong></p>
-<h1><a href="{domain}">👉👉点击进入主站👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉点击进入主站👈👈</a></h1>
 <h3>平台优势：</h3>
 <ul>
     <li>稳定线路支持，快速直达。</li>
@@ -143,15 +139,14 @@ const TEMPLATES = [
 <p>我们每天都会检查和更新可用地址，保证您可以畅通无阻地访问。建议收藏本页面，以便随时找到最新地址。</p>
 <p>感谢您长期以来的支持与信任，祝您浏览愉快！</p>`,
 
-  `{title}
-<p><strong>永久收藏指南 - {app} 官方直达！</strong></p>
+  `<p><strong>永久收藏指南 {app} 官方直达！</strong></p>
 <p>您好！本页面为您提供 {app} 的最新地址，避免因网络封锁或链接失效带来困扰。通过本官方入口，您将能够第一时间获取最新、最稳定的访问方式。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>更新日期：</strong> {date}</li>
 </ul>
 <p><strong>最新入口：</strong></p>
-<h1><a href="{domain}">👉👉立即进入👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉立即进入👈👈</a></h1>
 <h3>我们的服务优势：</h3>
 <ul>
     <li>专业团队实时检测，确保入口可用。</li>
@@ -170,15 +165,14 @@ const TEMPLATES = [
 <p>请务必将本页面收藏到浏览器书签，以便随时找到最新地址。我们会不断优化服务，为您带来更好体验。</p>
 <p>感谢您的支持，祝您使用愉快！</p>`,
 
-  `{title}
-<p><strong>{app} - 官方推荐访问通道</strong></p>
+  `<p><strong>{app} 官方推荐访问通道</strong></p>
 <p>欢迎访问 {app} 官方导航页！本页面收录最新有效的访问地址，帮助广大用户在任何情况下都能轻松进入平台，获取优质内容。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>更新时间：</strong> {date}</li>
 </ul>
 <p><strong>可用链接入口：</strong></p>
-<h1><a href="{domain}">👉👉主入口地址👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉主入口地址👈👈</a></h1>
 <h3>我们的特色：</h3>
 <ul>
     <li>提供多线路，随时切换。</li>
@@ -195,15 +189,14 @@ const TEMPLATES = [
 <p><strong>我们承诺：</strong></p>
 <p>始终第一时间为用户更新最新地址，保障访问无忧。感谢您的理解与支持！</p>`,
 
-  `{title}
-<p><strong>一键直达 - {app} 官方最新通道</strong></p>
+  `<p><strong>一键直达 {app} 官方最新通道</strong></p>
 <p>为了让广大用户第一时间获取 {app} 的最新地址，我们特别建立了本导航页，实时更新可用链接，确保访问流畅。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>页面更新：</strong> {date}</li>
 </ul>
 <p><strong>当前推荐访问入口：</strong></p>
-<h1><a href="{domain}">👉👉立即访问👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉立即访问👈👈</a></h1>
 <h3>优势说明：</h3>
 <ul>
     <li>稳定高速线路，访问不卡顿。</li>
@@ -220,15 +213,14 @@ const TEMPLATES = [
 <p><strong>友情提醒：</strong></p>
 <p>收藏本页面，避免因链接变更而无法访问。我们将持续为您提供高效便捷的服务！</p>`,
 
-  `{title}
-<p><strong>最新导航更新 - {app}</strong></p>
+  `<p><strong>最新导航更新 {app}</strong></p>
 <p>感谢您一直以来对 {app} 的支持！为了确保您随时可以访问最新内容，我们建立了本页面并定期更新最新地址，帮助用户解决访问困难。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>更新日期：</strong> {date}</li>
 </ul>
 <p><strong>当前有效链接：</strong></p>
-<h1><a href="{domain}">👉👉官方入口👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉官方入口👈👈</a></h1>
 <h3>平台优势：</h3>
 <ul>
     <li>高速稳定，保障访问体验。</li>
@@ -245,15 +237,14 @@ const TEMPLATES = [
 <p><strong>温馨提示：</strong></p>
 <p>请将本导航收藏，避免因地址更新而错过访问机会。祝您浏览愉快！</p>`,
 
-  `{title}
-<p><strong>官方公告 - {app} 最新直达</strong></p>
+  `<p><strong>官方公告 {app} 最新直达</strong></p>
 <p>尊敬的用户您好！为了方便您随时找到 {app} 的最新地址，我们特别制作了此导航页，每日更新最新可用入口，保障您的访问体验。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>更新时间：</strong> {date}</li>
 </ul>
 <p><strong>最新推荐链接：</strong></p>
-<h1><a href="{domain}">👉👉点此进入👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉点此进入👈👈</a></h1>
 <h3>我们的优势：</h3>
 <ul>
     <li>稳定高速线路支持，访问更顺畅。</li>
@@ -269,15 +260,14 @@ const TEMPLATES = [
 </ul>
 <p>感谢您对我们的长期支持！我们将继续努力，为用户提供更加稳定与安全的访问体验。</p>`,
 
-  `{title}
-<p><strong>永久收藏 - {app} 官方导航更新</strong></p>
+  `<p><strong>永久收藏 {app} 官方导航更新</strong></p>
 <p>您好！为了解决访问不稳定、链接经常变化的问题，我们特别建立了本官方导航页面，为您提供最新最全的可用链接。</p>
 <ul>
     <li><strong>关键词：</strong> {keywords_text}</li>
     <li><strong>页面更新日期：</strong> {date}</li>
 </ul>
 <p><strong>当前有效访问入口：</strong></p>
-<h1><a href="{domain}">👉👉立即进入👈👈</a></h1>
+<h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉立即进入👈👈</a></h1>
 <h3>我们承诺：</h3>
 <ul>
     <li>所有入口均经过严格检测，保证安全稳定。</li>
@@ -320,7 +310,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const today = new Date().toISOString().slice(0, 10);
     const randomChars = generateRandomString(6);
     const displayDomain = input.domain.replace(/^https?:\/\//, '');
-    const title = `${input.primaryKeyword}-【链接地址：${displayDomain}】${input.secondaryKeyword}-${today}|${input.value}|881比鸭${randomChars}`;
+    const title = `${input.primaryKeyword}【链接地址：${displayDomain}】${input.secondaryKeyword}${today}|${input.value}|881比鸭${randomChars}`;
     const keywordsText = `${input.primaryKeyword}, ${input.secondaryKeyword}`;
 
     const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
@@ -334,7 +324,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
       .replace(/{domain}/g, input.domain)
       .replace(/^/gm, ''); 
     
-    const fullContent = content.replace('{title}', title)
+    const fullContent = `<h2>${title}</h2>` + content;
 
     return {title: title, content: fullContent};
   }
