@@ -24,21 +24,66 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const { toast } = useToast();
 
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
-    let textToCopy = text;
     if (type === 'content') {
-      textToCopy = converter.makeHtml(text);
+      // For content, we want to copy as rich text (HTML)
+      const htmlContent = converter.makeHtml(text);
+      try {
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const data = [new ClipboardItem({ 'text/html': blob, 'text/plain': new Blob([text], { type: 'text/plain' }) })];
+        navigator.clipboard.write(data).then(
+          () => {
+            // Success
+            const key = `${type}-${index}`;
+            setCopiedStates(prev => ({ ...prev, [key]: true }));
+            toast({
+                title: 'Copied to Clipboard!',
+                description: 'Content has been copied successfully.',
+            })
+            setTimeout(() => {
+              setCopiedStates(prev => ({ ...prev, [key]: false }));
+            }, 2000);
+          },
+          (err) => {
+            // Fallback for browsers that don't support text/html
+             navigator.clipboard.writeText(text);
+             const key = `${type}-${index}`;
+            setCopiedStates(prev => ({ ...prev, [key]: true }));
+            toast({
+                title: 'Copied as plain text!',
+                description: 'Your browser does not support rich text copy.',
+            })
+            setTimeout(() => {
+              setCopiedStates(prev => ({ ...prev, [key]: false }));
+            }, 2000);
+          }
+        );
+      } catch (error) {
+        console.error('Failed to copy rich text: ', error);
+        // Fallback for older browsers
+        navigator.clipboard.writeText(text);
+        const key = `${type}-${index}`;
+        setCopiedStates(prev => ({ ...prev, [key]: true }));
+        toast({
+            title: 'Copied as plain text!',
+            description: 'Rich text copy is not supported.',
+        })
+        setTimeout(() => {
+          setCopiedStates(prev => ({ ...prev, [key]: false }));
+        }, 2000);
+      }
+    } else {
+      // For title, copy as plain text
+      navigator.clipboard.writeText(text);
+      const key = `${type}-${index}`;
+      setCopiedStates(prev => ({ ...prev, [key]: true }));
+      toast({
+          title: 'Copied to Clipboard!',
+          description: 'Title has been copied successfully.',
+      })
+      setTimeout(() => {
+        setCopiedStates(prev => ({ ...prev, [key]: false }));
+      }, 2000);
     }
-    navigator.clipboard.writeText(textToCopy);
-    
-    const key = `${type}-${index}`;
-    setCopiedStates(prev => ({ ...prev, [key]: true }));
-    toast({
-        title: 'Copied to Clipboard!',
-        description: `${type === 'title' ? 'Title' : 'Content'} has been copied successfully.`,
-    })
-    setTimeout(() => {
-      setCopiedStates(prev => ({ ...prev, [key]: false }));
-    }, 2000);
   };
   
   if (isLoading) {
