@@ -18,11 +18,11 @@ import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z.object({
   primaryKeyword: z.enum(['黑料网'], {
-    required_error: "Please select a primary keyword."
+    required_error: "Vui lòng chọn một từ khóa chính."
   }),
-  secondaryKeyword: z.string().min(1, 'At least one secondary keyword is required.'),
-  domain: z.string().min(1, 'Please select a domain.'),
-  value: z.string().min(1, 'Value is required.'),
+  secondaryKeyword: z.string().min(1, 'Cần ít nhất một từ khóa phụ.'),
+  domain: z.string().min(1, 'Vui lòng chọn một tên miền.'),
+  value: z.string().min(1, 'Giá trị là bắt buộc.'),
 });
 
 const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "6677.one"];
@@ -53,8 +53,8 @@ export function MarkdownGenerator() {
     if (secondaryKeywords.length === 0) {
       toast({
         variant: "destructive",
-        title: "Validation Failed",
-        description: "At least one secondary keyword is required.",
+        title: "Xác thực thất bại",
+        description: "Cần ít nhất một từ khóa phụ.",
       });
       setIsLoading(false);
       return;
@@ -73,8 +73,8 @@ export function MarkdownGenerator() {
       } else {
         toast({
           variant: "destructive",
-          title: `Generation Failed for "${keyword}"`,
-          description: result.error || "An unknown error occurred.",
+          title: `Tạo thất bại cho "${keyword}"`,
+          description: result.error || "Đã xảy ra lỗi không xác định.",
         });
       }
     }
@@ -82,8 +82,8 @@ export function MarkdownGenerator() {
     if (allResults.length > 0) {
       setResults(allResults);
        toast({
-        title: "Success!",
-        description: `Generated markdown for ${allResults.length} keyword(s).`,
+        title: "Thành công!",
+        description: `Đã tạo markdown cho ${allResults.length} từ khóa.`,
       });
     }
 
@@ -96,8 +96,8 @@ export function MarkdownGenerator() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardHeader>
-              <CardTitle>Create Your Markdown</CardTitle>
-              <CardDescription>Fill in the details below to generate your content.</CardDescription>
+              <CardTitle>Tạo Markdown của bạn</CardTitle>
+              <CardDescription>Điền vào các chi tiết bên dưới để tạo nội dung của bạn.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
                <div className="grid gap-6 sm:grid-cols-2">
@@ -106,11 +106,11 @@ export function MarkdownGenerator() {
                     name="primaryKeyword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Primary Keyword</FormLabel>
+                        <FormLabel>Từ khóa chính</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a primary keyword" />
+                              <SelectValue placeholder="Chọn một từ khóa chính" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -128,9 +128,9 @@ export function MarkdownGenerator() {
                     name="value"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Value</FormLabel>
+                        <FormLabel>Giá trị</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g., CY" {...field} />
+                          <Input placeholder="ví dụ: CY" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -142,7 +142,7 @@ export function MarkdownGenerator() {
                     name="domain"
                     render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Domain</FormLabel>
+                        <FormLabel>Tên miền</FormLabel>
                         <FormControl>
                             <div className="flex flex-wrap gap-2 pt-2">
                                 {DOMAINS.map((domain) => (
@@ -168,12 +168,12 @@ export function MarkdownGenerator() {
                   name="secondaryKeyword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Secondary Keywords</FormLabel>
+                      <FormLabel>Từ khóa phụ</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="e.g., 最新在线地址 (one per line)" {...field}  rows={4} />
+                        <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={4} />
                       </FormControl>
                       <FormDescription>
-                        Enter one secondary keyword per line.
+                        Nhập một từ khóa phụ mỗi dòng.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -189,12 +189,12 @@ export function MarkdownGenerator() {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        Generating...
+                        Đang tạo...
                     </>
                 ) : (
                     <>
                       <Sparkles className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:scale-125" /> 
-                      Generate Content
+                      Tạo nội dung
                     </>
                 )}
               </Button>
