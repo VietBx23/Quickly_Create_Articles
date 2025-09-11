@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Copy, Check, FileText, Clipboard } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import showdown from 'showdown';
 
 export interface MarkdownResultItem {
   title: string;
@@ -17,8 +16,6 @@ interface MarkdownResultProps {
   isLoading: boolean;
 }
 
-const converter = new showdown.Converter();
-
 export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
@@ -27,53 +24,76 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     const key = `${type}-${index}`;
 
     if (type === 'content') {
-      const htmlContent = converter.makeHtml(text);
-      // Attempt to copy as rich text with a plain text fallback
-      try {
-        const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-        const blobText = new Blob([text], { type: 'text/plain' });
-        const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
-        
-        navigator.clipboard.write(data).then(() => {
-          setCopiedStates(prev => ({ ...prev, [key]: true }));
-          toast({
-            title: 'Đã sao chép vào Clipboard!',
-            description: 'Nội dung đã được sao chép dưới dạng văn bản đa dạng thức.',
-          });
-          setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        }).catch(() => {
-          // Fallback for browsers that might fail with write() but support writeText()
-          navigator.clipboard.writeText(text).then(() => {
+        const tempEl = document.createElement('div');
+        tempEl.innerHTML = text;
+        document.body.appendChild(tempEl);
+
+        const range = document.createRange();
+        range.selectNodeContents(tempEl);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+
+        try {
+            document.execCommand('copy');
+            toast({
+                title: 'Đã sao chép vào Clipboard!',
+                description: 'Nội dung đã được sao chép dưới dạng văn bản đa dạng thức.',
+            });
+            setCopiedStates(prev => ({ ...prev, [key]: true }));
+            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+        } catch (err) {
+            toast({
+                variant: 'destructive',
+                title: 'Sao chép thất bại',
+                description: 'Không thể sao chép nội dung.',
+            });
+        }
+
+        document.body.removeChild(tempEl);
+        selection?.removeAllRanges();
+
+    } else {
+        navigator.clipboard.writeText(text).then(() => {
             setCopiedStates(prev => ({ ...prev, [key]: true }));
             toast({
-              title: 'Đã sao chép dưới dạng văn bản thuần túy!',
-              description: 'Trình duyệt của bạn không hỗ trợ sao chép văn bản đa dạng thức.',
+                title: 'Đã sao chép vào Clipboard!',
+                description: 'Tiêu đề đã được sao chép thành công.',
             });
             setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-          });
+        }, () => {
+            toast({
+                variant: "destructive",
+                title: 'Sao chép thất bại',
+                description: 'Không thể sao chép tiêu đề.',
+            });
         });
-      } catch (e) {
-        // Fallback for browsers that do not support ClipboardItem
-        navigator.clipboard.writeText(text).then(() => {
-          setCopiedStates(prev => ({ ...prev, [key]: true }));
-          toast({
-            title: 'Đã sao chép dưới dạng văn bản thuần túy!',
-            description: 'Trình duyệt của bạn không hỗ trợ sao chép văn bản đa dạng thức.',
-          });
-          setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        });
-      }
-    } else {
-      // For title, copy as plain text
-      navigator.clipboard.writeText(text).then(() => {
-        setCopiedStates(prev => ({ ...prev, [key]: true }));
-        toast({
-          title: 'Đã sao chép vào Clipboard!',
-          description: 'Tiêu đề đã được sao chép thành công.',
-        });
-        setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-      });
     }
+  };
+
+  const TitleWithLink = ({ title }: { title: string }) => {
+    const regex = /【链接地址：(.*?)】/;
+    const match = title.match(regex);
+  
+    if (!match) {
+      return <>{title}</>;
+    }
+  
+    const domain = match[1];
+    const url = `https://${domain}`;
+    const parts = title.split(match[0]);
+  
+    return (
+      <>
+        {parts[0]}
+        {'【链接地址：'}
+        <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+          {domain}
+        </a>
+        {'】'}
+        {parts[1]}
+      </>
+    );
   };
   
   if (isLoading) {
@@ -118,8 +138,8 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4 overflow-hidden">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-medium text-sm truncate">
-                  {item.title}
+                <p className="flex-1 font-medium text-sm break-all">
+                  <TitleWithLink title={item.title} />
                 </p>
               </div>
               <div className="flex items-center space-x-2 pl-4">
