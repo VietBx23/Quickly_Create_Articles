@@ -91,11 +91,11 @@ export function MarkdownGenerator() {
 
   return (
     <>
-      <Card className="w-full shadow-lg">
+      <Card className="w-full shadow-2xl shadow-primary/10 transition-all hover:shadow-primary/20">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardHeader>
-              <CardTitle>Create Markdown</CardTitle>
+              <CardTitle>Create Your Markdown</CardTitle>
               <CardDescription>Fill in the details below to generate your content.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6 sm:grid-cols-2">
@@ -178,7 +178,7 @@ export function MarkdownGenerator() {
               />
             </CardContent>
             <CardFooter>
-              <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+              <Button type="submit" disabled={isLoading} className="w-full sm:w-auto text-lg py-6 px-8 group">
                 {isLoading ? (
                     <>
                         <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -188,18 +188,19 @@ export function MarkdownGenerator() {
                         Generating...
                     </>
                 ) : (
-                    <><Sparkles className="mr-2 h-4 w-4" /> Generate</>
+                    <>
+                      <Sparkles className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:scale-125" /> 
+                      Generate Content
+                    </>
                 )}
               </Button>
             </CardFooter>
           </form>
         </Form>
       </Card>
-      <div className="mt-8">
+      <div className="mt-10">
         <MarkdownResult results={results} isLoading={isLoading} />
       </div>
     </>
   );
 }
-
-    

@@ -45,8 +45,8 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     const key = `${type}-${index}`;
     setCopiedStates(prev => ({ ...prev, [key]: true }));
     toast({
-        title: 'Copied!',
-        description: `${type === 'title' ? 'Title' : 'Content'} has been copied to your clipboard.`,
+        title: 'Copied to Clipboard!',
+        description: `${type === 'title' ? 'Title' : 'Content'} has been copied successfully.`,
     })
     setTimeout(() => {
       setCopiedStates(prev => ({ ...prev, [key]: false }));
@@ -57,13 +57,13 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     return (
       <Card className="w-full">
         <CardHeader>
-          <CardTitle>Generated Markdown</CardTitle>
-          <CardDescription>Please wait while we generate your content...</CardDescription>
+          <CardTitle>Generating Your Content...</CardTitle>
+          <CardDescription>Please wait while our AI crafts the perfect markdown for you.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
+        <CardContent className="space-y-4 pt-4">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
         </CardContent>
       </Card>
     );
@@ -71,13 +71,13 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   
   if (results.length === 0) {
     return (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-                <FileText className="h-8 w-8 text-muted-foreground" />
+        <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/20 p-12 text-center transition-colors hover:border-primary/50">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+                <FileText className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="mt-4 text-lg font-semibold">No content generated yet</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-                Fill out the form above to generate your markdown.
+            <h3 className="mt-6 text-xl font-semibold">No Content Generated Yet</h3>
+            <p className="mt-2 text-md text-muted-foreground">
+                Fill out the form above and click "Generate" to see the magic happen.
             </p>
         </div>
     );
@@ -90,22 +90,22 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         <CardDescription>You can now copy the title or content for each generated article.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {results.map((item, index) => (
-            <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-4">
+            <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4 truncate">
-                <span className="text-sm font-medium text-muted-foreground">{index + 1}.</span>
+                <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
                 <p className="flex-1 truncate font-medium" title={item.title}>
                   {item.title}
                 </p>
               </div>
               <div className="flex items-center space-x-2 pl-4">
-                <Button variant="outline" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
-                  {copiedStates[`title-${index}`] ? <ClipboardCheck className="mr-2" /> : <Clipboard className="mr-2" />}
+                <Button variant="ghost" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
+                  {copiedStates[`title-${index}`] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
                   {copiedStates[`title-${index}`] ? 'Copied' : 'Copy Title'}
                 </Button>
                 <Button variant="secondary" size="sm" onClick={() => handleCopy(item.content, 'content', index)}>
-                 {copiedStates[`content-${index}`] ? <ClipboardCheck className="mr-2" /> : <Copy className="mr-2" />}
+                 {copiedStates[`content-${index}`] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Copy className="mr-2 h-4 w-4" />}
                   {copiedStates[`content-${index}`] ? 'Copied' : 'Copy Content'}
                 </Button>
               </div>
