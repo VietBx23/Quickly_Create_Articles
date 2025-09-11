@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sparkles } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Textarea } from '@/components/ui/textarea';
 
 import { handleGenerateMarkdown } from '@/app/actions';
 import { MarkdownResult } from './markdown-result';
@@ -20,7 +21,7 @@ const FormSchema = z.object({
   primaryKeyword: z.enum(['黑料网'], {
     required_error: "Please select a primary keyword."
   }),
-  secondaryKeyword: z.string().min(1, 'Secondary keyword is required.'),
+  secondaryKeyword: z.string().min(1, 'At least one secondary keyword is required.'),
   domain: z.string().min(1, 'Please select a domain.'),
   value: z.string().min(1, 'Value is required.'),
 });
@@ -47,21 +48,44 @@ export function MarkdownGenerator() {
     setIsLoading(true);
     setMarkdownContent(null);
 
-    const result = await handleGenerateMarkdown(data);
-
-    if (result.success && result.data) {
-      setMarkdownContent(result.data);
-      toast({
-        title: "Success!",
-        description: "Your markdown has been generated.",
-      });
-    } else {
+    const secondaryKeywords = data.secondaryKeyword.split('\n').filter(kw => kw.trim() !== '');
+    if (secondaryKeywords.length === 0) {
       toast({
         variant: "destructive",
-        title: "Generation Failed",
-        description: result.error || "An unknown error occurred.",
+        title: "Validation Failed",
+        description: "At least one secondary keyword is required.",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    const allMarkdown: string[] = [];
+
+    for (const keyword of secondaryKeywords) {
+      const result = await handleGenerateMarkdown({
+        ...data,
+        secondaryKeyword: keyword,
+      });
+
+      if (result.success && result.data) {
+        allMarkdown.push(result.data);
+      } else {
+        toast({
+          variant: "destructive",
+          title: `Generation Failed for "${keyword}"`,
+          description: result.error || "An unknown error occurred.",
+        });
+      }
+    }
+    
+    if (allMarkdown.length > 0) {
+      setMarkdownContent(allMarkdown.join('\n\n---\n\n'));
+       toast({
+        title: "Success!",
+        description: `Generated markdown for ${allMarkdown.length} keyword(s).`,
       });
     }
+
     setIsLoading(false);
   }
 
@@ -121,19 +145,24 @@ export function MarkdownGenerator() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="secondaryKeyword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Secondary Keyword</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., 最新在线地址" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="sm:col-span-2">
+                <FormField
+                  control={form.control}
+                  name="secondaryKeyword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Secondary Keywords</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="e.g., 最新在线地址 (one per line)" {...field}  rows={4} />
+                      </FormControl>
+                      <FormDescription>
+                        Enter one secondary keyword per line.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="value"
