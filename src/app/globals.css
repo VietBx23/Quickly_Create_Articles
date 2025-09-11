@@ -58,38 +58,63 @@
   .dotted-bg {
     background-color: hsl(var(--background));
     background-image: 
-      radial-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px),
-      linear-gradient(to right bottom, hsl(var(--primary)/0.4), hsl(var(--accent)/0.4), hsl(var(--primary)/0.4));
-    background-size: 16px 16px, 400% 400%;
-    animation: move-bg 15s linear infinite, gradient-flow 10s ease-in-out infinite;
+      /* Bubbles */
+      radial-gradient(circle at 15% 50%, hsl(var(--primary) / 0.1), transparent 25%),
+      radial-gradient(circle at 85% 30%, hsl(240 95% 53% / 0.1), transparent 25%),
+      radial-gradient(circle at 45% 80%, hsl(var(--accent) / 0.1), transparent 25%),
+      /* Dots */
+      radial-gradient(hsl(var(--accent) / 0.2) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 16px 16px;
+    background-position: 0 0, 0 0, 0 0, 0 0;
+    animation: bubble-flow 25s ease-in-out infinite;
   }
   .dark .dotted-bg {
     background-color: hsl(var(--background));
     background-image: 
-      radial-gradient(hsl(var(--primary) / 0.2) 1px, transparent 1px),
-      linear-gradient(to right bottom, hsl(var(--primary)/0.3), hsl(var(--accent)/0.3), hsl(var(--primary)/0.3));
-    background-size: 16px 16px, 400% 400%;
-    animation: move-bg 15s linear infinite, gradient-flow 10s ease-in-out infinite;
+      /* Bubbles */
+      radial-gradient(circle at 15% 50%, hsl(var(--primary) / 0.2), transparent 25%),
+      radial-gradient(circle at 85% 30%, hsl(240 95% 53% / 0.2), transparent 25%),
+      radial-gradient(circle at 45% 80%, hsl(var(--accent) / 0.2), transparent 25%),
+      /* Dots */
+      radial-gradient(hsl(var(--accent) / 0.3) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 16px 16px;
+    background-position: 0 0, 0 0, 0 0, 0 0;
+    animation: bubble-flow 25s ease-in-out infinite;
   }
 }
 
-@keyframes move-bg {
-  0% {
-    background-position: 0 0, 0% 50%;
-  }
-  100% {
-    background-position: 16px 16px, 0% 50%;
-  }
-}
 
-@keyframes gradient-flow {
+@keyframes bubble-flow {
 	0% {
-		background-position: 0 0, 0% 50%;
+		background-position: 
+      0% 0%,
+      0% 0%,
+      0% 0%,
+      0% 0%;
 	}
 	50% {
-		background-position: 0 0, 100% 50%;
+		background-position: 
+      -20% 40%,
+      10% -30%,
+      -30% -10%,
+      16px 16px;
 	}
 	100% {
-		background-position: 0 0, 0% 50%;
+		background-position: 
+      0% 0%,
+      0% 0%,
+      0% 0%,
+      0% 0%;
 	}
+}
+
+@keyframes fade-in-up {
+  '0%' {
+    opacity: '0';
+    transform: 'translateY(20px) scale(0.98)';
+  }
+  '100%' {
+    opacity: '1';
+    transform: 'translateY(0) scale(1)';
+  }
 }
