@@ -10,7 +10,6 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sparkles } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 
 import { handleGenerateMarkdown } from '@/app/actions';
@@ -32,6 +31,7 @@ const PRIMARY_KEYWORDS = ['黑料网'];
 export function MarkdownGenerator() {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<MarkdownResultItem[]>([]);
+  const [hasGenerated, setHasGenerated] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -47,6 +47,7 @@ export function MarkdownGenerator() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     setResults([]);
+    setHasGenerated(true);
 
     const secondaryKeywords = data.secondaryKeyword.split('\n').filter(kw => kw.trim() !== '');
     if (secondaryKeywords.length === 0) {
@@ -98,54 +99,70 @@ export function MarkdownGenerator() {
               <CardTitle>Create Your Markdown</CardTitle>
               <CardDescription>Fill in the details below to generate your content.</CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-6 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="primaryKeyword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Primary Keyword</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a primary keyword" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {PRIMARY_KEYWORDS.map(keyword => (
-                            <SelectItem key={keyword} value={keyword}>{keyword}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="domain"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Domain</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a domain" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <ScrollArea className="h-48">
-                            {DOMAINS.map(domain => (
-                                <SelectItem key={domain} value={`https://` + domain}>{domain}</SelectItem>
+            <CardContent className="grid gap-6">
+               <div className="grid gap-6 sm:grid-cols-2">
+                 <FormField
+                    control={form.control}
+                    name="primaryKeyword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Primary Keyword</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a primary keyword" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {PRIMARY_KEYWORDS.map(keyword => (
+                                <SelectItem key={keyword} value={keyword}>{keyword}</SelectItem>
                             ))}
-                        </ScrollArea>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="sm:col-span-2">
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="value"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Value</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., CY" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                 <FormField
+                    control={form.control}
+                    name="domain"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Domain</FormLabel>
+                        <FormControl>
+                            <div className="flex flex-wrap gap-2 pt-2">
+                                {DOMAINS.map((domain) => (
+                                    <Button
+                                        key={domain}
+                                        type="button"
+                                        variant={field.value === `https://` + domain ? 'default' : 'outline'}
+                                        onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
+                                        className="transition-all duration-200"
+                                    >
+                                        {domain}
+                                    </Button>
+                                ))}
+                            </div>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+              <div>
                 <FormField
                   control={form.control}
                   name="secondaryKeyword"
@@ -163,19 +180,6 @@ export function MarkdownGenerator() {
                   )}
                 />
               </div>
-              <FormField
-                control={form.control}
-                name="value"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Value</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., CY" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </CardContent>
             <CardFooter>
               <Button type="submit" disabled={isLoading} className="w-full sm:w-auto text-lg py-6 px-8 group">
@@ -198,9 +202,11 @@ export function MarkdownGenerator() {
           </form>
         </Form>
       </Card>
-      <div className="mt-10">
-        <MarkdownResult results={results} isLoading={isLoading} />
-      </div>
+      {hasGenerated && (
+        <div className="mt-10">
+            <MarkdownResult results={results} isLoading={isLoading} />
+        </div>
+      )}
     </>
   );
 }

@@ -65,4 +65,16 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .dotted-bg {
+    background-color: #ffffff;
+    background-image: radial-gradient(hsl(var(--primary) / 0.2) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  .dark .dotted-bg {
+    background-color: hsl(var(--background));
+    background-image: radial-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
 }
