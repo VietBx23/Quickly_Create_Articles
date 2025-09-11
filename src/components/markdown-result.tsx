@@ -7,6 +7,8 @@ import { Copy, Check, FileText, Clipboard } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 
+declare const ClipboardItem: any;
+
 export interface MarkdownResultItem {
   title: string;
   content: string;
