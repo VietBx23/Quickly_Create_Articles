@@ -55,8 +55,8 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       if (match) {
         const domain = match[1];
         const url = `https://${domain}`;
-        const linkedDomain = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
-        htmlToCopy = text.replace(match[0], `【链接地址：${linkedDomain}】`);
+        const linkedDomain = `<a href="${url}">${domain}</a>`;
+        htmlToCopy = text.replace(`【链接地址：${domain}】`, `【链接地址：${linkedDomain}】`);
       }
     }
     
@@ -136,7 +136,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4 overflow-hidden">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-semibold text-xl break-all text-black">
+                <p className="flex-1 font-semibold text-2xl break-all text-white">
                   <TitleWithLink title={item.title} />
                 </p>
               </div>
