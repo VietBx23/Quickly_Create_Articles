@@ -17,7 +17,7 @@ import { MarkdownResult, type MarkdownResultItem } from './markdown-result';
 import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z.object({
-  primaryKeyword: z.enum(['黑料网'], {
+  primaryKeyword: z.enum(['黑料网', '六合'], {
     required_error: "Vui lòng chọn một từ khóa chính."
   }),
   secondaryKeyword: z.string().min(1, 'Cần ít nhất một từ khóa phụ.'),
@@ -26,7 +26,7 @@ const FormSchema = z.object({
 });
 
 const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "6677.one"];
-const PRIMARY_KEYWORDS = ['黑料网'];
+const PRIMARY_KEYWORDS = ['黑料网', '六合'];
 
 export function MarkdownGenerator() {
   const [isLoading, setIsLoading] = useState(false);
