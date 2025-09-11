@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Copy, Check, FileText, Clipboard, ClipboardCheck } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import showdown from 'showdown';
 
 export interface MarkdownResultItem {
   title: string;
@@ -16,12 +17,31 @@ interface MarkdownResultProps {
   isLoading: boolean;
 }
 
+const converter = new showdown.Converter();
+
 export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
 
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
-    navigator.clipboard.writeText(text);
+    if (type === 'content') {
+      const html = converter.makeHtml(text);
+      try {
+        const blobHtml = new Blob([html], { type: 'text/html' });
+        const blobText = new Blob([text], { type: 'text/plain' });
+        const clipboardItem = new ClipboardItem({
+          'text/html': blobHtml,
+          'text/plain': blobText,
+        });
+        navigator.clipboard.write([clipboardItem]);
+      } catch (error) {
+        // Fallback for older browsers
+        navigator.clipboard.writeText(text);
+      }
+    } else {
+      navigator.clipboard.writeText(text);
+    }
+    
     const key = `${type}-${index}`;
     setCopiedStates(prev => ({ ...prev, [key]: true }));
     toast({
@@ -93,5 +113,3 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
-
-    
