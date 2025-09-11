@@ -103,11 +103,8 @@ export function MarkdownGenerator() {
   return (
     <>
       <div className="relative">
-        <Card className="w-full bg-card/80 backdrop-blur-xl shadow-2xl shadow-primary/10 animate-fade-in-up gradient-border-card">
+        <Card className="w-full bg-card/80 backdrop-blur-sm">
           <CardHeader className="text-center">
-            <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary mx-auto mb-4">
-              Péi Chūn Yuè
-            </div>
             <CardTitle className="font-headline font-bold tracking-tighter text-4xl sm:text-5xl md:text-5xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               Markdown Generator Pro
             </CardTitle>
@@ -116,98 +113,92 @@ export function MarkdownGenerator() {
             </CardDescription>
           </CardHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <CardContent>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <CardContent className="space-y-6">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    <div className="space-y-6">
-                      <FormField
+                    <FormField
+                      control={form.control}
+                      name="primaryKeyword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Từ khóa chính</FormLabel>
+                           <FormControl>
+                              <Input placeholder="Nhập từ khóa chính của bạn" {...field} />
+                          </FormControl>
+                          <div className="flex flex-wrap gap-2 pt-2">
+                              {PRIMARY_KEYWORDS.map((keyword) => (
+                                  <Button
+                                      key={keyword}
+                                      type="button"
+                                      variant={field.value === keyword ? 'default' : 'outline'}
+                                      onClick={() => form.setValue('primaryKeyword', keyword, { shouldValidate: true })}
+                                  >
+                                      {keyword}
+                                  </Button>
+                              ))}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                     <FormField
+                      control={form.control}
+                      name="value"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Giá trị</FormLabel>
+                          <FormControl>
+                            <Input placeholder="ví dụ: CY" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                   <FormField
                         control={form.control}
-                        name="primaryKeyword"
+                        name="domain"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-base font-semibold">Từ khóa chính</FormLabel>
-                             <FormControl>
-                                <Input placeholder="Nhập từ khóa chính của bạn" {...field} className="py-6"/>
+                        <FormItem>
+                            <FormLabel>Tên miền</FormLabel>
+                            <FormControl>
+                              <Input placeholder="https://example.com" {...field} />
                             </FormControl>
                             <div className="flex flex-wrap gap-2 pt-2">
-                                {PRIMARY_KEYWORDS.map((keyword) => (
+                                {DOMAINS.map((domain) => (
                                     <Button
-                                        key={keyword}
+                                        key={domain}
                                         type="button"
-                                        variant={field.value === keyword ? 'default' : 'outline'}
-                                        onClick={() => form.setValue('primaryKeyword', keyword, { shouldValidate: true })}
-                                        className="transition-all duration-200 rounded-full px-3 py-1 h-auto text-xs"
+                                        variant={field.value === `https://` + domain ? 'default' : 'outline'}
+                                        onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
                                     >
-                                        {keyword}
+                                        {domain}
                                     </Button>
                                 ))}
                             </div>
                             <FormMessage />
-                          </FormItem>
+                        </FormItem>
                         )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="secondaryKeyword"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-base font-semibold">Từ khóa phụ</FormLabel>
-                            <FormControl>
-                              <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={8} />
-                            </FormControl>
-                            <FormDescription>
-                              Nhập một từ khóa phụ mỗi dòng.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <div className="space-y-6">
-                      <FormField
-                          control={form.control}
-                          name="domain"
-                          render={({ field }) => (
-                          <FormItem>
-                              <FormLabel className="text-base font-semibold">Tên miền</FormLabel>
-                              <FormControl>
-                                <Input placeholder="https://example.com" {...field} className="py-6" />
-                              </FormControl>
-                              <div className="flex flex-wrap gap-2 pt-2">
-                                  {DOMAINS.map((domain) => (
-                                      <Button
-                                          key={domain}
-                                          type="button"
-                                          variant={field.value === `https://` + domain ? 'default' : 'outline'}
-                                          onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
-                                          className="transition-all duration-200 rounded-full px-2.5 py-1 h-auto text-xs"
-                                      >
-                                          {domain}
-                                      </Button>
-                                  ))}
-                              </div>
-                              <FormMessage />
-                          </FormItem>
-                          )}
-                      />
-                       <FormField
-                        control={form.control}
-                        name="value"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-base font-semibold">Giá trị</FormLabel>
-                            <FormControl>
-                              <Input placeholder="ví dụ: CY" {...field} className="py-6"/>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
+                    />
+                  <FormField
+                    control={form.control}
+                    name="secondaryKeyword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Từ khóa phụ</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={5} />
+                        </FormControl>
+                        <FormDescription>
+                          Nhập một từ khóa phụ mỗi dòng.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
               </CardContent>
-              <CardFooter className="pt-6">
-                <Button type="submit" disabled={isLoading} className="w-full text-lg py-6 px-8 group transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/30">
+              <CardFooter>
+                <Button type="submit" disabled={isLoading} className="w-full">
                   {isLoading ? (
                       <>
                           <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -218,7 +209,7 @@ export function MarkdownGenerator() {
                       </>
                   ) : (
                       <>
-                        <Sparkles className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:scale-125 group-hover:animate-spin" /> 
+                        <Sparkles className="mr-2 h-4 w-4" /> 
                         Tạo nội dung
                       </>
                   )}
@@ -236,5 +227,3 @@ export function MarkdownGenerator() {
     </>
   );
 }
-
-    

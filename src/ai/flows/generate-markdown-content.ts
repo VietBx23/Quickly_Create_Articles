@@ -33,6 +33,17 @@ export type GenerateMarkdownContentOutput = z.infer<
   typeof GenerateMarkdownContentOutputSchema
 >;
 
+// This function can be defined outside the flow as it doesn't cause hydration issues.
+function generateRandomString(length: number): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
 const TEMPLATES = [
   `
     <p style="font-size: 1.1rem;"><strong>👋 欢迎来到 {app} 官方导航页！</strong></p><br>
@@ -112,18 +123,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     outputSchema: GenerateMarkdownContentOutputSchema,
   },
   async input => {
-    // This function is now defined and called within the flow to avoid hydration issues.
-    function generateRandomString(length: number): string {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
-      const charactersLength = characters.length;
-      for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      }
-      return result;
-    }
-    
-    // All random or date-based logic is now inside the flow.
+    // All random or date-based logic is now inside the flow to prevent hydration mismatches.
     const today = new Date().toISOString().slice(0, 10);
     const randomChars = generateRandomString(6);
     const displayDomain = input.domain.replace(/^https?:\/\//, '');
@@ -147,5 +147,3 @@ const generateMarkdownContentFlow = ai.defineFlow(
     return {title: title, content: fullContent};
   }
 );
-
-    

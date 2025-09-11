@@ -66,7 +66,6 @@
       radial-gradient(hsl(var(--accent) / 0.2) 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 100% 100%, 16px 16px;
     background-position: 0 0, 0 0, 0 0, 0 0;
-    animation: bubble-flow 25s ease-in-out infinite;
   }
   .dark .dotted-bg {
     background-color: hsl(var(--background));
@@ -79,7 +78,6 @@
       radial-gradient(hsl(var(--accent) / 0.3) 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 100% 100%, 16px 16px;
     background-position: 0 0, 0 0, 0 0, 0 0;
-    animation: bubble-flow 25s ease-in-out infinite;
   }
   .gradient-border-card::before {
     content: '';
@@ -99,31 +97,6 @@
   }
 }
 
-
-@keyframes bubble-flow {
-	0% {
-		background-position: 
-      0% 0%,
-      0% 0%,
-      0% 0%,
-      0% 0%;
-	}
-	50% {
-		background-position: 
-      -20% 40%,
-      10% -30%,
-      -30% -10%,
-      16px 16px;
-	}
-	100% {
-		background-position: 
-      0% 0%,
-      0% 0%,
-      0% 0%,
-      0% 0%;
-	}
-}
-
 @keyframes fade-in-up {
   '0%' {
     opacity: '0';
@@ -134,5 +107,3 @@
     transform: 'translateY(0) scale(1)';
   }
 }
-
-    
