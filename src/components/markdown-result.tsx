@@ -25,8 +25,8 @@ const TitleWithLink = ({ title }: { title: string }) => {
     return <>{title}</>;
   }
 
-  const domain = match[1];
-  const url = `https://${domain}`;
+  const domainWithPossiblePort = match[1];
+  const url = `https://${domainWithPossiblePort.split(':')[0]}`;
   const parts = title.split(match[0]);
 
   return (
@@ -34,7 +34,7 @@ const TitleWithLink = ({ title }: { title: string }) => {
       {parts[0]}
       {'【链接地址：'}
       <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
-        {domain}
+        {domainWithPossiblePort}
       </a>
       {'】'}
       {parts[1]}
@@ -53,22 +53,22 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     if (type === 'title') {
         const regex = /【链接地址：(.*?)】/;
         const match = text.match(regex);
+        let titleWithLink = text;
         if (match) {
             const domain = match[1];
             const url = `https://${domain}`;
-            const titleWithLink = text.replace(domain, `<a href="${url}" style="color: white; text-decoration: underline;">${domain}</a>`);
-            htmlToCopy = `<p style="font-size: 32px; font-weight: bold; color: white;">${titleWithLink}</p>`;
-        } else {
-            htmlToCopy = `<p style="font-size: 32px; font-weight: bold; color: white;">${text}</p>`;
+            titleWithLink = text.replace(domain, `<a href="${url}" style="color: white; text-decoration: underline;">${domain}</a>`);
         }
+        htmlToCopy = `<p style="font-size: 36px; font-weight: bold; color: white; text-align: center;">${titleWithLink}</p>`;
     }
     
     try {
-        const type = 'text/html';
-        const blob = new Blob([htmlToCopy], { type });
-        const data = [new ClipboardItem({ [type]: blob })];
+        const clipboardItem = new ClipboardItem({
+            'text/html': new Blob([htmlToCopy], { type: 'text/html' }),
+            'text/plain': new Blob([text], { type: 'text/plain' })
+        });
 
-        navigator.clipboard.write(data).then(
+        navigator.clipboard.write([clipboardItem]).then(
             () => {
                 setCopiedStates(prev => ({ ...prev, [key]: true }));
                 toast({
@@ -79,47 +79,73 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             },
             (err) => {
                 console.error('Copy failed (async)', err);
-                toast({
-                    variant: 'destructive',
-                    title: 'Sao chép thất bại',
-                    description: 'Không thể sao chép nội dung.',
-                });
+                fallbackCopy(htmlToCopy, text, key, type);
             }
         );
     } catch (err) {
-      console.error('Fallback copy method', err);
-      // Fallback for older browsers
+      console.error('ClipboardItem API not supported, using fallback.', err);
+      fallbackCopy(htmlToCopy, text, key, type);
+    }
+  };
+
+  const fallbackCopy = (htmlToCopy: string, plainText: string, key: string, type: 'title' | 'content') => {
       const tempEl = document.createElement('div');
       tempEl.style.position = 'absolute';
       tempEl.style.left = '-9999px';
       tempEl.innerHTML = htmlToCopy;
       document.body.appendChild(tempEl);
+      
       const selection = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(tempEl);
-       if(selection) {
+      
+      if(selection) {
         selection.removeAllRanges();
         selection.addRange(range);
       }
+      
       try {
-        document.execCommand('copy');
-        setCopiedStates(prev => ({ ...prev, [key]: true }));
-        toast({
-            title: 'Đã sao chép vào Clipboard!',
-            description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
-        });
-        setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+        const successful = document.execCommand('copy');
+        if (successful) {
+            setCopiedStates(prev => ({ ...prev, [key]: true }));
+            toast({
+                title: 'Đã sao chép vào Clipboard!',
+                description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
+            });
+            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+        } else {
+            throw new Error('Fallback copy command failed');
+        }
       } catch (e) {
-        toast({
-            variant: 'destructive',
-            title: 'Sao chép thất bại',
-            description: 'Không thể sao chép nội dung.',
-        });
+        // If execCommand fails, try copying plain text as a last resort
+        const textArea = document.createElement("textarea");
+        textArea.value = plainText;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            setCopiedStates(prev => ({ ...prev, [key]: true }));
+            toast({
+                title: 'Đã sao chép vào Clipboard!',
+                description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} (dạng văn bản thuần) đã được sao chép.`,
+            });
+            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+        } catch (err) {
+            toast({
+                variant: 'destructive',
+                title: 'Sao chép thất bại',
+                description: 'Không thể sao chép nội dung.',
+            });
+        }
+        document.body.removeChild(textArea);
       } finally {
+        if (selection) {
+          selection.removeAllRanges();
+        }
         document.body.removeChild(tempEl);
       }
-    }
-  };
+  }
   
   if (isLoading) {
     return (
