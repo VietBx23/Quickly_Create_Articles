@@ -102,20 +102,19 @@ export function MarkdownGenerator() {
 
   return (
     <>
-      <div className="relative" style={{ animation: 'fade-in-up 0.8s ease-out forwards' }}>
-        <Card className="w-full bg-card/60 backdrop-blur-xl border-border/20 shadow-lg">
-          <CardHeader className="text-center">
-            <CardTitle className="font-headline font-bold tracking-tighter text-4xl sm:text-5xl md:text-5xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+      <Card className="w-full">
+          <CardHeader>
+            <CardTitle>
               Markdown Generator Pro
             </CardTitle>
-            <CardDescription className="max-w-2xl mx-auto text-lg text-muted-foreground pt-2">
+            <CardDescription>
               Tạo nội dung markdown tùy chỉnh ngay lập tức. Chỉ cần cung cấp từ khóa, tên miền và giá trị của bạn để bắt đầu.
             </CardDescription>
           </CardHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <CardContent className="space-y-8">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+              <CardContent className="space-y-4">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="primaryKeyword"
@@ -218,9 +217,8 @@ export function MarkdownGenerator() {
             </form>
           </Form>
         </Card>
-      </div>
       {hasGenerated && (
-        <div className="mt-10 w-full" style={{ animation: 'fade-in-up 1s 0.2s ease-out forwards', opacity: 0 }}>
+        <div className="mt-8 w-full">
             <MarkdownResult results={results} isLoading={isLoading} />
         </div>
       )}

@@ -1,9 +1,8 @@
-
 'use client';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Check, FileText } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 
@@ -47,40 +46,25 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   
   if (isLoading) {
     return (
-      <Card className="w-full bg-card/60 backdrop-blur-xl border-border/20 shadow-lg">
+      <Card>
         <CardHeader>
           <CardTitle>Đang tạo nội dung của bạn...</CardTitle>
           <CardDescription>Vui lòng đợi trong khi AI của chúng tôi tạo ra markdown hoàn hảo cho bạn.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 pt-4">
-          <Skeleton className="h-10 w-1/3" />
-          <div className="space-y-2 pt-4">
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-8 w-full" />
-          </div>
-
+        <CardContent className="space-y-2">
+          <Skeleton className="h-8 w-1/3" />
+          <Skeleton className="h-20 w-full" />
         </CardContent>
       </Card>
     );
   }
   
   if (results.length === 0) {
-    return (
-        <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/20 p-12 text-center transition-colors hover:border-primary/50">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                <FileText className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="mt-6 text-xl font-semibold">Chưa có nội dung nào được tạo</h3>
-            <p className="mt-2 text-md text-muted-foreground">
-                Điền vào biểu mẫu ở trên và nhấp vào "Tạo nội dung" để xem điều kỳ diệu xảy ra.
-            </p>
-        </div>
-    );
+    return null;
   }
 
   return (
-    <Card className="w-full bg-card/60 backdrop-blur-xl border-border/20 shadow-lg">
+    <Card>
       <CardHeader>
         <CardTitle>Markdown đã tạo của bạn</CardTitle>
         <CardDescription>Đây là nội dung được tạo dựa trên thông tin bạn cung cấp. Bạn có thể sao chép tiêu đề hoặc nội dung đầy đủ.</CardDescription>
@@ -88,21 +72,24 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       <CardContent>
         <div className="space-y-4">
           {results.map((item, index) => (
-            <div key={index} className="border-b border-border/50 pb-4 last:border-b-0 last:pb-0">
+            <div key={index} className="border-t pt-4">
               <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-semibold text-lg">{item.title}</h3>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
-                      {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                      <span className="ml-2">{copiedStates[`title-${index}`] ? 'Đã sao chép' : 'Sao chép Tiêu đề'}</span>
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleCopy(item.content, 'content', index)}>
-                      {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                      <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
-                    </Button>
-                  </div>
+                  <h3 className="font-semibold">{item.title}</h3>
+                  <Button variant="ghost" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
+                    {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    <span className="ml-2">{copiedStates[`title-${index}`] ? 'Đã sao chép' : 'Sao chép Tiêu đề'}</span>
+                  </Button>
               </div>
-              <div className="p-4 bg-muted/50 rounded-md">
+              <div className="p-4 bg-muted rounded-md relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2"
+                  onClick={() => handleCopy(item.content, 'content', index)}
+                >
+                  {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
+                </Button>
                 <div 
                     className="prose prose-sm dark:prose-invert max-w-none" 
                     dangerouslySetInnerHTML={{ __html: item.content }}
