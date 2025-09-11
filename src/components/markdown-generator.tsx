@@ -217,7 +217,7 @@ export function MarkdownGenerator() {
                       </>
                   ) : (
                       <>
-                        <Sparkles className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:scale-125" /> 
+                        <Sparkles className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:scale-125 group-hover:animate-spin" /> 
                         Tạo nội dung
                       </>
                   )}
