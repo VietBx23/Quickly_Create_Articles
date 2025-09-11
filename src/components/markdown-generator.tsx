@@ -104,10 +104,10 @@ export function MarkdownGenerator() {
     <>
       <Card className="w-full">
           <CardHeader className="text-center">
-             <h1 className="text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary-foreground">
+             <h1 className="text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-orange-400">
                 Markdown Generator Pro
              </h1>
-            <CardDescription className="pt-2">
+            <CardDescription className="pt-2 text-muted-foreground/90">
               Tạo nội dung markdown tùy chỉnh ngay lập tức. Chỉ cần cung cấp từ khóa, tên miền và giá trị của bạn để bắt đầu.
             </CardDescription>
           </CardHeader>
