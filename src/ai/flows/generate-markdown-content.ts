@@ -79,21 +79,25 @@ const generateMarkdownContentFlow = ai.defineFlow(
   async input => {
     const today = new Date().toISOString().slice(0, 10);
     const randomChars = generateRandomString(6);
-    const title = `${input.primaryKeyword}-【链接地址：${input.domain}】${input.secondaryKeyword}-${today}|${input.value}|881比鸭${randomChars}`;
+    const displayDomain = input.domain.replace(/^https?:\/\//, '');
+    const title = `${input.primaryKeyword}-【链接地址：${displayDomain}】${input.secondaryKeyword}-${today}|${input.value}|881比鸭${randomChars}`;
     const keywordsText = `${input.primaryKeyword}, ${input.secondaryKeyword}`;
 
     const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
     let template = TEMPLATES[randomIndex];
     
     const content = template
-      .replace('{app}', input.primaryKeyword)
+      .replace(/{app}/g, input.primaryKeyword)
       .replace(/{url}/g, '')
       .replace(/{keywords_text}/g, keywordsText)
       .replace(/{date}/g, today)
-      .replace(/{domain}/g, input.domain);
+      .replace(/{domain}/g, input.domain)
+      .replace(/^/gm, ''); // Remove leading characters like '-'
     
     const fullContent = content.replace('{title}', title)
 
     return {title: title, content: fullContent};
   }
 );
+
+    

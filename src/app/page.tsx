@@ -8,7 +8,7 @@ export default function Home() {
            <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
             Powered by Generative AI
           </div>
-          <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+          <h1 className="font-headline font-bold tracking-tight text-[32px] text-white">
             Markdown Generator Pro
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
@@ -20,3 +20,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
