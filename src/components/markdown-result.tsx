@@ -45,22 +45,9 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
 
-  const copyRichText = (htmlContent: string) => {
-    const listener = (e: ClipboardEvent) => {
-      e.preventDefault();
-      if (e.clipboardData) {
-        e.clipboardData.setData('text/html', htmlContent);
-        e.clipboardData.setData('text/plain', htmlContent.replace(/<[^>]*>?/gm, ''));
-      }
-    };
-    document.addEventListener('copy', listener);
-    document.execCommand('copy');
-    document.removeEventListener('copy', listener);
-  };
-  
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
-    let htmlToCopy = '';
+    let htmlToCopy = text;
 
     if (type === 'title') {
       const regex = /【链接地址：(.*?)】/;
@@ -68,16 +55,29 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       if (match) {
         const domain = match[1];
         const url = `https://${domain}`;
-        htmlToCopy = text.replace(domain, `<a href="${url}" target="_blank">${domain}</a>`);
-      } else {
-        htmlToCopy = text;
+        const linkedDomain = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
+        htmlToCopy = text.replace(match[0], `【链接地址：${linkedDomain}】`);
       }
-    } else {
-      htmlToCopy = text;
     }
-
+    
     try {
-      copyRichText(htmlToCopy);
+      const tempEl = document.createElement('div');
+      tempEl.style.position = 'absolute';
+      tempEl.style.left = '-9999px';
+      tempEl.innerHTML = htmlToCopy;
+      document.body.appendChild(tempEl);
+
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(tempEl);
+      if(selection) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      
+      document.execCommand('copy');
+      document.body.removeChild(tempEl);
+
       setCopiedStates(prev => ({ ...prev, [key]: true }));
       toast({
         title: 'Đã sao chép vào Clipboard!',
@@ -85,6 +85,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       });
       setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
     } catch (err) {
+      console.error('Copy failed', err);
       toast({
         variant: 'destructive',
         title: 'Sao chép thất bại',
@@ -135,7 +136,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4 overflow-hidden">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-semibold text-lg break-all text-white">
+                <p className="flex-1 font-semibold text-xl break-all text-black">
                   <TitleWithLink title={item.title} />
                 </p>
               </div>
