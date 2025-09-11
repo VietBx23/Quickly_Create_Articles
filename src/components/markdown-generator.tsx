@@ -103,7 +103,7 @@ export function MarkdownGenerator() {
   return (
     <>
       <div className="relative">
-        <Card className="w-full bg-card/80 backdrop-blur-sm">
+        <Card className="w-full bg-card/80 backdrop-blur-sm relative gradient-border-card">
           <CardHeader className="text-center">
             <CardTitle className="font-headline font-bold tracking-tighter text-4xl sm:text-5xl md:text-5xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               Markdown Generator Pro

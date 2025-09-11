@@ -62,7 +62,6 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       htmlToCopy = `<p style="font-size: 36px; font-weight: bold; color: white; text-align: center;">${titleWithHtmlLink}</p>`;
     }
     
-    // The ClipboardItem API requires a secure context (HTTPS)
     if (typeof ClipboardItem !== 'undefined' && navigator.clipboard.write) {
       try {
           const clipboardItem = new ClipboardItem({
@@ -122,7 +121,6 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             throw new Error('Fallback copy command failed');
         }
       } catch (e) {
-        // If execCommand fails, try copying plain text as a last resort
         const textArea = document.createElement("textarea");
         textArea.value = plainText;
         document.body.appendChild(textArea);
@@ -154,7 +152,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   
   if (isLoading) {
     return (
-      <Card className="w-full">
+      <Card className="w-full bg-card/80 backdrop-blur-sm">
         <CardHeader>
           <CardTitle>Đang tạo nội dung của bạn...</CardTitle>
           <CardDescription>Vui lòng đợi trong khi AI của chúng tôi tạo ra markdown hoàn hảo cho bạn.</CardDescription>
@@ -183,7 +181,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-card/80 backdrop-blur-sm">
       <CardHeader>
         <CardTitle>Markdown đã tạo của bạn</CardTitle>
         <CardDescription>Bây giờ bạn có thể sao chép tiêu đề hoặc nội dung cho mỗi bài viết được tạo.</CardDescription>
@@ -194,7 +192,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4 overflow-hidden">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-semibold text-black break-all text-base">
+                <p className="flex-1 font-semibold text-foreground break-all text-base">
                   <TitleWithLink title={item.title} />
                 </p>
               </div>
@@ -215,5 +213,3 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
-
-    
