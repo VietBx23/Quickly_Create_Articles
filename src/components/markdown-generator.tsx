@@ -104,7 +104,7 @@ export function MarkdownGenerator() {
   return (
     <>
       <div className="relative">
-        <Card className="w-full bg-card/95 backdrop-blur-sm shadow-2xl shadow-primary/10">
+        <Card className="w-full bg-card/95 backdrop-blur-sm shadow-2xl shadow-primary/10 animate-fade-in-up">
           <CardHeader className="text-center">
             <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary mx-auto mb-4">
               Péi Chūn Yuè
@@ -206,7 +206,7 @@ export function MarkdownGenerator() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" disabled={isLoading} className="w-full sm:w-auto text-lg py-6 px-8 group">
+                <Button type="submit" disabled={isLoading} className="w-full sm:w-auto text-lg py-6 px-8 group transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/30">
                   {isLoading ? (
                       <>
                           <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
