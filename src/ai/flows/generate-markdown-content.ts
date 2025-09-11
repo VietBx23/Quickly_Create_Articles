@@ -123,24 +123,19 @@ const generateMarkdownContentFlow = ai.defineFlow(
     outputSchema: GenerateMarkdownContentOutputSchema,
   },
   async input => {
-    // All random or date-based logic is now inside the flow to prevent hydration mismatches.
     const today = new Date().toISOString().slice(0, 10);
     const randomChars = generateRandomString(6);
     const displayDomain = input.domain.replace(/^https?:\/\//, '');
     const title = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
     const keywordsText = `${input.primaryKeyword}, ${input.secondaryKeyword}`;
-    
-    // Random template selection is now inside the flow.
     const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
     let template = TEMPLATES[randomIndex];
-    
     const content = template
       .replace(/{app}/g, input.primaryKeyword)
       .replace(/{keywords_text}/g, keywordsText)
       .replace(/{date}/g, today)
       .replace(/{domain}/g, input.domain)
       .trim();
-    
     const titleWithLink = `${input.primaryKeyword} -【链接地址：<a href="${input.domain}" style="color: #1155cc; text-decoration: underline;">${displayDomain}</a>】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
     const fullContent = `<h2 style="font-size: 2.25rem; font-weight: 600; color: black;">${titleWithLink}</h2>` + content;
 
