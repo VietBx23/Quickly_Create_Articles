@@ -24,23 +24,11 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const { toast } = useToast();
 
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
+    let textToCopy = text;
     if (type === 'content') {
-      const html = converter.makeHtml(text);
-      try {
-        const blobHtml = new Blob([html], { type: 'text/html' });
-        const blobText = new Blob([text], { type: 'text/plain' });
-        const clipboardItem = new ClipboardItem({
-          'text/html': blobHtml,
-          'text/plain': blobText,
-        });
-        navigator.clipboard.write([clipboardItem]);
-      } catch (error) {
-        // Fallback for older browsers
-        navigator.clipboard.writeText(text);
-      }
-    } else {
-      navigator.clipboard.writeText(text);
+      textToCopy = converter.makeHtml(text);
     }
+    navigator.clipboard.writeText(textToCopy);
     
     const key = `${type}-${index}`;
     setCopiedStates(prev => ({ ...prev, [key]: true }));
@@ -95,7 +83,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-medium text-sm" title={item.title}>
+                <p className="flex-1 font-medium text-sm">
                   {item.title}
                 </p>
               </div>
