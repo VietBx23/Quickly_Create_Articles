@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, KeyRound, Hash, Globe, List, Heart } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 
 import { handleGenerateMarkdown } from '@/app/actions';
@@ -121,9 +121,12 @@ export function MarkdownGenerator() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Từ khóa chính</FormLabel>
-                           <FormControl>
-                              <Input placeholder="Nhập từ khóa chính của bạn" {...field} />
-                          </FormControl>
+                          <div className="relative">
+                            <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <FormControl>
+                                <Input placeholder="Nhập từ khóa chính của bạn" {...field} className="pl-10" />
+                            </FormControl>
+                          </div>
                           <div className="flex flex-wrap gap-2 pt-2">
                               {PRIMARY_KEYWORDS.map((keyword) => (
                                   <Button
@@ -146,9 +149,12 @@ export function MarkdownGenerator() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Giá trị</FormLabel>
-                          <FormControl>
-                            <Input placeholder="ví dụ: CY" {...field} />
-                          </FormControl>
+                          <div className="relative">
+                            <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <FormControl>
+                              <Input placeholder="ví dụ: CY" {...field} className="pl-10" />
+                            </FormControl>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -160,9 +166,12 @@ export function MarkdownGenerator() {
                         render={({ field }) => (
                         <FormItem>
                             <FormLabel>Tên miền</FormLabel>
-                            <FormControl>
-                              <Input placeholder="https://example.com" {...field} />
-                            </FormControl>
+                            <div className="relative">
+                              <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                              <FormControl>
+                                <Input placeholder="https://example.com" {...field} className="pl-10" />
+                              </FormControl>
+                            </div>
                             <div className="flex flex-wrap gap-2 pt-2">
                                 {DOMAINS.map((domain) => (
                                     <Button
@@ -185,9 +194,12 @@ export function MarkdownGenerator() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Từ khóa phụ</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={5} />
-                        </FormControl>
+                        <div className="relative">
+                          <List className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <FormControl>
+                            <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={5} className="pl-10" />
+                          </FormControl>
+                        </div>
                         <FormDescription>
                           Nhập một từ khóa phụ mỗi dòng.
                         </FormDescription>
@@ -196,7 +208,7 @@ export function MarkdownGenerator() {
                     )}
                   />
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex-col gap-4">
                 <Button type="submit" disabled={isLoading} className="w-full">
                   {isLoading ? (
                       <>
@@ -213,6 +225,9 @@ export function MarkdownGenerator() {
                       </>
                   )}
                 </Button>
+                <div className="text-xs text-muted-foreground flex items-center gap-1">
+                  Made with <Heart className="w-3 h-3 text-red-500 fill-current" /> by Péi Chūn Yuè
+                </div>
               </CardFooter>
             </form>
           </Form>
