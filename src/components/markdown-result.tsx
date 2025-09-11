@@ -47,7 +47,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   
   if (isLoading) {
     return (
-      <Card className="w-full bg-card/80 backdrop-blur-sm">
+      <Card className="w-full bg-card/60 backdrop-blur-xl border-border/20 shadow-lg">
         <CardHeader>
           <CardTitle>Đang tạo nội dung của bạn...</CardTitle>
           <CardDescription>Vui lòng đợi trong khi AI của chúng tôi tạo ra markdown hoàn hảo cho bạn.</CardDescription>
@@ -80,7 +80,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   }
 
   return (
-    <Card className="w-full bg-card/80 backdrop-blur-sm gradient-border-card">
+    <Card className="w-full bg-card/60 backdrop-blur-xl border-border/20 shadow-lg">
       <CardHeader>
         <CardTitle>Markdown đã tạo của bạn</CardTitle>
         <CardDescription>Đây là nội dung được tạo dựa trên thông tin bạn cung cấp. Bạn có thể sao chép tiêu đề hoặc nội dung đầy đủ.</CardDescription>

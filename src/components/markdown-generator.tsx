@@ -102,8 +102,8 @@ export function MarkdownGenerator() {
 
   return (
     <>
-      <div className="relative">
-        <Card className="w-full bg-card/80 backdrop-blur-sm relative gradient-border-card">
+      <div className="relative" style={{ animation: 'fade-in-up 0.8s ease-out forwards' }}>
+        <Card className="w-full bg-card/60 backdrop-blur-xl border-border/20 shadow-lg">
           <CardHeader className="text-center">
             <CardTitle className="font-headline font-bold tracking-tighter text-4xl sm:text-5xl md:text-5xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               Markdown Generator Pro
@@ -220,7 +220,7 @@ export function MarkdownGenerator() {
         </Card>
       </div>
       {hasGenerated && (
-        <div className="mt-10 w-full">
+        <div className="mt-10 w-full" style={{ animation: 'fade-in-up 1s 0.2s ease-out forwards', opacity: 0 }}>
             <MarkdownResult results={results} isLoading={isLoading} />
         </div>
       )}
