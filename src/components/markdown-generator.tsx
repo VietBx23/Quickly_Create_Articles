@@ -57,32 +57,46 @@ export function MarkdownGenerator() {
       return;
     }
 
-    const allResults: MarkdownResultItem[] = [];
-
-    for (const keyword of secondaryKeywords) {
-      const result = await handleGenerateMarkdown({
+    const generationPromises = secondaryKeywords.map(keyword =>
+      handleGenerateMarkdown({
         ...data,
         secondaryKeyword: keyword,
+      }).then(result => ({ result, keyword })) // Carry keyword for error reporting
+    );
+
+    try {
+      const promiseResults = await Promise.all(generationPromises);
+      
+      const successfulResults: MarkdownResultItem[] = [];
+      
+      promiseResults.forEach(({ result, keyword }) => {
+        if (result.success && result.data) {
+          successfulResults.push(result.data);
+        } else {
+          toast({
+            variant: "destructive",
+            title: `Tạo thất bại cho "${keyword}"`,
+            description: result.error || "Đã xảy ra lỗi không xác định.",
+          });
+        }
       });
 
-      if (result.success && result.data) {
-        allResults.push(result.data);
-      } else {
+      if (successfulResults.length > 0) {
+        setResults(successfulResults);
         toast({
-          variant: "destructive",
-          title: `Tạo thất bại cho "${keyword}"`,
-          description: result.error || "Đã xảy ra lỗi không xác định.",
+          title: "Thành công!",
+          description: `Đã tạo markdown cho ${successfulResults.length} từ khóa.`,
         });
       }
-    }
-    
-    if (allResults.length > 0) {
-      setResults(allResults);
+    } catch (error) {
        toast({
-        title: "Thành công!",
-        description: `Đã tạo markdown cho ${allResults.length} từ khóa.`,
+        variant: "destructive",
+        title: "Lỗi hàng loạt",
+        description: "Đã xảy ra lỗi khi xử lý nhiều yêu cầu. Vui lòng thử lại.",
       });
+      console.error('Batch generation error:', error);
     }
+
 
     setIsLoading(false);
   }
