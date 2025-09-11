@@ -18,12 +18,12 @@ import { useToast } from '@/hooks/use-toast';
 const FormSchema = z.object({
   primaryKeyword: z.string().min(1, 'Vui lòng nhập hoặc chọn một từ khóa chính.'),
   secondaryKeyword: z.string().min(1, 'Cần ít nhất một từ khóa phụ.'),
-  domain: z.string().min(1, 'Vui lòng chọn một tên miền.'),
+  domain: z.string().min(1, 'Vui lòng nhập hoặc chọn một tên miền.').url('Vui lòng nhập một URL hợp lệ.'),
   value: z.string().min(1, 'Giá trị là bắt buộc.'),
 });
 
-const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "6677.one"];
-const PRIMARY_KEYWORDS = ['黑料网', '六合彩内部资料'];
+const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "6677.one", "184.run"];
+const PRIMARY_KEYWORDS = ['黑料网', '六合彩内部资料', '六合'];
 
 export function MarkdownGenerator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -153,20 +153,21 @@ export function MarkdownGenerator() {
                       <FormItem>
                           <FormLabel>Tên miền</FormLabel>
                           <FormControl>
-                              <div className="flex flex-wrap gap-2 pt-2">
-                                  {DOMAINS.map((domain) => (
-                                      <Button
-                                          key={domain}
-                                          type="button"
-                                          variant={field.value === `https://` + domain ? 'default' : 'outline'}
-                                          onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
-                                          className="transition-all duration-200 px-3 py-1 h-auto text-xs"
-                                      >
-                                          {domain}
-                                      </Button>
-                                  ))}
-                              </div>
+                            <Input placeholder="https://example.com" {...field} />
                           </FormControl>
+                          <div className="flex flex-wrap gap-2 pt-2">
+                              {DOMAINS.map((domain) => (
+                                  <Button
+                                      key={domain}
+                                      type="button"
+                                      variant={field.value === `https://` + domain ? 'default' : 'outline'}
+                                      onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
+                                      className="transition-all duration-200 px-2.5 py-1 h-auto text-xs"
+                                  >
+                                      {domain}
+                                  </Button>
+                              ))}
+                          </div>
                           <FormMessage />
                       </FormItem>
                       )}
@@ -213,7 +214,7 @@ export function MarkdownGenerator() {
         </Card>
       </div>
       {hasGenerated && (
-        <div className="mt-10">
+        <div className="mt-10 w-full">
             <MarkdownResult results={results} isLoading={isLoading} />
         </div>
       )}

@@ -24,17 +24,18 @@ const TitleWithLink = ({ title }: { title: string }) => {
   if (!match) {
     return <>{title}</>;
   }
+  
+  const displayUrl = match[1];
+  const fullUrl = `https://${displayUrl.replace(/.*?:\/\//g, '')}`;
 
-  const domainWithPossiblePort = match[1];
-  const url = `https://${domainWithPossiblePort.split(':')[0]}`;
   const parts = title.split(match[0]);
 
   return (
     <>
       {parts[0]}
       {'【链接地址：'}
-      <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
-        {domainWithPossiblePort}
+      <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+        {displayUrl}
       </a>
       {'】'}
       {parts[1]}
@@ -51,7 +52,11 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let htmlToCopy = text;
 
     if (type === 'title') {
-      htmlToCopy = `<p style="font-size: 36px; font-weight: bold; color: white; text-align: center;">${text}</p>`;
+      const titleWithHtmlLink = text.replace(/【链接地址：(.*?)】/, (match, domain) => {
+        const url = `https://${domain.replace(/.*?:\/\//g, '')}`;
+        return `【链接地址：<a href="${url}" style="color: #1155cc; text-decoration: underline;">${domain}</a>】`;
+      });
+      htmlToCopy = `<p style="font-size: 36px; font-weight: bold; color: white; text-align: center;">${titleWithHtmlLink}</p>`;
     }
     
     try {
