@@ -102,12 +102,12 @@ export function MarkdownGenerator() {
 
   return (
     <>
-      <Card className="w-full bg-white/10 backdrop-blur-lg border-white/20">
+      <Card className="w-full">
           <CardHeader className="text-center">
              <h1 className="text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary-foreground">
                 Markdown Generator Pro
              </h1>
-            <CardDescription className="text-foreground/80 pt-2">
+            <CardDescription className="pt-2">
               Tạo nội dung markdown tùy chỉnh ngay lập tức. Chỉ cần cung cấp từ khóa, tên miền và giá trị của bạn để bắt đầu.
             </CardDescription>
           </CardHeader>
@@ -120,7 +120,7 @@ export function MarkdownGenerator() {
                       name="primaryKeyword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-foreground">Từ khóa chính</FormLabel>
+                          <FormLabel>Từ khóa chính</FormLabel>
                           <div className="relative">
                             <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
@@ -134,7 +134,6 @@ export function MarkdownGenerator() {
                                       type="button"
                                       variant={field.value === keyword ? 'default' : 'outline'}
                                       onClick={() => form.setValue('primaryKeyword', keyword, { shouldValidate: true })}
-                                      className={field.value === keyword ? '' : 'bg-white/5 border-white/20 hover:bg-white/10'}
                                   >
                                       {keyword}
                                   </Button>
@@ -149,7 +148,7 @@ export function MarkdownGenerator() {
                       name="value"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-foreground">Giá trị</FormLabel>
+                          <FormLabel>Giá trị</FormLabel>
                           <div className="relative">
                             <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
@@ -166,7 +165,7 @@ export function MarkdownGenerator() {
                         name="domain"
                         render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="text-foreground">Tên miền</FormLabel>
+                            <FormLabel>Tên miền</FormLabel>
                             <div className="relative">
                               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                               <FormControl>
@@ -180,7 +179,6 @@ export function MarkdownGenerator() {
                                         type="button"
                                         variant={field.value === `https://` + domain ? 'default' : 'outline'}
                                         onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
-                                        className={field.value === `https://` + domain ? '' : 'bg-white/5 border-white/20 hover:bg-white/10'}
                                     >
                                         {domain}
                                     </Button>
@@ -195,14 +193,14 @@ export function MarkdownGenerator() {
                     name="secondaryKeyword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-foreground">Từ khóa phụ</FormLabel>
+                        <FormLabel>Từ khóa phụ</FormLabel>
                         <div className="relative">
                           <List className="absolute left-3 top-4 h-5 w-5 text-muted-foreground" />
                           <FormControl>
                             <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={5} className="pl-10 pt-3" />
                           </FormControl>
                         </div>
-                        <FormDescription className="text-foreground/60">
+                        <FormDescription>
                           Nhập một từ khóa phụ mỗi dòng.
                         </FormDescription>
                         <FormMessage />
