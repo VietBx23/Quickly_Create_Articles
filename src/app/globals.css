@@ -57,12 +57,23 @@
   }
   .dotted-bg {
     background-color: hsl(var(--background));
-    background-image: radial-gradient(hsl(var(--foreground) / 0.05) 1px, transparent 1px);
-    background-size: 16px 16px;
+    background-image: radial-gradient(hsl(var(--primary) / 0.2) 2px, transparent 2px);
+    background-size: 32px 32px;
+    animation: move-bg 20s linear infinite;
   }
   .dark .dotted-bg {
     background-color: hsl(var(--background));
-    background-image: radial-gradient(hsl(var(--foreground) / 0.1) 1px, transparent 1px);
-    background-size: 16px 16px;
+    background-image: radial-gradient(hsl(var(--primary) / 0.5) 2px, transparent 2px);
+    background-size: 32px 32px;
+    animation: move-bg 20s linear infinite;
+  }
+}
+
+@keyframes move-bg {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 32px 32px;
   }
 }

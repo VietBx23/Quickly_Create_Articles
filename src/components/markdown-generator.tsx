@@ -94,12 +94,19 @@ export function MarkdownGenerator() {
     <>
       <div className="relative">
         <Card className="w-full bg-card/95 backdrop-blur-sm shadow-2xl shadow-primary/10">
+          <CardHeader className="text-center">
+            <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary mx-auto mb-4">
+              Péi Chūn Yuè
+            </div>
+            <CardTitle className="font-headline font-bold tracking-tighter text-4xl sm:text-5xl md:text-5xl bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+              Markdown Generator Pro
+            </CardTitle>
+            <CardDescription className="max-w-2xl mx-auto text-lg text-muted-foreground pt-2">
+              Tạo nội dung markdown tùy chỉnh ngay lập tức. Chỉ cần cung cấp từ khóa, tên miền và giá trị của bạn để bắt đầu.
+            </CardDescription>
+          </CardHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <CardHeader>
-                <CardTitle>Tạo Markdown của bạn</CardTitle>
-                <CardDescription>Điền vào các chi tiết bên dưới để tạo nội dung của bạn.</CardDescription>
-              </CardHeader>
               <CardContent className="grid gap-6">
                  <div className="grid gap-6 sm:grid-cols-2">
                    <FormField
