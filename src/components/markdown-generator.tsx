@@ -36,7 +36,7 @@ export function MarkdownGenerator() {
     defaultValues: {
       primaryKeyword: '黑料网',
       secondaryKeyword: '',
-      domain: '',
+      domain: 'https://za51.run',
       value: '',
     },
   });
@@ -61,7 +61,7 @@ export function MarkdownGenerator() {
       handleGenerateMarkdown({
         ...data,
         secondaryKeyword: keyword,
-      }).then(result => ({ result, keyword })) // Carry keyword for error reporting
+      }).then(result => ({ result, keyword }))
     );
 
     try {
@@ -97,14 +97,13 @@ export function MarkdownGenerator() {
       console.error('Batch generation error:', error);
     }
 
-
     setIsLoading(false);
   }
 
   return (
     <>
       <div className="relative">
-        <Card className="w-full bg-card/95 backdrop-blur-sm shadow-2xl shadow-primary/10 animate-fade-in-up">
+        <Card className="w-full bg-card/80 backdrop-blur-xl shadow-2xl shadow-primary/10 animate-fade-in-up gradient-border-card">
           <CardHeader className="text-center">
             <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary mx-auto mb-4">
               Péi Chūn Yuè
@@ -118,95 +117,97 @@ export function MarkdownGenerator() {
           </CardHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <CardContent className="grid gap-6">
-                 <div className="grid gap-6 sm:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="primaryKeyword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Từ khóa chính</FormLabel>
-                           <FormControl>
-                              <Input placeholder="Nhập từ khóa chính của bạn" {...field} />
-                          </FormControl>
-                          <div className="flex flex-wrap gap-2 pt-2">
-                              {PRIMARY_KEYWORDS.map((keyword) => (
-                                  <Button
-                                      key={keyword}
-                                      type="button"
-                                      variant={field.value === keyword ? 'default' : 'outline'}
-                                      onClick={() => form.setValue('primaryKeyword', keyword, { shouldValidate: true })}
-                                      className="transition-all duration-200 px-3 py-1 h-auto text-xs"
-                                  >
-                                      {keyword}
-                                  </Button>
-                              ))}
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="value"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Giá trị</FormLabel>
-                          <FormControl>
-                            <Input placeholder="ví dụ: CY" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+              <CardContent>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div className="space-y-6">
+                      <FormField
+                        control={form.control}
+                        name="primaryKeyword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base font-semibold">Từ khóa chính</FormLabel>
+                             <FormControl>
+                                <Input placeholder="Nhập từ khóa chính của bạn" {...field} className="py-6"/>
+                            </FormControl>
+                            <div className="flex flex-wrap gap-2 pt-2">
+                                {PRIMARY_KEYWORDS.map((keyword) => (
+                                    <Button
+                                        key={keyword}
+                                        type="button"
+                                        variant={field.value === keyword ? 'default' : 'outline'}
+                                        onClick={() => form.setValue('primaryKeyword', keyword, { shouldValidate: true })}
+                                        className="transition-all duration-200 rounded-full px-3 py-1 h-auto text-xs"
+                                    >
+                                        {keyword}
+                                    </Button>
+                                ))}
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="secondaryKeyword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base font-semibold">Từ khóa phụ</FormLabel>
+                            <FormControl>
+                              <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={8} />
+                            </FormControl>
+                            <FormDescription>
+                              Nhập một từ khóa phụ mỗi dòng.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="space-y-6">
+                      <FormField
+                          control={form.control}
+                          name="domain"
+                          render={({ field }) => (
+                          <FormItem>
+                              <FormLabel className="text-base font-semibold">Tên miền</FormLabel>
+                              <FormControl>
+                                <Input placeholder="https://example.com" {...field} className="py-6" />
+                              </FormControl>
+                              <div className="flex flex-wrap gap-2 pt-2">
+                                  {DOMAINS.map((domain) => (
+                                      <Button
+                                          key={domain}
+                                          type="button"
+                                          variant={field.value === `https://` + domain ? 'default' : 'outline'}
+                                          onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
+                                          className="transition-all duration-200 rounded-full px-2.5 py-1 h-auto text-xs"
+                                      >
+                                          {domain}
+                                      </Button>
+                                  ))}
+                              </div>
+                              <FormMessage />
+                          </FormItem>
+                          )}
+                      />
+                       <FormField
+                        control={form.control}
+                        name="value"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base font-semibold">Giá trị</FormLabel>
+                            <FormControl>
+                              <Input placeholder="ví dụ: CY" {...field} className="py-6"/>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                   <FormField
-                      control={form.control}
-                      name="domain"
-                      render={({ field }) => (
-                      <FormItem>
-                          <FormLabel>Tên miền</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://example.com" {...field} />
-                          </FormControl>
-                          <div className="flex flex-wrap gap-2 pt-2">
-                              {DOMAINS.map((domain) => (
-                                  <Button
-                                      key={domain}
-                                      type="button"
-                                      variant={field.value === `https://` + domain ? 'default' : 'outline'}
-                                      onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
-                                      className="transition-all duration-200 px-2.5 py-1 h-auto text-xs"
-                                  >
-                                      {domain}
-                                  </Button>
-                              ))}
-                          </div>
-                          <FormMessage />
-                      </FormItem>
-                      )}
-                  />
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="secondaryKeyword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Từ khóa phụ</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={4} />
-                        </FormControl>
-                        <FormDescription>
-                          Nhập một từ khóa phụ mỗi dòng.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
               </CardContent>
-              <CardFooter>
-                <Button type="submit" disabled={isLoading} className="w-full sm:w-auto text-lg py-6 px-8 group transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/30">
+              <CardFooter className="pt-6">
+                <Button type="submit" disabled={isLoading} className="w-full text-lg py-6 px-8 group transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/30">
                   {isLoading ? (
                       <>
                           <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
