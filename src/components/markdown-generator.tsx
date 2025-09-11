@@ -22,7 +22,7 @@ const FormSchema = z.object({
   value: z.string().min(1, 'Giá trị là bắt buộc.'),
 });
 
-const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "6677.one", "184.run"];
+const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "184.run", "6677.one"];
 const PRIMARY_KEYWORDS = ['黑料网', '六合彩内部资料', '六合'];
 
 export function MarkdownGenerator() {
