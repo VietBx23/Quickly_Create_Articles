@@ -1,25 +1,36 @@
 'use client';
 import { useState } from 'react';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Check, FileText } from 'lucide-react';
+import { Copy, Check, FileText, Clipboard, ClipboardCheck } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
+
+export interface MarkdownResultItem {
+  title: string;
+  content: string;
+}
 
 interface MarkdownResultProps {
-  content: string | null;
+  results: MarkdownResultItem[];
   isLoading: boolean;
 }
 
-export function MarkdownResult({ content, isLoading }: MarkdownResultProps) {
-  const [copied, setCopied] = useState(false);
+export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
+  const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
+  const { toast } = useToast();
 
-  const handleCopy = () => {
-    if (content) {
-      navigator.clipboard.writeText(content);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+  const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
+    navigator.clipboard.writeText(text);
+    const key = `${type}-${index}`;
+    setCopiedStates(prev => ({ ...prev, [key]: true }));
+    toast({
+        title: 'Copied!',
+        description: `${type === 'title' ? 'Title' : 'Content'} has been copied to your clipboard.`,
+    })
+    setTimeout(() => {
+      setCopiedStates(prev => ({ ...prev, [key]: false }));
+    }, 2000);
   };
   
   if (isLoading) {
@@ -30,13 +41,15 @@ export function MarkdownResult({ content, isLoading }: MarkdownResultProps) {
           <CardDescription>Please wait while we generate your content...</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Skeleton className="h-40 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
         </CardContent>
       </Card>
     );
   }
   
-  if (!content) {
+  if (results.length === 0) {
     return (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
@@ -52,23 +65,33 @@ export function MarkdownResult({ content, isLoading }: MarkdownResultProps) {
 
   return (
     <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-            <CardTitle>Your Generated Markdown</CardTitle>
-            <CardDescription>You can now copy the content below.</CardDescription>
-        </div>
-        <Button variant="outline" size="icon" onClick={handleCopy} aria-label="Copy to clipboard">
-          {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
-        </Button>
+      <CardHeader>
+        <CardTitle>Your Generated Markdown</CardTitle>
+        <CardDescription>You can now copy the title or content for each generated article.</CardDescription>
       </CardHeader>
       <CardContent>
-        <Textarea
-          readOnly
-          value={content}
-          className="min-h-[300px] resize-y font-code text-sm"
-          aria-label="Generated markdown content"
-        />
+        <div className="space-y-4">
+          {results.map((item, index) => (
+            <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-4">
+              <p className="flex-1 truncate font-medium pr-4" title={item.title}>
+                {item.title}
+              </p>
+              <div className="flex items-center space-x-2">
+                <Button variant="outline" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
+                  {copiedStates[`title-${index}`] ? <ClipboardCheck className="mr-2" /> : <Clipboard className="mr-2" />}
+                  {copiedStates[`title-${index}`] ? 'Copied' : 'Copy Title'}
+                </Button>
+                <Button variant="secondary" size="sm" onClick={() => handleCopy(item.content, 'content', index)}>
+                 {copiedStates[`content-${index}`] ? <ClipboardCheck className="mr-2" /> : <Copy className="mr-2" />}
+                  {copiedStates[`content-${index}`] ? 'Copied' : 'Copy Content'}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
 }
+
+    

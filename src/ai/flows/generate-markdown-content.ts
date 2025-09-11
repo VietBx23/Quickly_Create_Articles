@@ -24,7 +24,8 @@ export type GenerateMarkdownContentInput = z.infer<
 >;
 
 const GenerateMarkdownContentOutputSchema = z.object({
-  markdownContent: z.string().describe('The generated markdown content.'),
+  title: z.string().describe('The generated title.'),
+  content: z.string().describe('The generated markdown content.'),
 });
 
 export type GenerateMarkdownContentOutput = z.infer<
@@ -59,13 +60,6 @@ export async function generateMarkdownContent(
   return generateMarkdownContentFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'generateMarkdownContentPrompt',
-  input: {schema: GenerateMarkdownContentInputSchema},
-  output: {schema: GenerateMarkdownContentOutputSchema},
-  prompt: `使用以下信息生成markdown内容：\n\n主要关键字: {{{primaryKeyword}}}\n次要关键字: {{{secondaryKeyword}}}\n域名: {{{domain}}}\n值: {{{value}}}\n\n从以下模板中选择最合适的模板: \n\n${TEMPLATES.join('\n')}\n\n根据用户输入的信息, 使用所选模板生成markdown内容. 确保所有变量都被替换.`, // Corrected template joining
-});
-
 const generateMarkdownContentFlow = ai.defineFlow(
   {
     name: 'generateMarkdownContentFlow',
@@ -77,19 +71,20 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const title = `${input.primaryKeyword}-【链接地址：${input.domain}】${input.secondaryKeyword}-${today}`;
     const keywordsText = `${input.primaryKeyword}, ${input.secondaryKeyword}`;
 
-    const template = TEMPLATES[0]; // Select the first template
+    const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
+    const template = TEMPLATES[randomIndex];
 
     const content = template
-      .replace('{title}', title)
       .replace('{app}', input.primaryKeyword)
       .replace('{url}', '')
       .replace('{keywords_text}', keywordsText)
       .replace('{date}', today)
       .replace('{domain}', input.domain);
+    
+    const fullContent = content.replace('{title}', title)
 
-    //  const {output} = await prompt(input);
-    //  return output!;
-
-    return {markdownContent: content};
+    return {title: title, content: fullContent};
   }
 );
+
+    

@@ -14,7 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 
 import { handleGenerateMarkdown } from '@/app/actions';
-import { MarkdownResult } from './markdown-result';
+import { MarkdownResult, type MarkdownResultItem } from './markdown-result';
 import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z.object({
@@ -31,7 +31,7 @@ const PRIMARY_KEYWORDS = ['黑料网'];
 
 export function MarkdownGenerator() {
   const [isLoading, setIsLoading] = useState(false);
-  const [markdownContent, setMarkdownContent] = useState<string | null>(null);
+  const [results, setResults] = useState<MarkdownResultItem[]>([]);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -46,7 +46,7 @@ export function MarkdownGenerator() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
-    setMarkdownContent(null);
+    setResults([]);
 
     const secondaryKeywords = data.secondaryKeyword.split('\n').filter(kw => kw.trim() !== '');
     if (secondaryKeywords.length === 0) {
@@ -59,7 +59,7 @@ export function MarkdownGenerator() {
       return;
     }
 
-    const allMarkdown: string[] = [];
+    const allResults: MarkdownResultItem[] = [];
 
     for (const keyword of secondaryKeywords) {
       const result = await handleGenerateMarkdown({
@@ -68,7 +68,7 @@ export function MarkdownGenerator() {
       });
 
       if (result.success && result.data) {
-        allMarkdown.push(result.data);
+        allResults.push(result.data);
       } else {
         toast({
           variant: "destructive",
@@ -78,11 +78,11 @@ export function MarkdownGenerator() {
       }
     }
     
-    if (allMarkdown.length > 0) {
-      setMarkdownContent(allMarkdown.join('\n\n---\n\n'));
+    if (allResults.length > 0) {
+      setResults(allResults);
        toast({
         title: "Success!",
-        description: `Generated markdown for ${allMarkdown.length} keyword(s).`,
+        description: `Generated markdown for ${allResults.length} keyword(s).`,
       });
     }
 
@@ -196,8 +196,10 @@ export function MarkdownGenerator() {
         </Form>
       </Card>
       <div className="mt-8">
-        <MarkdownResult content={markdownContent} isLoading={isLoading} />
+        <MarkdownResult results={results} isLoading={isLoading} />
       </div>
     </>
   );
 }
+
+    

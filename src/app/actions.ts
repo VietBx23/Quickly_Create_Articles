@@ -1,11 +1,11 @@
 
 'use server';
 
-import { generateMarkdownContent, GenerateMarkdownContentInput } from '@/ai/flows/generate-markdown-content';
+import { generateMarkdownContent, GenerateMarkdownContentInput, GenerateMarkdownContentOutput } from '@/ai/flows/generate-markdown-content';
 
 export async function handleGenerateMarkdown(input: GenerateMarkdownContentInput): Promise<{
   success: boolean;
-  data?: string;
+  data?: GenerateMarkdownContentOutput;
   error?: string;
 }> {
   // Basic validation, client-side handles more.
@@ -15,9 +15,11 @@ export async function handleGenerateMarkdown(input: GenerateMarkdownContentInput
 
   try {
     const result = await generateMarkdownContent(input);
-    return { success: true, data: result.markdownContent };
+    return { success: true, data: result };
   } catch (error) {
     console.error('Error generating markdown:', error);
     return { success: false, error: 'An unexpected error occurred. Please try again.' };
   }
 }
+
+    
