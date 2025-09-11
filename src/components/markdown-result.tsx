@@ -16,84 +16,81 @@ interface MarkdownResultProps {
   isLoading: boolean;
 }
 
+const TitleWithLink = ({ title }: { title: string }) => {
+  const regex = /【链接地址：(.*?)】/;
+  const match = title.match(regex);
+
+  if (!match) {
+    return <>{title}</>;
+  }
+
+  const domain = match[1];
+  const url = `https://${domain}`;
+  const parts = title.split(match[0]);
+
+  return (
+    <>
+      {parts[0]}
+      {'【链接地址：'}
+      <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+        {domain}
+      </a>
+      {'】'}
+      {parts[1]}
+    </>
+  );
+};
+
 export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
 
+  const copyRichText = (htmlContent: string) => {
+    const listener = (e: ClipboardEvent) => {
+      e.preventDefault();
+      if (e.clipboardData) {
+        e.clipboardData.setData('text/html', htmlContent);
+        e.clipboardData.setData('text/plain', htmlContent.replace(/<[^>]*>?/gm, ''));
+      }
+    };
+    document.addEventListener('copy', listener);
+    document.execCommand('copy');
+    document.removeEventListener('copy', listener);
+  };
+  
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
+    let htmlToCopy = '';
 
-    if (type === 'content') {
-        const tempEl = document.createElement('div');
-        tempEl.innerHTML = text;
-        document.body.appendChild(tempEl);
-
-        const range = document.createRange();
-        range.selectNodeContents(tempEl);
-        const selection = window.getSelection();
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-
-        try {
-            document.execCommand('copy');
-            toast({
-                title: 'Đã sao chép vào Clipboard!',
-                description: 'Nội dung đã được sao chép dưới dạng văn bản đa dạng thức.',
-            });
-            setCopiedStates(prev => ({ ...prev, [key]: true }));
-            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        } catch (err) {
-            toast({
-                variant: 'destructive',
-                title: 'Sao chép thất bại',
-                description: 'Không thể sao chép nội dung.',
-            });
-        }
-
-        document.body.removeChild(tempEl);
-        selection?.removeAllRanges();
-
+    if (type === 'title') {
+      const regex = /【链接地址：(.*?)】/;
+      const match = text.match(regex);
+      if (match) {
+        const domain = match[1];
+        const url = `https://${domain}`;
+        htmlToCopy = text.replace(domain, `<a href="${url}" target="_blank">${domain}</a>`);
+      } else {
+        htmlToCopy = text;
+      }
     } else {
-        navigator.clipboard.writeText(text).then(() => {
-            setCopiedStates(prev => ({ ...prev, [key]: true }));
-            toast({
-                title: 'Đã sao chép vào Clipboard!',
-                description: 'Tiêu đề đã được sao chép thành công.',
-            });
-            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        }, () => {
-            toast({
-                variant: "destructive",
-                title: 'Sao chép thất bại',
-                description: 'Không thể sao chép tiêu đề.',
-            });
-        });
+      htmlToCopy = text;
     }
-  };
 
-  const TitleWithLink = ({ title }: { title: string }) => {
-    const regex = /【链接地址：(.*?)】/;
-    const match = title.match(regex);
-  
-    if (!match) {
-      return <>{title}</>;
+    try {
+      copyRichText(htmlToCopy);
+      setCopiedStates(prev => ({ ...prev, [key]: true }));
+      toast({
+        title: 'Đã sao chép vào Clipboard!',
+        description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
+      });
+      setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+    } catch (err) {
+      toast({
+        variant: 'destructive',
+        title: 'Sao chép thất bại',
+        description: 'Không thể sao chép nội dung.',
+      });
     }
-  
-    const domain = match[1];
-    const url = `https://${domain}`;
-    const parts = title.split(match[0]);
-  
-    return (
-      <>
-        {parts[0]}
-        {'【链接地址：'}
-        <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
-          {domain}
-        </a>
-        {'】'}
-        {parts[1]}
-      </>
-    );
   };
   
   if (isLoading) {
