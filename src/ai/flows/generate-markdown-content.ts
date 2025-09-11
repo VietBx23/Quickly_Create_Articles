@@ -54,6 +54,16 @@ const TEMPLATES = [
   `{title}\n\n🚀 永久收藏 - {app}{url} 官方导航更新\n\n您好！为了解决访问不稳定、链接经常变化的问题，我们特别建立了本官方导航页面，为您提供最新最全的可用链接。\n\n关键词：{keywords_text}\n页面更新日期：{date}\n\n🔗 当前有效访问入口：\n- [👉👉立即进入👈👈]({domain})\n\n📌 我们承诺：\n- 所有入口均经过严格检测，保证安全稳定。\n- 实时更新，避免访问中断。\n- 界面简洁，杜绝广告干扰。\n- 完全匿名，最大限度保护用户隐私。\n\n⚙️ 常见使用建议：\n- 建议收藏多个入口地址备用。\n- 访问出现问题时，请切换浏览器或清理缓存。\n- 若所在地区限制访问，请配合 VPN 使用。\n\n✨ 请务必收藏本页面，我们将持续为您更新最新地址，保障您的使用体验。感谢您的支持！`,
 ];
 
+function generateRandomString(length: number): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 export async function generateMarkdownContent(
   input: GenerateMarkdownContentInput
 ): Promise<GenerateMarkdownContentOutput> {
@@ -68,7 +78,8 @@ const generateMarkdownContentFlow = ai.defineFlow(
   },
   async input => {
     const today = new Date().toISOString().slice(0, 10);
-    const title = `${input.primaryKeyword}-【链接地址：${input.domain}】${input.secondaryKeyword}-${today}`;
+    const randomChars = generateRandomString(6);
+    const title = `${input.primaryKeyword}-【链接地址：${input.domain}】${input.secondaryKeyword}-${today}|${input.value}|881比鸭${randomChars}`;
     const keywordsText = `${input.primaryKeyword}, ${input.secondaryKeyword}`;
 
     const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
@@ -86,5 +97,3 @@ const generateMarkdownContentFlow = ai.defineFlow(
     return {title: title, content: fullContent};
   }
 );
-
-    
