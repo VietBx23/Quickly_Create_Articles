@@ -215,3 +215,5 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
+
+    
