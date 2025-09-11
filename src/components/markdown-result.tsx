@@ -56,11 +56,11 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       if (match) {
         const domain = match[1];
         const url = `https://${domain}`;
-        const linkedDomain = `<a href="${url}" style="color: black; text-decoration: underline;">${domain}</a>`;
-        htmlToCopy = text.replace(`【链接地址：${domain}】`, `【链接地址：${linkedDomain}】`);
+        const titleWithLink = text.replace(domain, `<a href="${url}">${domain}</a>`);
+        htmlToCopy = `<h1 style="font-size: 2rem; font-weight: bold; color: white;">${titleWithLink}</h1>`;
+      } else {
+        htmlToCopy = `<h1 style="font-size: 2rem; font-weight: bold; color: white;">${text}</h1>`;
       }
-      // Wrap the title in a styled span for copying
-      htmlToCopy = `<span style="font-size: 24px; color: white; background-color: #111;">${htmlToCopy}</span>`;
     }
     
     try {
@@ -139,7 +139,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4 overflow-hidden">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-semibold text-black break-all">
+                <p className="flex-1 font-semibold text-black break-all text-xl">
                   <TitleWithLink title={item.title} />
                 </p>
               </div>

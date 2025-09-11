@@ -37,8 +37,8 @@ const TEMPLATES = [
   `
     <p><strong>👋 欢迎来到 {app} 官方导航页！</strong></p>
     <p>尊敬的用户您好！为了让您能够轻松、快速地找到 {app} 的最新地址，我们特地建立了本官方导航页面。无论您是首次访问，还是长期使用我们的老用户，都能在这里第一时间获取最新、最稳定的访问链接。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>更新时间：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 更新时间：</strong> {date}</p>
     <p>以下是您当前可用的访问入口，强烈建议收藏多个备用链接，以防主链路出现故障：</p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉主站入口👈👈</a></h1>
     <p><strong>📌 我们的优势：</strong></p>
@@ -59,8 +59,8 @@ const TEMPLATES = [
   `
     <p><strong>🔥 {app} 最新可用地址合集！</strong></p>
     <p>随着网络限制日益增多，保证稳定访问优质内容成为我们最重要的目标。为此，我们精心整理并持续更新本页面，确保您可以第一时间获得 {app} 的最新可用地址。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>页面更新日期：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 页面更新日期：</strong> {date}</p>
     <p><strong>📍 当前可访问地址：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉主入口👈👈</a></h1>
     <p><strong>🌟 为什么选择我们？</strong></p>
@@ -82,8 +82,8 @@ const TEMPLATES = [
   `
     <p><strong>🚀 {app} 官方跳转入口说明</strong></p>
     <p>您好，欢迎访问由我们精心维护的 {app} 官方导航页面。本页面专门提供当前最新、最安全、最稳定的访问入口，确保您能顺畅浏览所有内容。</p>
-    <p><strong>关键词聚合：</strong> {keywords_text}</p>
-    <p><strong>日期：</strong> {date}</p>
+    <p><strong>🔑 关键词聚合：</strong> {keywords_text}</p>
+    <p><strong>📅 日期：</strong> {date}</p>
     <p><strong>🌍 可用地址一览：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉主站点👈👈</a></h1>
     <p><strong>📢 访问建议：</strong></p>
@@ -104,8 +104,8 @@ const TEMPLATES = [
   `
     <p><strong>🎉 {app} 最新导航页正式上线！</strong></p>
     <p>亲爱的用户您好！在网络环境复杂多变的今天，获取稳定可靠的访问链接尤为重要。我们特别推出了这一官方导航页，让您可以轻松获取 {app} 的最新地址，保证访问不受干扰。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>页面更新：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 页面更新：</strong> {date}</p>
     <p><strong>📍 当前可用地址：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉点击进入主站👈👈</a></h1>
     <p><strong>🏆 平台优势：</strong></p>
@@ -127,8 +127,8 @@ const TEMPLATES = [
   `
     <p><strong>🔥 永久收藏指南 {app} 官方直达！</strong></p>
     <p>您好！本页面为您提供 {app} 的最新地址，避免因网络封锁或链接失效带来困扰。通过本官方入口，您将能够第一时间获取最新、最稳定的访问方式。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>更新日期：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 更新日期：</strong> {date}</p>
     <p><strong>🌍 最新入口：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉立即进入👈👈</a></h1>
     <p><strong>📌 我们的服务优势：</strong></p>
@@ -149,8 +149,8 @@ const TEMPLATES = [
   `
     <p><strong>✨ {app} 官方推荐访问通道</strong></p>
     <p>欢迎访问 {app} 官方导航页！本页面收录最新有效的访问地址，帮助广大用户在任何情况下都能轻松进入平台，获取优质内容。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>更新时间：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 更新时间：</strong> {date}</p>
     <p><strong>🔗 可用链接入口：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉主入口地址👈👈</a></h1>
     <p><strong>📌 我们的特色：</strong></p>
@@ -169,8 +169,8 @@ const TEMPLATES = [
   `
     <p><strong>🚀 一键直达 {app} 官方最新通道</strong></p>
     <p>为了让广大用户第一时间获取 {app} 的最新地址，我们特别建立了本导航页，实时更新可用链接，确保访问流畅。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>页面更新：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 页面更新：</strong> {date}</p>
     <p><strong>📍 当前推荐访问入口：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉立即访问👈👈</a></h1>
     <p><strong>⭐ 优势说明：</strong></p>
@@ -189,8 +189,8 @@ const TEMPLATES = [
   `
     <p><strong>🔄 最新导航更新 {app}</strong></p>
     <p>感谢您一直以来对 {app} 的支持！为了确保您随时可以访问最新内容，我们建立了本页面并定期更新最新地址，帮助用户解决访问困难。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>更新日期：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 更新日期：</strong> {date}</p>
     <p><strong>🔗 当前有效链接：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉官方入口👈👈</a></h1>
     <p><strong>🏆 平台优势：</strong></p>
@@ -209,8 +209,8 @@ const TEMPLATES = [
   `
     <p><strong>📢 官方公告 {app} 最新直达</strong></p>
     <p>尊敬的用户您好！为了方便您随时找到 {app} 的最新地址，我们特别制作了此导航页，每日更新最新可用入口，保障您的访问体验。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>更新时间：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 更新时间：</strong> {date}</p>
     <p><strong>📍 最新推荐链接：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉点此进入👈👈</a></h1>
     <p><strong>🌟 我们的优势：</strong></p>
@@ -228,8 +228,8 @@ const TEMPLATES = [
   `
     <p><strong>⭐ 永久收藏 {app} 官方导航更新</strong></p>
     <p>您好！为了解决访问不稳定、链接经常变化的问题，我们特别建立了本官方导航页面，为您提供最新最全的可用链接。</p>
-    <p><strong>关键词：</strong> {keywords_text}</p>
-    <p><strong>页面更新日期：</strong> {date}</p>
+    <p><strong>🔑 关键词：</strong> {keywords_text}</p>
+    <p><strong>📅 页面更新日期：</strong> {date}</p>
     <p><strong>🔗 当前有效访问入口：</strong></p>
     <h1><a style="color: black; text-decoration: none;" href="{domain}">👉👉立即进入👈👈</a></h1>
     <p><strong>✨ 我们承诺：</strong></p>
@@ -274,7 +274,6 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const displayDomain = input.domain.replace(/^https?:\/\//, '');
     const title = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
     const keywordsText = `${input.primaryKeyword}, ${input.secondaryKeyword}`;
-
     const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
     let template = TEMPLATES[randomIndex];
     
@@ -285,7 +284,8 @@ const generateMarkdownContentFlow = ai.defineFlow(
       .replace(/{domain}/g, input.domain)
       .trim();
     
-    const fullContent = `<h2 style="font-size: 1.875rem; font-weight: 600;"><a href="${input.domain}" style="color: black; text-decoration: underline;">${input.primaryKeyword} -【链接地址：${displayDomain}】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}</a></h2>` + content;
+    const titleWithLink = `${input.primaryKeyword} -【链接地址：<a href="${input.domain}" style="color: black; text-decoration: underline;">${displayDomain}</a>】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
+    const fullContent = `<h2 style="font-size: 1.875rem; font-weight: 600;">${titleWithLink}</h2>` + content;
 
     return {title: title, content: fullContent};
   }
