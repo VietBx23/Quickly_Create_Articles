@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Check, FileText, Clipboard } from 'lucide-react';
+import { Copy, Check, FileText, Clipboard, ExternalLink } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 
 declare const ClipboardItem: any;
 
@@ -19,31 +21,19 @@ interface MarkdownResultProps {
   isLoading: boolean;
 }
 
-const TitleWithLink = ({ title }: { title: string }) => {
+const getDomainFromTitle = (title: string): string | null => {
   const regex = /【链接地址：(.*?)】/;
   const match = title.match(regex);
-
-  if (!match) {
-    return <>{title}</>;
+  if (match && match[1]) {
+    const domain = match[1];
+    if (domain.startsWith('https://')) {
+      return domain;
+    }
+    return `https://${domain}`;
   }
-  
-  const displayUrl = match[1];
-  const fullUrl = `https://${displayUrl.replace(/.*?:\/\//g, '')}`;
-
-  const parts = title.split(match[0]);
-
-  return (
-    <>
-      {parts[0]}
-      {'【链接地址：'}
-      <a href={fullUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
-        {displayUrl}
-      </a>
-      {'】'}
-      {parts[1]}
-    </>
-  );
+  return null;
 };
+
 
 export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
@@ -51,104 +41,25 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
 
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
-    let htmlToCopy = text;
-    let plainTextToCopy = text;
-
-    if (type === 'title') {
-      const titleWithHtmlLink = text.replace(/【链接地址：(.*?)】/, (match, domain) => {
-        const url = `https://${domain.replace(/.*?:\/\//g, '')}`;
-        return `【链接地址：<a href="${url}" style="color: #1155cc; text-decoration: underline;">${domain}</a>】`;
-      });
-      htmlToCopy = `<p style="font-size: 36px; font-weight: bold; color: white; text-align: center;">${titleWithHtmlLink}</p>`;
-    }
-    
-    if (typeof ClipboardItem !== 'undefined' && navigator.clipboard.write) {
-      try {
-          const clipboardItem = new ClipboardItem({
-              'text/html': new Blob([htmlToCopy], { type: 'text/html' }),
-              'text/plain': new Blob([plainTextToCopy], { type: 'text/plain' })
-          });
-
-          navigator.clipboard.write([clipboardItem]).then(
-              () => {
-                  setCopiedStates(prev => ({ ...prev, [key]: true }));
-                  toast({
-                      title: 'Đã sao chép vào Clipboard!',
-                      description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
-                  });
-                  setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-              },
-              (err) => {
-                  console.error('Copy failed (async)', err);
-                  fallbackCopy(htmlToCopy, plainTextToCopy, key, type);
-              }
-          );
-      } catch (err) {
-        console.error('ClipboardItem API failed, using fallback.', err);
-        fallbackCopy(htmlToCopy, plainTextToCopy, key, type);
+    navigator.clipboard.writeText(text).then(
+      () => {
+        setCopiedStates(prev => ({ ...prev, [key]: true }));
+        toast({
+          title: 'Đã sao chép vào Clipboard!',
+          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép dưới dạng văn bản thuần.`,
+        });
+        setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+      },
+      (err) => {
+        toast({
+          variant: 'destructive',
+          title: 'Sao chép thất bại',
+          description: 'Không thể sao chép nội dung. Vui lòng thử lại.',
+        });
+        console.error('Lỗi sao chép:', err);
       }
-    } else {
-        fallbackCopy(htmlToCopy, plainTextToCopy, key, type);
-    }
+    );
   };
-
-  const fallbackCopy = (htmlToCopy: string, plainText: string, key: string, type: 'title' | 'content') => {
-      const tempEl = document.createElement('div');
-      tempEl.style.position = 'absolute';
-      tempEl.style.left = '-9999px';
-      tempEl.innerHTML = htmlToCopy;
-      document.body.appendChild(tempEl);
-      
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNodeContents(tempEl);
-      
-      if(selection) {
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
-      
-      try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            setCopiedStates(prev => ({ ...prev, [key]: true }));
-            toast({
-                title: 'Đã sao chép vào Clipboard!',
-                description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
-            });
-            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        } else {
-            throw new Error('Fallback copy command failed');
-        }
-      } catch (e) {
-        const textArea = document.createElement("textarea");
-        textArea.value = plainText;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            setCopiedStates(prev => ({ ...prev, [key]: true }));
-            toast({
-                title: 'Đã sao chép vào Clipboard!',
-                description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} (dạng văn bản thuần) đã được sao chép.`,
-            });
-            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        } catch (err) {
-            toast({
-                variant: 'destructive',
-                title: 'Sao chép thất bại',
-                description: 'Không thể sao chép nội dung.',
-            });
-        }
-        document.body.removeChild(textArea);
-      } finally {
-        if (selection) {
-          selection.removeAllRanges();
-        }
-        document.body.removeChild(tempEl);
-      }
-  }
   
   if (isLoading) {
     return (
@@ -158,9 +69,13 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
           <CardDescription>Vui lòng đợi trong khi AI của chúng tôi tạo ra markdown hoàn hảo cho bạn.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 pt-4">
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-10 w-1/3" />
+          <div className="space-y-2 pt-4">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+
         </CardContent>
       </Card>
     );
@@ -181,34 +96,58 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   }
 
   return (
-    <Card className="w-full bg-card/80 backdrop-blur-sm">
+    <Card className="w-full bg-card/80 backdrop-blur-sm gradient-border-card">
       <CardHeader>
         <CardTitle>Markdown đã tạo của bạn</CardTitle>
-        <CardDescription>Bây giờ bạn có thể sao chép tiêu đề hoặc nội dung cho mỗi bài viết được tạo.</CardDescription>
+        <CardDescription>Chọn một tab để xem và sao chép nội dung tương ứng.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          {results.map((item, index) => (
-            <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
-              <div className="flex flex-1 items-center gap-4 overflow-hidden">
-                <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-semibold text-foreground break-all text-base">
-                  <TitleWithLink title={item.title} />
-                </p>
-              </div>
-              <div className="flex items-center space-x-2 pl-4">
-                <Button variant="ghost" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
-                  {copiedStates[`title-${index}`] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Clipboard className="mr-2 h-4 w-4" />}
-                  {copiedStates[`title-${index}`] ? 'Đã sao chép' : 'Sao chép tiêu đề'}
-                </Button>
-                <Button variant="secondary" size="sm" onClick={() => handleCopy(item.content, 'content', index)}>
-                 {copiedStates[`content-${index}`] ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Copy className="mr-2 h-4 w-4" />}
-                  {copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép nội dung'}
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Tabs defaultValue={`result-0`} className="w-full">
+          <TabsList className="grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {results.map((item, index) => (
+              <TabsTrigger key={`trigger-${index}`} value={`result-${index}`} className="truncate">
+                {item.title.split('-')[0]} - {item.title.split('-')[2]}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {results.map((item, index) => {
+            const domainUrl = getDomainFromTitle(item.title);
+            return (
+              <TabsContent key={`content-${index}`} value={`result-${index}`}>
+                <Card className="border-border/50">
+                   <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-xl font-bold leading-snug">{item.title}</CardTitle>
+                        {domainUrl && (
+                          <Button asChild variant="outline" size="sm">
+                            <a href={domainUrl} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="mr-2" />
+                              Truy cập liên kết
+                            </a>
+                          </Button>
+                        )}
+                      </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="prose prose-sm dark:prose-invert max-w-none border rounded-lg p-4 h-96 overflow-auto bg-background/50">
+                       <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 justify-end">
+                       <Button variant="outline" onClick={() => handleCopy(item.title, 'title', index)}>
+                          {copiedStates[`title-${index}`] ? <Check className="text-green-500" /> : <Clipboard />}
+                          {copiedStates[`title-${index}`] ? 'Đã sao chép tiêu đề' : 'Sao chép tiêu đề'}
+                        </Button>
+                        <Button variant="default" onClick={() => handleCopy(item.content, 'content', index)}>
+                          {copiedStates[`content-${index}`] ? <Check className="text-white" /> : <Copy />}
+                          {copiedStates[`content-${index}`] ? 'Đã sao chép nội dung' : 'Sao chép nội dung'}
+                        </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            )
+          })}
+        </Tabs>
       </CardContent>
     </Card>
   );
