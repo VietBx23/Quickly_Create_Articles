@@ -93,9 +93,9 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         <div className="space-y-3">
           {results.map((item, index) => (
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
-              <div className="flex flex-1 items-center gap-4 truncate">
+              <div className="flex flex-1 items-center gap-4">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 truncate font-medium" title={item.title}>
+                <p className="flex-1 font-medium text-sm" title={item.title}>
                   {item.title}
                 </p>
               </div>
