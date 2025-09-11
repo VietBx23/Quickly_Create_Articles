@@ -59,7 +59,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             const url = `https://${domain}`;
             titleWithLink = text.replace(domain, `<a href="${url}" style="color: white; text-decoration: underline;">${domain}</a>`);
         }
-        htmlToCopy = `<p style="font-size: 36px; font-weight: bold; color: white; text-align: center;">${titleWithLink}</p>`;
+        htmlToCopy = `<p style="font-size: 42px; font-weight: bold; color: white; text-align: center;">${titleWithLink}</p>`;
     }
     
     try {
