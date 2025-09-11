@@ -93,10 +93,13 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         <div className="space-y-4">
           {results.map((item, index) => (
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-4">
-              <p className="flex-1 truncate font-medium pr-4" title={item.title}>
-                {item.title}
-              </p>
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-1 items-center gap-4 truncate">
+                <span className="text-sm font-medium text-muted-foreground">{index + 1}.</span>
+                <p className="flex-1 truncate font-medium" title={item.title}>
+                  {item.title}
+                </p>
+              </div>
+              <div className="flex items-center space-x-2 pl-4">
                 <Button variant="outline" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
                   {copiedStates[`title-${index}`] ? <ClipboardCheck className="mr-2" /> : <Clipboard className="mr-2" />}
                   {copiedStates[`title-${index}`] ? 'Copied' : 'Copy Title'}
