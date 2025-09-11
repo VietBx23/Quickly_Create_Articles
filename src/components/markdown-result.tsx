@@ -51,15 +51,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let htmlToCopy = text;
 
     if (type === 'title') {
-        const regex = /【链接地址：(.*?)】/;
-        const match = text.match(regex);
-        let titleWithLink = text;
-        if (match) {
-            const domain = match[1];
-            const url = `https://${domain}`;
-            titleWithLink = text.replace(domain, `<a href="${url}" style="color: white; text-decoration: underline;">${domain}</a>`);
-        }
-        htmlToCopy = `<p style="font-size: 42px; font-weight: bold; color: white; text-align: center;">${titleWithLink}</p>`;
+      htmlToCopy = `<p style="font-size: 36px; font-weight: bold; color: white; text-align: center;">${text}</p>`;
     }
     
     try {
@@ -189,7 +181,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             <div key={index} className="flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:border-primary/50 hover:shadow-md">
               <div className="flex flex-1 items-center gap-4 overflow-hidden">
                 <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
-                <p className="flex-1 font-semibold text-black break-all text-xl">
+                <p className="flex-1 font-semibold text-black break-all text-base">
                   <TitleWithLink title={item.title} />
                 </p>
               </div>
