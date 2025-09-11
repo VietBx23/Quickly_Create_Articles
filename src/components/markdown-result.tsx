@@ -22,14 +22,22 @@ interface MarkdownResultProps {
 }
 
 const getDomainFromTitle = (title: string): string | null => {
-  const regex = /【链接地址：(.*?)】/;
-  const match = title.match(regex);
-  if (match && match[1]) {
-    const domain = match[1];
-    if (domain.startsWith('https://')) {
-      return domain;
-    }
-    return `https://${domain}`;
+  try {
+    const urlRegex = /(https?:\/\/[^\s]+)/;
+    const anchorTagRegex = /<a href="(.*?)"/;
+
+    let urlMatch = title.match(urlRegex);
+    if (urlMatch) return urlMatch[0];
+    
+    let anchorMatch = title.match(anchorTagRegex);
+    if (anchorMatch && anchorMatch[1]) return anchorMatch[1];
+    
+    const domainRegex = /[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+    let domainMatch = title.match(domainRegex);
+    if (domainMatch) return `https://${domainMatch[0]}`;
+
+  } catch (e) {
+      // In case of any regex error, just fail gracefully
   }
   return null;
 };
@@ -46,7 +54,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         setCopiedStates(prev => ({ ...prev, [key]: true }));
         toast({
           title: 'Đã sao chép vào Clipboard!',
-          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép dưới dạng văn bản thuần.`,
+          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
         });
         setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
       },
@@ -103,9 +111,9 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue={`result-0`} className="w-full">
-          <TabsList className="grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <TabsList className="grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 h-auto">
             {results.map((item, index) => (
-              <TabsTrigger key={`trigger-${index}`} value={`result-${index}`} className="truncate">
+              <TabsTrigger key={`trigger-${index}`} value={`result-${index}`} className="truncate px-4 py-2 text-sm">
                 {item.title.split('-')[0]} - {item.title.split('-')[2]}
               </TabsTrigger>
             ))}
@@ -114,14 +122,14 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             const domainUrl = getDomainFromTitle(item.title);
             return (
               <TabsContent key={`content-${index}`} value={`result-${index}`}>
-                <Card className="border-border/50">
+                <Card className="border-border/50 shadow-inner bg-background/30">
                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <CardTitle className="text-xl font-bold leading-snug">{item.title}</CardTitle>
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                        <CardTitle className="text-xl font-bold leading-snug flex-1">{item.title}</CardTitle>
                         {domainUrl && (
                           <Button asChild variant="outline" size="sm">
                             <a href={domainUrl} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="mr-2" />
+                              <ExternalLink className="mr-2 h-4 w-4" />
                               Truy cập liên kết
                             </a>
                           </Button>
@@ -129,17 +137,17 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                       </div>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <div className="prose prose-sm dark:prose-invert max-w-none border rounded-lg p-4 h-96 overflow-auto bg-background/50">
+                    <div className="prose prose-sm dark:prose-invert max-w-none border rounded-lg p-4 h-96 overflow-auto bg-background/50 backdrop-blur-sm">
                        <div dangerouslySetInnerHTML={{ __html: item.content }} />
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 justify-end">
-                       <Button variant="outline" onClick={() => handleCopy(item.title, 'title', index)}>
-                          {copiedStates[`title-${index}`] ? <Check className="text-green-500" /> : <Clipboard />}
-                          {copiedStates[`title-${index}`] ? 'Đã sao chép tiêu đề' : 'Sao chép tiêu đề'}
+                       <Button variant="outline" onClick={() => handleCopy(item.title, 'title', index)} className="gap-2">
+                          {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
+                          {copiedStates[`title-${index}`] ? 'Đã sao chép' : 'Sao chép tiêu đề'}
                         </Button>
-                        <Button variant="default" onClick={() => handleCopy(item.content, 'content', index)}>
-                          {copiedStates[`content-${index}`] ? <Check className="text-white" /> : <Copy />}
-                          {copiedStates[`content-${index}`] ? 'Đã sao chép nội dung' : 'Sao chép nội dung'}
+                        <Button variant="default" onClick={() => handleCopy(item.content, 'content', index)} className="gap-2">
+                          {copiedStates[`content-${index}`] ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                          {copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép nội dung'}
                         </Button>
                     </div>
                   </CardContent>
