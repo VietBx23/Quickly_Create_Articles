@@ -112,6 +112,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     outputSchema: GenerateMarkdownContentOutputSchema,
   },
   async input => {
+    // This function is now defined and called within the flow to avoid hydration issues.
     function generateRandomString(length: number): string {
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
@@ -122,11 +123,14 @@ const generateMarkdownContentFlow = ai.defineFlow(
       return result;
     }
     
+    // All random or date-based logic is now inside the flow.
     const today = new Date().toISOString().slice(0, 10);
     const randomChars = generateRandomString(6);
     const displayDomain = input.domain.replace(/^https?:\/\//, '');
     const title = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
     const keywordsText = `${input.primaryKeyword}, ${input.secondaryKeyword}`;
+    
+    // Random template selection is now inside the flow.
     const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
     let template = TEMPLATES[randomIndex];
     
@@ -143,3 +147,5 @@ const generateMarkdownContentFlow = ai.defineFlow(
     return {title: title, content: fullContent};
   }
 );
+
+    
