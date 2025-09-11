@@ -14,7 +14,7 @@ import {z} from 'genkit';
 import * as os from 'os';
 
 const GenerateMarkdownContentInputSchema = z.object({
-  primaryKeyword: z.enum(['黑料网', '六合']).describe('The primary keyword.'),
+  primaryKeyword: z.string().describe('The primary keyword.'),
   secondaryKeyword: z.string().describe('The secondary keyword.'),
   domain: z.string().describe('The domain to use in the markdown content.'),
   value: z.string().describe('A user-defined value to include in the markdown content.'),

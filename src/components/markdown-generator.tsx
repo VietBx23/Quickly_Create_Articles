@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sparkles } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -17,16 +16,14 @@ import { MarkdownResult, type MarkdownResultItem } from './markdown-result';
 import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z.object({
-  primaryKeyword: z.enum(['黑料网', '六合'], {
-    required_error: "Vui lòng chọn một từ khóa chính."
-  }),
+  primaryKeyword: z.string().min(1, 'Vui lòng nhập hoặc chọn một từ khóa chính.'),
   secondaryKeyword: z.string().min(1, 'Cần ít nhất một từ khóa phụ.'),
   domain: z.string().min(1, 'Vui lòng chọn một tên miền.'),
   value: z.string().min(1, 'Giá trị là bắt buộc.'),
 });
 
 const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "6677.one"];
-const PRIMARY_KEYWORDS = ['黑料网', '六合'];
+const PRIMARY_KEYWORDS = ['黑料网', '六合彩内部资料'];
 
 export function MarkdownGenerator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -109,24 +106,28 @@ export function MarkdownGenerator() {
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <CardContent className="grid gap-6">
                  <div className="grid gap-6 sm:grid-cols-2">
-                   <FormField
+                    <FormField
                       control={form.control}
                       name="primaryKeyword"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Từ khóa chính</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Chọn một từ khóa chính" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {PRIMARY_KEYWORDS.map(keyword => (
-                                  <SelectItem key={keyword} value={keyword}>{keyword}</SelectItem>
+                           <FormControl>
+                              <Input placeholder="Nhập từ khóa chính của bạn" {...field} />
+                          </FormControl>
+                          <div className="flex flex-wrap gap-2 pt-2">
+                              {PRIMARY_KEYWORDS.map((keyword) => (
+                                  <Button
+                                      key={keyword}
+                                      type="button"
+                                      variant={field.value === keyword ? 'default' : 'outline'}
+                                      onClick={() => form.setValue('primaryKeyword', keyword, { shouldValidate: true })}
+                                      className="transition-all duration-200 px-3 py-1 h-auto text-xs"
+                                  >
+                                      {keyword}
+                                  </Button>
                               ))}
-                            </SelectContent>
-                          </Select>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
