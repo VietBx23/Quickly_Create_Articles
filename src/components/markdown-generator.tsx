@@ -92,8 +92,8 @@ export function MarkdownGenerator() {
 
   return (
     <>
-      <div className="relative p-px rounded-lg bg-gradient-to-b from-primary/20 to-transparent">
-        <Card className="w-full shadow-2xl shadow-primary/10">
+      <div className="relative">
+        <Card className="w-full bg-card/95 backdrop-blur-sm shadow-2xl shadow-primary/10">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <CardHeader>
