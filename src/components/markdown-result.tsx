@@ -52,6 +52,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
     let htmlToCopy = text;
+    let plainTextToCopy = text;
 
     if (type === 'title') {
       const titleWithHtmlLink = text.replace(/【链接地址：(.*?)】/, (match, domain) => {
@@ -61,29 +62,34 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       htmlToCopy = `<p style="font-size: 36px; font-weight: bold; color: white; text-align: center;">${titleWithHtmlLink}</p>`;
     }
     
-    try {
-        const clipboardItem = new ClipboardItem({
-            'text/html': new Blob([htmlToCopy], { type: 'text/html' }),
-            'text/plain': new Blob([text], { type: 'text/plain' })
-        });
+    // The ClipboardItem API requires a secure context (HTTPS)
+    if (typeof ClipboardItem !== 'undefined' && navigator.clipboard.write) {
+      try {
+          const clipboardItem = new ClipboardItem({
+              'text/html': new Blob([htmlToCopy], { type: 'text/html' }),
+              'text/plain': new Blob([plainTextToCopy], { type: 'text/plain' })
+          });
 
-        navigator.clipboard.write([clipboardItem]).then(
-            () => {
-                setCopiedStates(prev => ({ ...prev, [key]: true }));
-                toast({
-                    title: 'Đã sao chép vào Clipboard!',
-                    description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
-                });
-                setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-            },
-            (err) => {
-                console.error('Copy failed (async)', err);
-                fallbackCopy(htmlToCopy, text, key, type);
-            }
-        );
-    } catch (err) {
-      console.error('ClipboardItem API not supported, using fallback.', err);
-      fallbackCopy(htmlToCopy, text, key, type);
+          navigator.clipboard.write([clipboardItem]).then(
+              () => {
+                  setCopiedStates(prev => ({ ...prev, [key]: true }));
+                  toast({
+                      title: 'Đã sao chép vào Clipboard!',
+                      description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
+                  });
+                  setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+              },
+              (err) => {
+                  console.error('Copy failed (async)', err);
+                  fallbackCopy(htmlToCopy, plainTextToCopy, key, type);
+              }
+          );
+      } catch (err) {
+        console.error('ClipboardItem API failed, using fallback.', err);
+        fallbackCopy(htmlToCopy, plainTextToCopy, key, type);
+      }
+    } else {
+        fallbackCopy(htmlToCopy, plainTextToCopy, key, type);
     }
   };
 
