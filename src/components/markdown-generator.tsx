@@ -159,7 +159,7 @@ export function MarkdownGenerator() {
                                           type="button"
                                           variant={field.value === `https://` + domain ? 'default' : 'outline'}
                                           onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
-                                          className="transition-all duration-200"
+                                          className="transition-all duration-200 px-3 py-1 h-auto text-xs"
                                       >
                                           {domain}
                                       </Button>
