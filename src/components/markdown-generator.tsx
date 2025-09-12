@@ -56,22 +56,19 @@ export function MarkdownGenerator() {
       setIsLoading(false);
       return;
     }
+    
+    let successfulCount = 0;
 
-    const generationPromises = secondaryKeywords.map(keyword =>
-      handleGenerateMarkdown({
-        ...data,
-        secondaryKeyword: keyword,
-      }).then(result => ({ result, keyword }))
-    );
+    for (const keyword of secondaryKeywords) {
+      try {
+        const result = await handleGenerateMarkdown({
+          ...data,
+          secondaryKeyword: keyword,
+        });
 
-    try {
-      const promiseResults = await Promise.all(generationPromises);
-      
-      const successfulResults: MarkdownResultItem[] = [];
-      
-      promiseResults.forEach(({ result, keyword }) => {
         if (result.success && result.data) {
-          successfulResults.push(result.data);
+          setResults(prevResults => [...prevResults, result.data!]);
+          successfulCount++;
         } else {
           toast({
             variant: "destructive",
@@ -79,35 +76,35 @@ export function MarkdownGenerator() {
             description: result.error || "Đã xảy ra lỗi không xác định.",
           });
         }
-      });
-
-      if (successfulResults.length > 0) {
-        setResults(successfulResults);
+      } catch (error) {
         toast({
-          title: "Thành công!",
-          description: `Đã tạo markdown cho ${successfulResults.length} từ khóa.`,
-        });
+            variant: "destructive",
+            title: `Tạo thất bại cho "${keyword}"`,
+            description: "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại.",
+          });
+        console.error(`Generation error for ${keyword}:`, error);
       }
-    } catch (error) {
-       toast({
-        variant: "destructive",
-        title: "Lỗi hàng loạt",
-        description: "Đã xảy ra lỗi khi xử lý nhiều yêu cầu. Vui lòng thử lại.",
-      });
-      console.error('Batch generation error:', error);
     }
+
+    if (successfulCount > 0) {
+        toast({
+          title: "Hoàn thành!",
+          description: `Đã tạo thành công markdown cho ${successfulCount} trên ${secondaryKeywords.length} từ khóa.`,
+        });
+    }
+
 
     setIsLoading(false);
   }
 
   return (
     <>
-      <Card className="w-full shadow-lg">
+      <Card className="w-full shadow-lg bg-card/60 backdrop-blur-xl border-border/20">
           <CardHeader className="text-center">
              <h1 className="text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-orange-400 to-amber-500">
                 Markdown Generator Pro
              </h1>
-            <CardDescription className="pt-2">
+            <CardDescription className="pt-2 text-foreground/80">
               Tạo nội dung markdown tùy chỉnh ngay lập tức. Chỉ cần cung cấp từ khóa, tên miền và giá trị của bạn để bắt đầu.
             </CardDescription>
           </CardHeader>
@@ -234,7 +231,7 @@ export function MarkdownGenerator() {
         </Card>
       {hasGenerated && (
         <div className="mt-8 w-full">
-            <MarkdownResult results={results} isLoading={isLoading} />
+            <MarkdownResult results={results} isLoading={isLoading && results.length === 0} />
         </div>
       )}
     </>

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Copy, Check } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 
 declare const ClipboardItem: any;
 
@@ -46,14 +47,21 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   
   if (isLoading) {
     return (
-      <Card>
+      <Card className="bg-card/60 backdrop-blur-xl border-border/20">
         <CardHeader>
           <CardTitle>Đang tạo nội dung của bạn...</CardTitle>
           <CardDescription>Vui lòng đợi trong khi AI của chúng tôi tạo ra markdown hoàn hảo cho bạn.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <Skeleton className="h-8 w-1/3" />
-          <Skeleton className="h-20 w-full" />
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-1/3" />
+            <Skeleton className="h-4 w-4/5" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-1/2" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
         </CardContent>
       </Card>
     );
@@ -64,40 +72,41 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   }
 
   return (
-    <Card>
+    <Card className="bg-card/60 backdrop-blur-xl border-border/20">
       <CardHeader>
         <CardTitle>Markdown đã tạo của bạn</CardTitle>
-        <CardDescription>Đây là nội dung được tạo dựa trên thông tin bạn cung cấp. Bạn có thể sao chép tiêu đề hoặc nội dung đầy đủ.</CardDescription>
+        <CardDescription>Đây là nội dung được tạo. Nhấp vào một mục để xem và sao chép nội dung.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <Accordion type="single" collapsible className="w-full">
           {results.map((item, index) => (
-            <div key={index} className="border-t pt-4">
-              <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-semibold">{item.title}</h3>
-                  <Button variant="ghost" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
-                    {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    <span className="ml-2">{copiedStates[`title-${index}`] ? 'Đã sao chép' : 'Sao chép Tiêu đề'}</span>
-                  </Button>
-              </div>
-              <div className="p-4 bg-muted rounded-md relative">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute top-2 right-2"
-                  onClick={() => handleCopy(item.content, 'content', index)}
-                >
-                  {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                  <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
-                </Button>
-                <div 
-                    className="prose prose-sm dark:prose-invert max-w-none" 
-                    dangerouslySetInnerHTML={{ __html: item.content }}
-                />
-              </div>
-            </div>
+            <AccordionItem value={`item-${index}`} key={index}>
+              <AccordionTrigger>{item.title}</AccordionTrigger>
+              <AccordionContent>
+                <div className="p-4 bg-muted/50 rounded-md relative mt-2">
+                   <div className="flex justify-end gap-2 mb-2">
+                     <Button variant="ghost" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
+                        {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        <span className="ml-2">{copiedStates[`title-${index}`] ? 'Đã sao chép' : 'Sao chép Tiêu đề'}</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCopy(item.content, 'content', index)}
+                      >
+                        {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
+                      </Button>
+                   </div>
+                  <div 
+                      className="prose prose-sm dark:prose-invert max-w-none rounded-md border border-border/20 p-4" 
+                      dangerouslySetInnerHTML={{ __html: item.content }}
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
       </CardContent>
     </Card>
   );
