@@ -102,9 +102,9 @@ export function MarkdownGenerator() {
 
   return (
     <>
-      <Card className="w-full">
+      <Card className="w-full bg-card/60 backdrop-blur-xl border-border/20 shadow-lg">
           <CardHeader className="text-center">
-             <h1 className="text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-orange-400">
+             <h1 className="text-4xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-fuchsia-500">
                 Markdown Generator Pro
              </h1>
             <CardDescription className="pt-2 text-muted-foreground/90">
@@ -124,7 +124,7 @@ export function MarkdownGenerator() {
                           <div className="relative">
                             <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="Nhập từ khóa chính của bạn" {...field} className="pl-10 h-12" />
+                                <Input placeholder="Nhập từ khóa chính của bạn" {...field} className="pl-10 h-12 bg-background/50" />
                             </FormControl>
                           </div>
                           <div className="flex flex-wrap gap-2 pt-2">
@@ -134,6 +134,7 @@ export function MarkdownGenerator() {
                                       type="button"
                                       variant={field.value === keyword ? 'default' : 'outline'}
                                       onClick={() => form.setValue('primaryKeyword', keyword, { shouldValidate: true })}
+                                      className="bg-transparent"
                                   >
                                       {keyword}
                                   </Button>
@@ -152,7 +153,7 @@ export function MarkdownGenerator() {
                           <div className="relative">
                             <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                              <Input placeholder="ví dụ: CY" {...field} className="pl-10 h-12" />
+                              <Input placeholder="ví dụ: CY" {...field} className="pl-10 h-12 bg-background/50" />
                             </FormControl>
                           </div>
                           <FormMessage />
@@ -169,7 +170,7 @@ export function MarkdownGenerator() {
                             <div className="relative">
                               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                               <FormControl>
-                                <Input placeholder="https://example.com" {...field} className="pl-10 h-12" />
+                                <Input placeholder="https://example.com" {...field} className="pl-10 h-12 bg-background/50" />
                               </FormControl>
                             </div>
                             <div className="flex flex-wrap gap-2 pt-2">
@@ -179,6 +180,7 @@ export function MarkdownGenerator() {
                                         type="button"
                                         variant={field.value === `https://` + domain ? 'default' : 'outline'}
                                         onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
+                                        className="bg-transparent"
                                     >
                                         {domain}
                                     </Button>
@@ -197,7 +199,7 @@ export function MarkdownGenerator() {
                         <div className="relative">
                           <List className="absolute left-3 top-4 h-5 w-5 text-muted-foreground" />
                           <FormControl>
-                            <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={5} className="pl-10 pt-3" />
+                            <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={5} className="pl-10 pt-3 bg-background/50" />
                           </FormControl>
                         </div>
                         <FormDescription>
