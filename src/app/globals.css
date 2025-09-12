@@ -76,15 +76,5 @@
       radial-gradient(circle at 10% 20%, hsl(var(--primary) / 0.1), transparent 25%),
       radial-gradient(circle at 85% 30%, hsl(var(--primary) / 0.1), transparent 25%),
       radial-gradient(circle at 25% 85%, hsl(var(--primary) / 0.05), transparent 20%);
-    animation: move-glow 30s linear infinite;
-  }
-}
-
-@keyframes move-glow {
-  0% {
-    background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%;
-  }
-  100% {
-    background-position: 300% 300%, 150% 200%, -100% 180%, 250% -120%;
   }
 }
