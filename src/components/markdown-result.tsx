@@ -19,28 +19,32 @@ interface MarkdownResultProps {
 }
 
 const TitleWithClickableLink = ({ title }: { title: string }) => {
-    const regex = /(【链接地址：)(.*?)(】)/;
-    const parts = title.split(regex);
-    
-    if (parts.length > 3) {
-      const url = `https://${parts[2]}`;
-      return (
-        <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
-          {parts[0]}
-          {parts[1]}
-          <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
-            {parts[2]}
-          </a>
-          {parts[3]}
-          {parts.slice(4).join('')}
-        </p>
-      );
+    const regex = /(【链接地址：)([^】]+)(】)/;
+    const match = title.match(regex);
+
+    if (match) {
+        const prefix = title.substring(0, match.index);
+        const linkText = match[1] + match[2] + match[3];
+        const suffix = title.substring(match.index! + linkText.length);
+        const url = `https://${match[2]}`;
+
+        return (
+            <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
+                {prefix}
+                {match[1]}
+                <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+                    {match[2]}
+                </a>
+                {match[3]}
+                {suffix}
+            </p>
+        );
     }
-  
+
     return (
-      <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
-        {title}
-      </p>
+        <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
+            {title}
+        </p>
     );
 };
 
