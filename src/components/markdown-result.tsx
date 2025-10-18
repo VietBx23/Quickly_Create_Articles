@@ -34,7 +34,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
             <p className="p-3 bg-muted/30 rounded-md break-all text-lg text-foreground">
                 {prefix}
                 {linkPrefix}
-                <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+                <a href={url} target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:text-foreground/80">
                     {domain}
                 </a>
                 {linkSuffix}
@@ -66,13 +66,11 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
       if (match) {
         const domain = match[2];
         const url = domain.startsWith('http') ? domain : `https://${domain}`;
-        const link = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
-        // Escape characters for the replacement string
-        const escapedPrefix = match[1].replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const escapedDomain = match[2].replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const escapedSuffix = match[3].replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        const replacementRegex = new RegExp(`${escapedPrefix}${escapedDomain}${escapedSuffix}`);
-        htmlToCopy = text.replace(replacementRegex, `${match[1]}${link}${match[3]}`);
+        const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
+        
+        // This is a safer way to do replacement with special chars
+        const fullMatch = match[0];
+        htmlToCopy = text.replace(fullMatch, `${match[1]}${linkHtml}${match[3]}`);
       }
       
       try {
