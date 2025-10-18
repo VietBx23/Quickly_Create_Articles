@@ -26,11 +26,12 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let textToCopy = text;
 
     if (type === 'content') {
-        // Create a temporary div to render the HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = text;
-        // Get the plain text content
-        textToCopy = tempDiv.innerText || tempDiv.textContent || '';
+        // Replace </p> with a newline, then strip all other HTML tags
+        textToCopy = text
+            .replace(/<\/p>/gi, '\n') // Ensure paragraph breaks become newlines
+            .replace(/<br\s*\/?>/gi, '\n') // Handle <br> tags
+            .replace(/<[^>]+>/g, '') // Strip all other tags
+            .trim(); // Clean up any leading/trailing whitespace
     }
 
     navigator.clipboard.writeText(textToCopy).then(
@@ -119,5 +120,3 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
-
-    
