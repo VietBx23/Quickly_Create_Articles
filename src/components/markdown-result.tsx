@@ -59,53 +59,50 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     const key = `${type}-${index}`;
     
     if (type === 'title') {
-        const regex = /(【链接地址：)([^】]+)(】)/;
-        const match = text.match(regex);
-        
-        // Escape the base text first
-        let htmlContent = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const regex = /(【链接地址：)([^】]+)(】)/;
+      const match = text.match(regex);
+      let htmlContent = text;
 
-        if (match) {
-            const domain = match[2];
-            const url = domain.startsWith('http') ? domain : `https://${domain}`;
-            // The link should also be white and underlined
-            const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #FFFFFF; text-decoration: underline;">${domain}</a>`;
-            const escapedMatch = match[0].replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            htmlContent = htmlContent.replace(escapedMatch, `【链接地址：${linkHtml}】`);
-        }
+      if (match) {
+          const domain = match[2];
+          const url = domain.startsWith('http') ? domain : `https://${domain}`;
+          const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #FFFFFF; text-decoration: underline;">${domain}</a>`;
+          htmlContent = text.replace(match[0], `【链接地址：${linkHtml}】`);
+      }
 
-        // Wrap the entire content in a span with white color style
-        const htmlToCopy = `<span style="color: #FFFFFF;">${htmlContent}</span>`;
+      const finalHtml = `<span style="color: #FFFFFF;">${htmlContent}</span>`;
       
       try {
-        const blob = new Blob([htmlToCopy], { type: 'text/html' });
-        const clipboardItem = new ClipboardItem({ 'text/html': blob });
+        const htmlBlob = new Blob([finalHtml], { type: 'text/html' });
+        const textBlob = new Blob([text], { type: 'text/plain' });
+        
+        const clipboardItem = new ClipboardItem({
+            'text/html': htmlBlob,
+            'text/plain': textBlob,
+        });
 
         navigator.clipboard.write([clipboardItem]).then(() => {
           setCopiedStates(prev => ({ ...prev, [key]: true }));
           toast({
             title: '已复制到剪贴板！',
-            description: `标题内容已复制为 HTML。`,
+            description: `标题已复制。`,
           });
           setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        }, () => {
-           // Fallback to plain text if HTML copy fails
-           navigator.clipboard.writeText(text).then(() => {
-                setCopiedStates(prev => ({ ...prev, [key]: true }));
-                toast({
-                    title: '已复制为纯文本！',
-                    description: `标题内容已复制。`,
-                });
-                setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-           });
+        }, (err) => {
+          toast({
+            variant: 'destructive',
+            title: '复制失败',
+            description: '无法将内容复制到剪贴板。',
+          });
+          console.error('Clipboard write failed:', err);
         });
       } catch (e) {
           toast({
             variant: 'destructive',
             title: '复制失败',
-            description: '无法复制内容。请再试一次。',
+            description: '您的浏览器可能不支持此操作。',
           });
-          console.error('Clipboard API 错误:', e);
+          console.error('Clipboard API error:', e);
       }
       return;
     }
