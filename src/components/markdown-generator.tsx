@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z.object({
   primaryKeyword: z.string().min(1, 'Vui lòng nhập hoặc chọn một từ khóa chính.'),
-  secondaryKeyword: z.string().min(1, 'Cần ít nhất một từ khóa phụ.'),
+  secondaryKeywords: z.string().min(1, 'Cần ít nhất một từ khóa phụ.'),
   domain: z.string().min(1, 'Vui lòng nhập hoặc chọn một tên miền.').url('Vui lòng nhập một URL hợp lệ.'),
   value: z.string().min(1, 'Giá trị là bắt buộc.'),
 });
@@ -37,6 +37,15 @@ const defaultSecondaryKeywords = [
   "欧美自拍亚洲综合丝袜"
 ].join('\n');
 
+function chunkArray<T>(array: T[], size: number): T[][] {
+    const chunkedArr: T[][] = [];
+    for (let i = 0; i < array.length; i += size) {
+        chunkedArr.push(array.slice(i, i + size));
+    }
+    return chunkedArr;
+}
+
+
 export function MarkdownGenerator() {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<MarkdownResultItem[]>([]);
@@ -47,7 +56,7 @@ export function MarkdownGenerator() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       primaryKeyword: '黑料网',
-      secondaryKeyword: defaultSecondaryKeywords,
+      secondaryKeywords: defaultSecondaryKeywords,
       domain: 'https://za51.run',
       value: '',
     },
@@ -58,8 +67,8 @@ export function MarkdownGenerator() {
     setResults([]);
     setHasGenerated(true);
 
-    const secondaryKeywords = data.secondaryKeyword.split('\n').filter(kw => kw.trim() !== '');
-    if (secondaryKeywords.length === 0) {
+    const allSecondaryKeywords = data.secondaryKeywords.split('\n').map(kw => kw.trim()).filter(kw => kw !== '');
+    if (allSecondaryKeywords.length === 0) {
       toast({
         variant: "destructive",
         title: "Xác thực thất bại",
@@ -69,13 +78,18 @@ export function MarkdownGenerator() {
       return;
     }
     
+    const keywordGroups = chunkArray(allSecondaryKeywords, 3);
     let successfulCount = 0;
 
-    for (const keyword of secondaryKeywords) {
+    for (const group of keywordGroups) {
+      if (group.length === 0) continue;
+
       try {
         const result = await handleGenerateMarkdown({
-          ...data,
-          secondaryKeyword: keyword,
+          primaryKeyword: data.primaryKeyword,
+          secondaryKeywords: group,
+          domain: data.domain,
+          value: data.value,
         });
 
         if (result.success && result.data) {
@@ -84,24 +98,24 @@ export function MarkdownGenerator() {
         } else {
           toast({
             variant: "destructive",
-            title: `Tạo thất bại cho "${keyword}"`,
+            title: `Tạo thất bại cho nhóm: "${group.join(', ')}"`,
             description: result.error || "Đã xảy ra lỗi không xác định.",
           });
         }
       } catch (error) {
         toast({
             variant: "destructive",
-            title: `Tạo thất bại cho "${keyword}"`,
+            title: `Tạo thất bại cho nhóm: "${group.join(', ')}"`,
             description: "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại.",
           });
-        console.error(`Generation error for ${keyword}:`, error);
+        console.error(`Generation error for group ${group.join(', ')}:`, error);
       }
     }
 
     if (successfulCount > 0) {
         toast({
           title: "Hoàn thành!",
-          description: `Đã tạo thành công markdown cho ${successfulCount} trên ${secondaryKeywords.length} từ khóa.`,
+          description: `Đã tạo thành công markdown cho ${successfulCount} trên ${keywordGroups.length} nhóm từ khóa.`,
         });
     }
 
@@ -199,7 +213,7 @@ export function MarkdownGenerator() {
                     />
                   <FormField
                     control={form.control}
-                    name="secondaryKeyword"
+                    name="secondaryKeywords"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Từ khóa phụ</FormLabel>
@@ -210,7 +224,7 @@ export function MarkdownGenerator() {
                           </FormControl>
                         </div>
                         <FormDescription>
-                          Nhập một từ khóa phụ mỗi dòng.
+                          Nhập một từ khóa phụ mỗi dòng. Hệ thống sẽ nhóm 3 từ khóa một để tạo bài viết.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -249,5 +263,3 @@ export function MarkdownGenerator() {
     </>
   );
 }
-
-    
