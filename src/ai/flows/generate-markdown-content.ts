@@ -56,13 +56,19 @@ const MIDDLE_BLOCKS = [
     (pk: string, sks: string[]) => `<p>🌍 Sự khác biệt của <strong>${pk}</strong> nằm ở cam kết về chất lượng và sự đa dạng. Chúng tôi hiểu mỗi người có một sở thích riêng, và kho nội dung về ${sks[0]} của chúng tôi phản ánh điều đó.</p><p>Dù bạn muốn giải trí nhanh với ${sks[1]} hay đắm chìm trong những câu chuyện của ${sks[2]}, chúng tôi đều đáp ứng được.</p>`,
     (pk: string, sks: string[]) => `<p>📈 Chúng tôi tạo ra một hệ sinh thái giải trí toàn diện tại <strong>${pk}</strong>. Bạn có thể tham gia thảo luận về ${sks[0]} và chia sẻ khoảnh khắc yêu thích.</p><p>Nền tảng tích hợp các tính năng xã hội để bạn kết nối với những người có cùng sở thích về ${sks[1]} và ${sks[2]}.</p>`,
     (pk: string, sks: string[]) => `<p>📱 Trải nghiệm giải trí không gián đoạn trên mọi thiết bị. Nền tảng <strong>${pk}</strong> hoạt động hoàn hảo trên máy tính, máy tính bảng và điện thoại.</p><p>Dù bạn ở đâu, bạn đều có thể truy cập và thưởng thức ${sks[0]} và ${sks[1]}. Thế giới giải trí về ${sks[2]} luôn nằm gọn trong túi của bạn.</p>`,
+    (pk: string, sks: string[]) => `<p>🎨 Giao diện người dùng của <strong>${pk}</strong> được thiết kế tinh tế và trực quan. Việc tìm kiếm và khám phá nội dung về ${sks[0]} chưa bao giờ dễ dàng hơn.</p><p>Chúng tôi tập trung vào trải nghiệm người dùng, giúp bạn dễ dàng điều hướng qua các danh mục, từ ${sks[1]} đến ${sks[2]}, chỉ với vài cú nhấp chuột.</p>`,
+    (pk: string, sks: string[]) => `<p>🌐 Cộng đồng người dùng của <strong>${pk}</strong> là một phần không thể thiếu. Hãy tham gia cùng hàng triệu người dùng khác để chia sẻ niềm đam mê với ${sks[0]}.</p><p>Bạn có thể để lại bình luận, đánh giá các nội dung về ${sks[1]}, và kết nối với những người bạn mới có cùng sở thích ${sks[2]}.</p>`,
+    (pk: string, sks: string[]) => `<p>🎁 Nhiều chương trình ưu đãi và phần thưởng hấp dẫn đang chờ bạn tại <strong>${pk}</strong>. Chúng tôi thường xuyên tổ chức các sự kiện đặc biệt liên quan đến ${sks[0]}.</p><p>Hãy theo dõi để không bỏ lỡ cơ hội nhận những phần quà độc quyền khi bạn thưởng thức ${sks[1]} và khám phá ${sks[2]}.</p>`,
+    (pk: string, sks: string[]) => `<p>🎧 Chất lượng âm thanh đỉnh cao là một điểm nhấn tại <strong>${pk}</strong>. Trải nghiệm ${sks[0]} với âm thanh vòm sống động, mang lại cảm giác chân thực nhất.</p><p>Chúng tôi hỗ trợ nhiều định dạng âm thanh khác nhau, từ đó nâng cao trải nghiệm của bạn với ${sks[1]} và ${sks[2]}.</p>`,
+    (pk: string, sks: string[]) => `<p>🔍 Chức năng tìm kiếm thông minh của <strong>${pk}</strong> giúp bạn nhanh chóng tìm thấy chính xác những gì bạn cần. Chỉ cần gõ từ khóa về ${sks[0]}, kết quả sẽ hiện ra ngay lập tức.</p><p>Bộ lọc nâng cao cho phép bạn sắp xếp nội dung theo nhiều tiêu chí khác nhau, giúp việc khám phá ${sks[1]} và ${sks[2]} trở nên dễ dàng hơn.</p>`,
+    (pk: string, sks: string[]) => `<p>💯 Chúng tôi cam kết mang đến nội dung độc quyền mà bạn không thể tìm thấy ở nơi khác. <strong>${pk}</strong> hợp tác với các nhà sản xuất hàng đầu để cung cấp ${sks[0]} mới nhất.</p><p>Thư viện của chúng tôi luôn được cập nhật với các tác phẩm ${sks[1]} và xu hướng ${sks[2]} đang thịnh hành.</p>`,
 ];
 
 const CTA_BLOCKS = [
-    (domain: string) => `<h2><a href="${domain}" target="_blank" rel="noopener noreferrer">👉 Nhấn vào đây để khám phá ${domain} ngay!</a></h2>`,
-    (domain: string) => `<h2><a href="${domain}" target="_blank" rel="noopener noreferrer">🚀 Truy cập ${domain} để bắt đầu hành trình của bạn!</a></h2>`,
-    (domain: string) => `<h2><a href="${domain}" target="_blank" rel="noopener noreferrer">🔥 Trải nghiệm ngay tại ${domain} để không bỏ lỡ!</a></h2>`,
-    (domain: string) => `<h2><a href="${domain}" target="_blank" rel="noopener noreferrer">💎 Gia nhập cộng đồng ưu tú tại ${domain}!</a></h2>`,
+    (domain: string) => `<h2><a href="https://${domain}" target="_blank" rel="noopener noreferrer">👉 Nhấn vào đây để khám phá ${domain} ngay!</a></h2>`,
+    (domain: string) => `<h2><a href="https://${domain}" target="_blank" rel="noopener noreferrer">🚀 Truy cập ${domain} để bắt đầu hành trình của bạn!</a></h2>`,
+    (domain: string) => `<h2><a href="https://${domain}" target="_blank" rel="noopener noreferrer">🔥 Trải nghiệm ngay tại ${domain} để không bỏ lỡ!</a></h2>`,
+    (domain: string) => `<h2><a href="https://${domain}" target="_blank" rel="noopener noreferrer">💎 Gia nhập cộng đồng ưu tú tại ${domain}!</a></h2>`,
 ];
 
 const CLOSING_BLOCKS = [
@@ -112,7 +118,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const intro = getRandomItem(INTRO_BLOCKS)(input.primaryKeyword, sks);
     const middle1 = shuffledMiddleBlocks[0](input.primaryKeyword, sks);
     const middle2 = shuffledMiddleBlocks[1](input.primaryKeyword, sks);
-    const cta = getRandomItem(CTA_BLOCKS)(input.domain);
+    const cta = getRandomItem(CTA_BLOCKS)(displayDomain);
     const closing = getRandomItem(CLOSING_BLOCKS)(input.primaryKeyword, sks);
 
     const fullContent = `<h1>${titleWithLink}</h1>${intro}${middle1}${cta}${middle2}${closing}`;
@@ -124,3 +130,5 @@ const generateMarkdownContentFlow = ai.defineFlow(
     };
   }
 );
+
+    

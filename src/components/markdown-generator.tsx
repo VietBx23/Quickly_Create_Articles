@@ -200,8 +200,8 @@ export function MarkdownGenerator() {
                                     <Button
                                         key={domain}
                                         type="button"
-                                        variant={field.value === `https://` + domain ? 'default' : 'outline'}
-                                        onClick={() => form.setValue('domain', `https://` + domain, { shouldValidate: true })}
+                                        variant={field.value === `https://${domain}` ? 'default' : 'outline'}
+                                        onClick={() => form.setValue('domain', `https://${domain}`, { shouldValidate: true })}
                                     >
                                         {domain}
                                     </Button>
@@ -263,3 +263,5 @@ export function MarkdownGenerator() {
     </>
   );
 }
+
+    
