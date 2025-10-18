@@ -68,9 +68,8 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         const url = domain.startsWith('http') ? domain : `https://${domain}`;
         const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
         
-        // This is a safer way to do replacement with special chars
-        const fullMatch = match[0];
-        htmlToCopy = text.replace(fullMatch, `${match[1]}${linkHtml}${match[3]}`);
+        const fullMatch = `【链接地址：${domain}】`;
+        htmlToCopy = text.replace(fullMatch, `【链接地址：${linkHtml}】`);
       }
       
       try {
@@ -174,7 +173,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             {results.map((item, index) => (
               <AccordionItem value={`item-${index}`} key={index} className="border border-border/20 rounded-lg bg-background/50 px-4">
                  <div className="flex justify-between items-center w-full pt-4">
-                     <h3 className="font-bold text-lg text-primary text-left">STT {index + 1}</h3>
+                     <h3 className="font-bold text-lg text-left">STT {index + 1}</h3>
                       <div className="flex gap-2 items-center">
                           <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.title, 'title', index); }}>
                               {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
