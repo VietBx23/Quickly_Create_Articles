@@ -26,25 +26,27 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let textToCopy = text;
 
     if (type === 'content') {
-        // Step 1: Replace <a> tags with their href URL.
-        // This ensures the full, clickable URL is in the text.
-        textToCopy = text.replace(/<a\s+(?:[^>]*?\s+)?href="([^"]*)"[^>]*>.*?<\/a>/gi, '$1');
-        
-        // Step 2: Convert <p> and <br> tags to newlines for structure.
-        textToCopy = textToCopy.replace(/<\/p>/gi, '\n');
-        textToCopy = textToCopy.replace(/<br\s*\/?>/gi, '\n');
-
-        // Step 3: Remove all remaining HTML tags.
-        textToCopy = textToCopy.replace(/<[^>]+>/g, '');
-
-        // Step 4: Decode HTML entities (like &nbsp;) and trim whitespace.
-        // This is a robust way to handle entities without a library.
+        // Create a temporary div to parse the HTML
         const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = textToCopy;
-        textToCopy = tempDiv.textContent || tempDiv.innerText || '';
+        tempDiv.innerHTML = text;
+
+        // Find all links and ensure their text is the href
+        // This is a safeguard, though the generator already does this.
+        tempDiv.querySelectorAll('a').forEach(a => {
+            a.textContent = a.href;
+        });
+
+        // Get the innerHTML, which is now "cleaner"
+        let processedHtml = tempDiv.innerHTML;
+
+        // Convert <p> tags to newlines for basic structure
+        processedHtml = processedHtml.replace(/<p>/gi, '').replace(/<\/p>/gi, '\n');
         
-        // Step 5: Clean up extra newlines
-        textToCopy = textToCopy.replace(/\n\s*\n/g, '\n').trim();
+        // Remove other block-level tags but keep their content
+        processedHtml = processedHtml.replace(/<\/?(h1|h2|strong|b)>/gi, '');
+
+        // Clean up excessive newlines
+        textToCopy = processedHtml.replace(/\n\s*\n/g, '\n').trim();
     }
 
 
