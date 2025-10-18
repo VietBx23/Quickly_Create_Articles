@@ -70,7 +70,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
           htmlContent = text.replace(match[0], `【链接地址：${linkHtml}】`);
       }
 
-      const finalHtml = `<p style="color: #FFFFFF; font-size: 20px;">${htmlContent}</p>`;
+      const finalHtml = `<p style="color: #FFFFFF; font-size: 32px;">${htmlContent}</p>`;
       
       try {
         const htmlBlob = new Blob([finalHtml], { type: 'text/html' });
