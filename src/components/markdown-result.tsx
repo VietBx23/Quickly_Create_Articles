@@ -6,7 +6,6 @@ import { Copy, Check } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
-import showdown from 'showdown';
 
 declare const ClipboardItem: any;
 
@@ -24,23 +23,14 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
 
-  const handleCopy = (text: string, type: 'title' | 'content' | 'html', index: number) => {
-    let textToCopy = text;
-    let toastDescription = `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`;
-
-    if (type === 'content') {
-        const converter = new showdown.Converter();
-        textToCopy = converter.makeMarkdown(text);
-        toastDescription = 'Nội dung đã được chuyển thành văn bản và sao chép.';
-    }
-
+  const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
-    navigator.clipboard.writeText(textToCopy).then(
+    navigator.clipboard.writeText(text).then(
       () => {
         setCopiedStates(prev => ({ ...prev, [key]: true }));
         toast({
           title: 'Đã sao chép vào Clipboard!',
-          description: toastDescription,
+          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
         });
         setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
       },
@@ -102,18 +92,10 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleCopy(item.content, 'html', index)}
-                      >
-                        {copiedStates[`html-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        <span className="ml-2">{copiedStates[`html-${index}`] ? 'Đã sao chép HTML' : 'Sao chép HTML'}</span>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
                         onClick={() => handleCopy(item.content, 'content', index)}
                       >
                         {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép Text' : 'Sao chép Text'}</span>
+                        <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
                       </Button>
                    </div>
                   <div 
