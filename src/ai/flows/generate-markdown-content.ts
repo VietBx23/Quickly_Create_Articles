@@ -42,42 +42,42 @@ function generateRandomString(length: number): string {
     return result;
 }
 
-// --- Dynamic Content Generation System ---
+// --- Dynamic Content Generation System (Translated to Chinese) ---
 
 const INTRO_BLOCKS = [
-    (pk: string, sks: string[]) => `<p>🌟 Chào mừng đến với <strong>${pk}</strong>, điểm đến giải trí trực tuyến hàng đầu! Chúng tôi chuyên cung cấp những nội dung độc đáo và hấp dẫn.</p><p>Nếu bạn yêu thích ${sks[0]} hoặc đang tìm kiếm ${sks[1]}, bạn đã đến đúng nơi.</p><p>Hãy sẵn sàng khám phá một thế giới giải trí đa dạng, nơi ${sks[2]} chỉ là một phần nhỏ trong kho tàng nội dung của chúng tôi.</p>`,
-    (pk: string, sks: string[]) => `<p>🎬 Bạn đang tìm kiếm trải nghiệm giải trí chân thực? <strong>${pk}</strong> chính là câu trả lời.</p><p>Chúng tôi tự hào mang đến cho bạn những nội dung về ${sks[0]} và nhiều hơn thế nữa.</p><p>Nền tảng của chúng tôi liên tục cập nhật các xu hướng mới nhất, từ ${sks[1]} đến ${sks[2]}, đảm bảo bạn luôn có những điều mới mẻ để khám phá mỗi ngày.</p>`,
-    (pk: string, sks: string[]) => `<p>🔥 Khám phá thế giới giải trí không giới hạn với <strong>${pk}</strong>.</p><p>Chúng tôi có một thư viện nội dung khổng lồ, đặc biệt là về ${sks[0]}.</p><p>Dù bạn muốn thư giãn với ${sks[1]} hay tìm hiểu sâu hơn về ${sks[2]}, chúng tôi đều có thể đáp ứng. Chất lượng và sự đa dạng là ưu tiên hàng đầu của chúng tôi.</p>`,
-    (pk: string, sks: string[]) => `<p>💎 Nâng tầm trải nghiệm giải trí của bạn với <strong>${pk}</strong>.</p><p>Chúng tôi tập trung vào các lĩnh vực bạn yêu thích như ${sks[0]}.</p><p>Kho nội dung của chúng tôi, từ ${sks[1]} đến ${sks[2]}, luôn được làm mới hàng ngày.</p><p>Hãy tham gia cộng đồng của chúng tôi để không bỏ lỡ bất kỳ điều gì!</p>`,
+    (pk: string, sks: string[]) => `<p>🌟 歡迎來到 <strong>${pk}</strong>，首屈一指的線上娛樂目的地！我們專注於提供獨特且引人入勝的內容。</p><p>如果您喜愛 ${sks[0]} 或正在尋找 ${sks[1]}，那您來對地方了。</p><p>準備好探索一個多元化的娛樂世界，其中 ${sks[2]} 只是我們內容寶庫的一小部分。</p>`,
+    (pk: string, sks: string[]) => `<p>🎬 您在尋找真實的娛樂體驗嗎？<strong>${pk}</strong> 就是答案。</p><p>我們很自豪能為您帶來關於 ${sks[0]} 的內容以及更多。</p><p>我們的平台不斷更新最新趨勢，從 ${sks[1]} 到 ${sks[2]}，確保您每天都有新鮮事可探索。</p>`,
+    (pk: string, sks: string[]) => `<p>🔥 透過 <strong>${pk}</strong> 探索無限的娛樂世界。</p><p>我們擁有龐大的內容庫，特別是關於 ${sks[0]} 的內容。</p><p>無論您是想用 ${sks[1]} 放鬆一下，還是想深入了解 ${sks[2]}，我們都能滿足您的需求。品質和多樣性是我們的首要任務。</p>`,
+    (pk: string, sks: string[]) => `<p>💎 透過 <strong>${pk}</strong> 提升您的娛樂體驗。</p><p>我們專注於您喜愛的領域，例如 ${sks[0]}。</p><p>我們的內容庫，從 ${sks[1]} 到 ${sks[2]}，每天都在更新。</p><p>加入我們的社群，不錯過任何精彩內容！</p>`,
 ];
 
 const MIDDLE_BLOCKS = [
-    (pk: string, sks: string[]) => `<p>🚀 Công nghệ tiên tiến là xương sống của nền tảng <strong>${pk}</strong>.</p><p>Chúng tôi đầu tư vào hạ tầng hiện đại để mang lại trải nghiệm xem mượt mà, không giật lag.</p><p>Thưởng thức ${sks[0]} với chất lượng hình ảnh sắc nét và âm thanh sống động.</p><p>Giao diện thân thiện giúp bạn dễ dàng tìm kiếm nội dung về ${sks[1]}.</p><p>Hệ thống đề xuất thông minh của chúng tôi sẽ gợi ý cho bạn những video hấp dẫn liên quan đến ${sks[2]}.</p>`,
-    (pk: string, sks: string[]) => `<p>💡 Hãy quên đi những phiền toái về chất lượng thấp. Tại <strong>${pk}</strong>, chúng tôi tối ưu hóa để mang lại tốc độ tải nhanh và độ phân giải cao cho các nội dung như ${sks[0]}.</p><p>Chúng tôi không chỉ là một trang web, mà là một cộng đồng sôi nổi, nơi bạn có thể khám phá ${sks[1]} và nhiều hơn nữa.</p><p>Chúng tôi luôn mang đến những nội dung sáng tạo, phá vỡ mọi giới hạn, bao gồm cả ${sks[2]}.</p>`,
-    (pk: string, sks: string[]) => `<p>🔒 Tìm kiếm một nguồn cung cấp nội dung đáng tin cậy? <strong>${pk}</strong> là lựa chọn hàng đầu, đặc biệt trong lĩnh vực ${sks[0]}.</p><p>Sứ mệnh của chúng tôi là tạo ra một không gian an toàn để bạn khám phá ${sks[1]} và giải trí với ${sks[2]}.</p><p>Mỗi sản phẩm đều qua kiểm duyệt nghiêm ngặt, đảm bảo chất lượng và tính độc đáo.</p>`,
-    (pk: string, sks: string[]) => `<p>🌍 Sự khác biệt của <strong>${pk}</strong> nằm ở cam kết về chất lượng và sự đa dạng.</p><p>Chúng tôi hiểu mỗi người có một sở thích riêng, và kho nội dung về ${sks[0]} của chúng tôi phản ánh điều đó.</p><p>Dù bạn muốn giải trí nhanh với ${sks[1]} hay đắm chìm trong những câu chuyện của ${sks[2]}, chúng tôi đều đáp ứng được.</p>`,
-    (pk: string, sks: string[]) => `<p>📈 Chúng tôi tạo ra một hệ sinh thái giải trí toàn diện tại <strong>${pk}</strong>.</p><p>Bạn có thể tham gia thảo luận về ${sks[0]} và chia sẻ khoảnh khắc yêu thích.</p><p>Nền tảng tích hợp các tính năng xã hội để bạn kết nối với những người có cùng sở thích về ${sks[1]} và ${sks[2]}.</p>`,
-    (pk: string, sks: string[]) => `<p>📱 Trải nghiệm giải trí không gián đoạn trên mọi thiết bị. Nền tảng <strong>${pk}</strong> hoạt động hoàn hảo trên máy tính, máy tính bảng và điện thoại.</p><p>Dù bạn ở đâu, bạn đều có thể truy cập và thưởng thức ${sks[0]} và ${sks[1]}.</p><p>Thế giới giải trí về ${sks[2]} luôn nằm gọn trong túi của bạn.</p>`,
-    (pk: string, sks: string[]) => `<p>🎨 Giao diện người dùng của <strong>${pk}</strong> được thiết kế tinh tế và trực quan.</p><p>Việc tìm kiếm và khám phá nội dung về ${sks[0]} chưa bao giờ dễ dàng hơn.</p><p>Chúng tôi tập trung vào trải nghiệm người dùng, giúp bạn dễ dàng điều hướng qua các danh mục, từ ${sks[1]} đến ${sks[2]}, chỉ với vài cú nhấp chuột.</p>`,
-    (pk: string, sks: string[]) => `<p>🌐 Cộng đồng người dùng của <strong>${pk}</strong> là một phần không thể thiếu.</p><p>Hãy tham gia cùng hàng triệu người dùng khác để chia sẻ niềm đam mê với ${sks[0]}.</p><p>Bạn có thể để lại bình luận, đánh giá các nội dung về ${sks[1]}, và kết nối với những người bạn mới có cùng sở thích ${sks[2]}.</p>`,
-    (pk: string, sks: string[]) => `<p>🎁 Nhiều chương trình ưu đãi và phần thưởng hấp dẫn đang chờ bạn tại <strong>${pk}</strong>.</p><p>Chúng tôi thường xuyên tổ chức các sự kiện đặc biệt liên quan đến ${sks[0]}.</p><p>Hãy theo dõi để không bỏ lỡ cơ hội nhận những phần quà độc quyền khi bạn thưởng thức ${sks[1]} và khám phá ${sks[2]}.</p>`,
-    (pk: string, sks: string[]) => `<p>🎧 Chất lượng âm thanh đỉnh cao là một điểm nhấn tại <strong>${pk}</strong>.</p><p>Trải nghiệm ${sks[0]} với âm thanh vòm sống động, mang lại cảm giác chân thực nhất.</p><p>Chúng tôi hỗ trợ nhiều định dạng âm thanh khác nhau, từ đó nâng cao trải nghiệm của bạn với ${sks[1]} và ${sks[2]}.</p>`,
-    (pk: string, sks: string[]) => `<p>🔍 Chức năng tìm kiếm thông minh của <strong>${pk}</strong> giúp bạn nhanh chóng tìm thấy chính xác những gì bạn cần.</p><p>Chỉ cần gõ từ khóa về ${sks[0]}, kết quả sẽ hiện ra ngay lập tức.</p><p>Bộ lọc nâng cao cho phép bạn sắp xếp nội dung theo nhiều tiêu chí khác nhau, giúp việc khám phá ${sks[1]} và ${sks[2]} trở nên dễ dàng hơn.</p>`,
-    (pk: string, sks: string[]) => `<p>💯 Chúng tôi cam kết mang đến nội dung độc quyền mà bạn không thể tìm thấy ở nơi khác.</p><p><strong>${pk}</strong> hợp tác với các nhà sản xuất hàng đầu để cung cấp ${sks[0]} mới nhất.</p><p>Thư viện của chúng tôi luôn được cập nhật với các tác phẩm ${sks[1]} và xu hướng ${sks[2]} đang thịnh hành.</p>`,
+    (pk: string, sks: string[]) => `<p>🚀 先進技術是 <strong>${pk}</strong> 平台的支柱。</p><p>我們投資於現代化基礎設施，以提供流暢、無延遲的觀看體驗。</p><p>以清晰的畫質和生動的音效享受 ${sks[0]}。</p><p>友善的介面可幫助您輕鬆搜尋有關 ${sks[1]} 的內容。</p><p>我們的智慧推薦系統會向您推薦與 ${sks[2]} 相關的引人入勝的影片。</p>`,
+    (pk: string, sks: string[]) => `<p>💡 忘掉低品質的煩惱。在 <strong>${pk}</strong>，我們進行了優化，為 ${sks[0]} 等內容提供快速的載入速度和高解析度。</p><p>我們不僅僅是一個網站，而是一個充滿活力的社群，您可以在這裡探索 ${sks[1]} 等更多內容。</p><p>我們始終帶來突破界限的創意內容，包括 ${sks[2]}。</p>`,
+    (pk: string, sks: string[]) => `<p>🔒 正在尋找可靠的內容來源？<strong>${pk}</strong> 是您的首選，尤其是在 ${sks[0]} 領域。</p><p>我們的使命是為您創造一個安全的空間，讓您探索 ${sks[1]} 並享受 ${sks[2]} 的樂趣。</p><p>每件產品都經過嚴格審核，確保品質和獨特性。</p>`,
+    (pk: string, sks: string[]) => `<p>🌍 <strong>${pk}</strong> 的與眾不同之處在於我們對品質和多樣性的承諾。</p><p>我們了解每個人都有自己的喜好，我們關於 ${sks[0]} 的內容庫反映了這一點。</p><p>無論您是想用 ${sks[1]} 快速娛樂一下，還是沉浸在 ${sks[2]} 的故事中，我們都能滿足您的需求。</p>`,
+    (pk: string, sks: string[]) => `<p>📈 我們在 <strong>${pk}</strong> 創建了一個全面的娛樂生態系統。</p><p>您可以參與關於 ${sks[0]} 的討論並分享您最喜愛的時刻。</p><p>該平台整合了社交功能，讓您可以與對 ${sks[1]} 和 ${sks[2]} 有相同興趣的人建立聯繫。</p>`,
+    (pk: string, sks: string[]) => `<p>📱 在任何裝置上享受不間斷的娛樂體驗。<strong>${pk}</strong> 平台在電腦、平板電腦和手機上都能完美運作。</p><p>無論您身在何處，都可以存取並享受 ${sks[0]} 和 ${sks[1]}。</p><p>關於 ${sks[2]} 的娛樂世界始終在您的口袋裡。</p>`,
+    (pk: string, sks: string[]) => `<p>🎨 <strong>${pk}</strong> 的使用者介面設計精美且直觀。</p><p>尋找和發現關於 ${sks[0]} 的內容從未如此簡單。</p><p>我們專注於使用者體驗，幫助您輕鬆瀏覽從 ${sks[1]} 到 ${sks[2]} 的各種類別，只需點擊幾下。</p>`,
+    (pk: string, sks: string[]) => `<p>🌐 <strong>${pk}</strong> 的使用者社群是不可或缺的一部分。</p><p>加入數百萬其他使用者，分享您對 ${sks[0]} 的熱情。</p><p>您可以對有關 ${sks[1]} 的內容發表評論、評分，並與有相同 ${sks[2]} 興趣的新朋友建立聯繫。</p>`,
+    (pk: string, sks: string[]) => `<p>🎁 許多誘人的促銷和獎勵在 <strong>${pk}</strong> 等著您。</p><p>我們定期舉辦與 ${sks[0]} 相關的特別活動。</p><p>敬請關注，在您享受 ${sks[1]} 和探索 ${sks[2]} 的同時，不要錯過獲得獨家禮物的機會。</p>`,
+    (pk: string, sks: string[]) => `<p>🎧 頂級音質是 <strong>${pk}</strong> 的一大亮點。</p><p>以生動的環繞聲體驗 ${sks[0]}，帶來最真實的感受。</p><p>我們支援多種不同的音訊格式，從而增強您對 ${sks[1]} 和 ${sks[2]} 的體驗。</p>`,
+    (pk: string, sks: string[]) => `<p>🔍 <strong>${pk}</strong> 的智慧搜尋功能可幫助您快速找到您需要的東西。</p><p>只需輸入關於 ${sks[0]} 的關鍵字，結果就會立即出現。</p><p>進階篩選器可讓您按各種標準對內容進行排序，使探索 ${sks[1]} 和 ${sks[2]} 變得更加容易。</p>`,
+    (pk: string, sks: string[]) => `<p>💯 我們承諾提供您在其他地方找不到的獨家內容。</p><p><strong>${pk}</strong> 與頂級製作人合作，提供最新的 ${sks[0]}。</p><p>我們的庫不斷更新，包含熱門的 ${sks[1]} 作品和 ${sks[2]} 趨勢。</p>`,
 ];
 
 const CTA_BLOCKS = [
-    (url: string, display: string) => `<h2>👉 Nhấn vào đây để khám phá <a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size: 1.2em; font-weight: bold;">${display}</a> ngay!</h2>`,
-    (url: string, display: string) => `<h2>🚀 Truy cập <a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size: 1.2em; font-weight: bold;">${display}</a> để bắt đầu hành trình của bạn!</h2>`,
-    (url: string, display: string) => `<h2>🔥 Trải nghiệm ngay tại <a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size: 1.2em; font-weight: bold;">${display}</a> để không bỏ lỡ!</h2>`,
-    (url: string, display: string) => `<h2>💎 Gia nhập cộng đồng ưu tú tại <a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size: 1.2em; font-weight: bold;">${display}</a>!</h2>`,
+    (url: string, display: string) => `<h2>👉 點擊此處探索 <a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size: 1.2em; font-weight: bold;">${display}</a>！</h2>`,
+    (url: string, display: string) => `<h2>🚀 訪問 <a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size: 1.2em; font-weight: bold;">${display}</a> 開始您的旅程！</h2>`,
+    (url: string, display: string) => `<h2>🔥 立即在 <a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size: 1.2em; font-weight: bold;">${display}</a> 體驗，不要錯過！</h2>`,
+    (url: string, display: string) => `<h2>💎 在 <a href="${url}" target="_blank" rel="noopener noreferrer" style="font-size: 1.2em; font-weight: bold;">${display}</a> 加入精英社群！</h2>`,
 ];
 
 const CLOSING_BLOCKS = [
-    (pk: string, sks: string[]) => `<p>🎉 Đã đến lúc nâng tầm trải nghiệm của bạn với <strong>${pk}</strong>.</p><p>Nếu bạn là fan của ${sks[0]}, đây chính là nơi dành cho bạn.</p><p>Chúng tôi mang đến bộ sưu tập từ ${sks[1]} đến ${sks[2]}, được phân loại rõ ràng, giúp bạn dễ dàng tìm kiếm.</p>`,
-    (pk: string, sks: string[]) => `<p>💯 Hãy tưởng tượng một nơi bạn có thể truy cập kho tàng ${sks[0]} chỉ với vài cú nhấp chuột.</p><p>Đó chính là <strong>${pk}</strong>.</p><p>Sự kết hợp giữa nội dung đa dạng như ${sks[1]} và ${sks[2]} cùng giao diện đẹp mắt tạo nên một trải nghiệm tuyệt vời.</p>`,
-    (pk: string, sks: string[]) => `<p>✨ Với <strong>${pk}</strong>, mỗi ngày đều là một khám phá mới.</p><p>Chúng tôi liên tục mang đến nội dung độc đáo từ ${sks[0]} kinh điển đến ${sks[1]} hiện đại.</p><p>Đội ngũ của chúng tôi đảm bảo bạn luôn có những điều mới mẻ để mong đợi, bao gồm cả xu hướng ${sks[2]}.</p>`,
-    (pk: string, sks: string[]) => `<p>💖 Sự hài lòng của bạn là ưu tiên số một tại <strong>${pk}</strong>.</p><p>Chúng tôi cung cấp nội dung ${sks[0]} chất lượng và hỗ trợ khách hàng 24/7.</p><p>Mọi thắc mắc về ${sks[1]} hay ${sks[2]} sẽ được giải đáp nhanh chóng. Hãy gia nhập để cảm nhận sự khác biệt!</p>`,
+    (pk: string, sks: string[]) => `<p>🎉 是時候用 <strong>${pk}</strong> 提升您的體驗了。</p><p>如果您是 ${sks[0]} 的粉絲，那麼這裡就是您的最佳選擇。</p><p>我們提供從 ${sks[1]} 到 ${sks[2]} 的系列，分類清晰，方便您輕鬆搜尋。</p>`,
+    (pk: string, sks: string[]) => `<p>💯 想像一下，一個只需點擊幾下即可存取 ${sks[0]} 寶庫的地方。</p><p>那就是 <strong>${pk}</strong>。</p><p>像 ${sks[1]} 和 ${sks[2]} 這樣多樣化的內容與精美的介面相結合，創造了絕佳的體驗。</p>`,
+    (pk: string, sks: string[]) => `<p>✨ 有了 <strong>${pk}</strong>，每一天都是新的發現。</p><p>我們不斷地從經典的 ${sks[0]} 到現代的 ${sks[1]} 帶來獨特的內容。</p><p>我們的團隊確保您總有新的期待，包括 ${sks[2]} 趨勢。</p>`,
+    (pk: string, sks: string[]) => `<p>💖 您的滿意是 <strong>${pk}</strong> 的第一要務。</p><p>我們提供優質的 ${sks[0]} 內容和 24/7 的客戶支援。</p><p>任何有關 ${sks[1]} 或 ${sks[2]} 的問題都將得到迅速解答。現在就加入，感受不同！</p>`,
 ];
 
 // --- End Dynamic Content Generation System ---
@@ -123,7 +123,10 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const cta = getRandomItem(CTA_BLOCKS)(input.domain, displayDomain);
     const closing = getRandomItem(CLOSING_BLOCKS)(input.primaryKeyword, sks);
 
-    const fullContent = `<h1>${titleWithLink}</h1>${intro}${middle1}${cta}${middle2}${closing}`;
+    const allKeywords = [input.primaryKeyword, ...input.secondaryKeywords];
+    const keywordAggregation = `🔍 关键词聚合：${allKeywords.join('、')}`;
+
+    const fullContent = `<h1>${titleWithLink}</h1>${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
     // --- End Dynamic Content Assembly ---
 
     return {
