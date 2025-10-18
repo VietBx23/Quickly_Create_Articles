@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Eye } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -29,55 +29,57 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         () => {
           setCopiedStates(prev => ({ ...prev, [key]: true }));
           toast({
-            title: '已複製到剪貼簿！',
-            description: `標題內容已複製。`,
+            title: '已复制到剪贴板！',
+            description: `标题内容已复制。`,
           });
           setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
         },
         (err) => {
           toast({
             variant: 'destructive',
-            title: '複製失敗',
-            description: '無法複製內容。請再試一次。',
+            title: '复制失败',
+            description: '无法复制内容。请再试一次。',
           });
-          console.error('複製錯誤:', err);
+          console.error('复制错误:', err);
         }
       );
       return;
     }
     
     if (type === 'content') {
-        const processedHtml = text
-            .replace(/<h1>.*?<\/h1>/gi, '') 
+        // Remove h1 and strong tags but keep a and p tags
+        const cleanedHtml = text
+            .replace(/<h1>/gi, '<p>') // Replace h1 with p to preserve structure
+            .replace(/<\/h1>/gi, '</p>')
             .replace(/<strong>/gi, '')
             .replace(/<\/strong>/gi, '');
 
         try {
-            const blob = new Blob([processedHtml], { type: 'text/html' });
+            const blob = new Blob([cleanedHtml], { type: 'text/html' });
             const clipboardItem = new ClipboardItem({ 'text/html': blob });
 
             navigator.clipboard.write([clipboardItem]).then(() => {
                 setCopiedStates(prev => ({ ...prev, [key]: true }));
                 toast({
-                    title: '已複製到剪貼簿！',
-                    description: `文章內容已複製為 HTML。`,
+                    title: '已复制到剪贴板！',
+                    description: `文章内容已复制为 HTML。`,
                 });
                 setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
             }, (err) => {
                 toast({
                     variant: 'destructive',
-                    title: '複製失敗',
-                    description: '無法複製 HTML 內容。請再試一次。',
+                    title: '复制失败',
+                    description: '无法复制 HTML 内容。请再试一次。',
                 });
-                console.error('複製錯誤:', err);
+                console.error('复制错误:', err);
             });
         } catch (e) {
              toast({
                     variant: 'destructive',
-                    title: '未知錯誤',
-                    description: '您的瀏覽器可能不支援複製 HTML。',
+                    title: '未知错误',
+                    description: '您的浏览器可能不支持复制 HTML。',
                 });
-             console.error('Clipboard API 錯誤:', e);
+             console.error('Clipboard API 错误:', e);
         }
     }
   };
@@ -86,8 +88,8 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     return (
       <Card className="bg-card/60 backdrop-blur-xl border-border/20">
         <CardHeader>
-          <CardTitle>正在生成您的內容...</CardTitle>
-          <CardDescription>請稍候，我們正在為您製作完美的 markdown。</CardDescription>
+          <CardTitle>正在生成您的内容...</CardTitle>
+          <CardDescription>请稍候，我们正在为您制作完美的 markdown。</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -111,33 +113,36 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   return (
     <Card className="bg-card/60 backdrop-blur-xl border-border/20">
       <CardHeader>
-        <CardTitle>已生成的結果</CardTitle>
-        <CardDescription>已生成 {results.length} 篇文章。以下是結果列表。</CardDescription>
+        <CardTitle>已生成的结果</CardTitle>
+        <CardDescription>已生成 {results.length} 篇文章。以下是结果列表。</CardDescription>
       </CardHeader>
       <CardContent>
          <Accordion type="single" collapsible className="w-full space-y-4">
             {results.map((item, index) => (
               <AccordionItem value={`item-${index}`} key={index} className="border border-border/20 rounded-lg bg-background/50 px-4">
-                <AccordionTrigger className="hover:no-underline">
-                  <div className="flex justify-between items-center w-full">
+                 <div className="flex justify-between items-center w-full py-4">
                      <h3 className="font-bold text-lg text-primary text-left">STT {index + 1}</h3>
                       <div className="flex gap-2 items-center">
                           <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.title, 'title', index); }}>
                               {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                              <span className="ml-2 hidden sm:inline">{copiedStates[`title-${index}`] ? '已複製' : '複製標題'}</span>
+                              <span className="ml-2 hidden sm:inline">{copiedStates[`title-${index}`] ? '已复制' : '复制标题'}</span>
                           </Button>
                           <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.content, 'content', index); }}>
                               {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                              <span className="ml-2 hidden sm:inline">{copiedStates[`content-${index}`] ? '已複製' : '複製內容'}</span>
+                              <span className="ml-2 hidden sm:inline">{copiedStates[`content-${index}`] ? '已复制' : '复制内容'}</span>
                           </Button>
+                           <AccordionTrigger className="p-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md [&[data-state=open]>svg]:rotate-180">
+                               <Eye className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                           </AccordionTrigger>
                       </div>
                   </div>
-                </AccordionTrigger>
+                   <div className="pb-4">
+                        <div className="p-3 bg-muted/30 rounded-md text-sm font-mono break-all">
+                            {item.title}
+                        </div>
+                    </div>
                 <AccordionContent>
                   <div className="space-y-4 pt-4 border-t border-dashed">
-                      <div className="p-3 bg-muted/30 rounded-md text-sm font-mono break-all">
-                          {item.title}
-                       </div>
                       <div 
                           className="prose prose-sm dark:prose-invert max-w-none rounded-md border border-border/20 p-4 bg-background" 
                           dangerouslySetInnerHTML={{ __html: item.content }}
@@ -151,3 +156,5 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
+
+    

@@ -16,10 +16,10 @@ import { MarkdownResult, type MarkdownResultItem } from './markdown-result';
 import { useToast } from '@/hooks/use-toast';
 
 const FormSchema = z.object({
-  primaryKeyword: z.string().min(1, 'Vui lòng nhập hoặc chọn một từ khóa chính.'),
-  secondaryKeywords: z.string().min(1, 'Cần ít nhất một từ khóa phụ.'),
-  domain: z.string().min(1, 'Vui lòng nhập hoặc chọn một tên miền.').url('Vui lòng nhập một URL hợp lệ.'),
-  value: z.string().min(1, 'Giá trị là bắt buộc.'),
+  primaryKeyword: z.string().min(1, '请输入或选择一个主关键词。'),
+  secondaryKeywords: z.string().min(1, '至少需要一个次要关键词。'),
+  domain: z.string().min(1, '请输入或选择一个域名。').url('请输入有效的URL。'),
+  value: z.string().min(1, '值是必需的。'),
 });
 
 const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "184.run", "6677.one"];
@@ -62,8 +62,8 @@ export function MarkdownGenerator() {
     if (allSecondaryKeywords.length === 0) {
       toast({
         variant: "destructive",
-        title: "Xác thực thất bại",
-        description: "Cần ít nhất một từ khóa phụ.",
+        title: "验证失败",
+        description: "至少需要一个次要关键词。",
       });
       setIsLoading(false);
       return;
@@ -71,6 +71,7 @@ export function MarkdownGenerator() {
     
     let successfulCount = 0;
     const totalKeywords = allSecondaryKeywords.length;
+    const newResults = [];
 
     for (let i = 0; i < totalKeywords; i++) {
         const mainSecondaryKeyword = allSecondaryKeywords[i];
@@ -87,9 +88,10 @@ export function MarkdownGenerator() {
             retries++;
         }
 
-        // If not enough random keywords, duplicate the main one
+        // If not enough random keywords, duplicate the main one or another from the list
         while (randomKeywords.length < 2) {
-            randomKeywords.push(mainSecondaryKeyword);
+             const fallbackKeyword = allSecondaryKeywords.length > 1 ? allSecondaryKeywords[(i + 1) % allSecondaryKeywords.length] : mainSecondaryKeyword;
+             randomKeywords.push(fallbackKeyword);
         }
 
         const keywordGroup = [mainSecondaryKeyword, ...randomKeywords];
@@ -103,30 +105,31 @@ export function MarkdownGenerator() {
             });
 
             if (result.success && result.data) {
-                setResults(prevResults => [...prevResults, result.data!]);
+                newResults.push(result.data);
                 successfulCount++;
             } else {
                 toast({
                     variant: "destructive",
-                    title: `Tạo thất bại cho từ khóa: "${mainSecondaryKeyword}"`,
-                    description: result.error || "Đã xảy ra lỗi không xác định.",
+                    title: `关键词生成失败: "${mainSecondaryKeyword}"`,
+                    description: result.error || "发生未知错误。",
                 });
             }
         } catch (error) {
             toast({
                 variant: "destructive",
-                title: `Tạo thất bại cho từ khóa: "${mainSecondaryKeyword}"`,
-                description: "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại.",
+                title: `关键词生成失败: "${mainSecondaryKeyword}"`,
+                description: "处理请求时出错。请重试。",
             });
             console.error(`Generation error for keyword ${mainSecondaryKeyword}:`, error);
         }
     }
-
+    
+    setResults(newResults);
 
     if (successfulCount > 0) {
         toast({
-          title: "Hoàn thành!",
-          description: `Đã tạo thành công markdown cho ${successfulCount} trên ${totalKeywords} từ khóa.`,
+          title: "完成!",
+          description: `成功为 ${successfulCount} / ${totalKeywords} 个关键词生成了内容。`,
         });
     }
 
@@ -142,7 +145,7 @@ export function MarkdownGenerator() {
                 Markdown Generator Pro
              </h1>
             <CardDescription className="pt-2 text-foreground/80">
-              Tạo nội dung markdown tùy chỉnh ngay lập tức. Chỉ cần cung cấp từ khóa, tên miền và giá trị của bạn để bắt đầu.
+              立即生成自定义的Markdown内容。只需提供您的关键词、域名和值即可开始。
             </CardDescription>
           </CardHeader>
           <Form {...form}>
@@ -154,11 +157,11 @@ export function MarkdownGenerator() {
                       name="primaryKeyword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Từ khóa chính</FormLabel>
+                          <FormLabel>主关键词</FormLabel>
                           <div className="relative">
                             <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                                <Input placeholder="Nhập từ khóa chính của bạn" {...field} className="pl-10 h-12" />
+                                <Input placeholder="输入您的主关键词" {...field} className="pl-10 h-12" />
                             </FormControl>
                           </div>
                           <div className="flex flex-wrap gap-2 pt-2">
@@ -182,11 +185,11 @@ export function MarkdownGenerator() {
                       name="value"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Giá trị</FormLabel>
+                          <FormLabel>值</FormLabel>
                           <div className="relative">
                             <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <FormControl>
-                              <Input placeholder="ví dụ: CY" {...field} className="pl-10 h-12" />
+                              <Input placeholder="例如：CY" {...field} className="pl-10 h-12" />
                             </FormControl>
                           </div>
                           <FormMessage />
@@ -199,7 +202,7 @@ export function MarkdownGenerator() {
                         name="domain"
                         render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Tên miền</FormLabel>
+                            <FormLabel>域名</FormLabel>
                             <div className="relative">
                               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                               <FormControl>
@@ -227,15 +230,15 @@ export function MarkdownGenerator() {
                     name="secondaryKeywords"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Từ khóa phụ</FormLabel>
+                        <FormLabel>次要关键词</FormLabel>
                         <div className="relative">
                           <List className="absolute left-3 top-4 h-5 w-5 text-muted-foreground" />
                           <FormControl>
-                            <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={10} className="pl-10 pt-3" />
+                            <Textarea placeholder="例如：最新在线地址 (每行一个)" {...field}  rows={10} className="pl-10 pt-3" />
                           </FormControl>
                         </div>
                         <FormDescription>
-                          Mỗi từ khóa phụ một dòng. Hệ thống sẽ tạo một bài viết cho mỗi từ khóa.
+                          每行一个次要关键词。系统将为每个关键词生成一篇文章。
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -250,12 +253,12 @@ export function MarkdownGenerator() {
                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Đang tạo...
+                          正在生成...
                       </>
                   ) : (
                       <>
                         <Sparkles className="mr-2 h-5 w-5" /> 
-                        Tạo nội dung
+                        生成内容
                       </>
                   )}
                 </Button>
@@ -274,3 +277,5 @@ export function MarkdownGenerator() {
     </>
   );
 }
+
+    
