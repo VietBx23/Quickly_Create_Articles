@@ -31,9 +31,13 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let textToCopy = text;
 
     if (type === 'content') {
-      const markdown = converter.makeMarkdown(text);
-      // A simple regex to remove markdown image tags and other link syntaxes if needed
-      textToCopy = markdown.replace(/!\[.*?\]\(.*?\)/g, '').replace(/\[(.*?)\]\(.*?\)/g, '$1');
+        const markdown = converter.makeMarkdown(text);
+        // This regex will remove image tags, but keep the text from links.
+        // It converts [link text](url) to "link text". We want to keep the URL for autolinking.
+        // A better approach is to let the browser render the HTML and get the innerText.
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = text;
+        textToCopy = tempDiv.innerText;
     }
 
     navigator.clipboard.writeText(textToCopy).then(
@@ -41,7 +45,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         setCopiedStates(prev => ({ ...prev, [key]: true }));
         toast({
           title: 'Đã sao chép vào Clipboard!',
-          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép dưới dạng văn bản thuần túy.`,
+          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
         });
         setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
       },
@@ -122,5 +126,3 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
-
-    
