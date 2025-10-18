@@ -70,6 +70,7 @@ const CLOSING_BLOCKS = [
     (pk: string, sks: string[]) => `<p>💖 您的满意是 <strong>${pk}</strong> 的第一要务。</p><p>我们提供优质的 ${sks[0]} 内容和 24/7 的客户支持。</p><p>任何有关 ${sks[1]} 或 ${sks[2]} 的问题都将得到迅速解答。现在就加入，感受不同！</p>`,
 ];
 
+
 // --- End Dynamic Content Generation System ---
 
 
@@ -104,8 +105,13 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const randomChars = Math.random().toString(36).substring(2, 8);
     
     // Create two separate titles
-    const displayTitleForH1 = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
-    const fullTitleForCopying = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')} - ${displayTitleForH1}`;
+    const seoTitlePart = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
+    const uniqueIdPart = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
+
+    // This is the title for the H1 tag inside the article
+    const displayTitleForH1 = seoTitlePart;
+    // This is the full title for copying
+    const fullTitleForCopying = `${seoTitlePart} - ${uniqueIdPart}`;
     // --- End New Title Generation Logic ---
     
     // --- Dynamic Content Assembly ---
@@ -132,5 +138,3 @@ const generateMarkdownContentFlow = ai.defineFlow(
     };
   }
 );
-
-    
