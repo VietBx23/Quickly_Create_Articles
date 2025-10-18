@@ -94,9 +94,17 @@ const generateMarkdownContentFlow = ai.defineFlow(
       sks.push(sks[sks.length - 1] || input.primaryKeyword);
     }
     
-    const secondaryKeywordsForTitle = sks.slice(0, 3).join(' - ');
-
-    const title = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${secondaryKeywordsForTitle}`;
+    // --- New Title Generation Logic ---
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    
+    const randomChars = Math.random().toString(36).substring(2, 8);
+    
+    const title = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
+    // --- End New Title Generation Logic ---
     
     // --- Dynamic Content Assembly ---
     const getRandomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
@@ -122,5 +130,3 @@ const generateMarkdownContentFlow = ai.defineFlow(
     };
   }
 );
-
-    
