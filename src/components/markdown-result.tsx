@@ -31,7 +31,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
         const url = domain.startsWith('http') ? domain : `https://${domain}`;
 
         return (
-            <p className="break-all text-lg text-foreground">
+            <p className="break-all text-xl text-foreground">
                 {prefix}
                 {linkPrefix}
                 <a href={url} target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:text-foreground/80">
@@ -44,7 +44,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
     }
 
     return (
-        <p className="p-3 bg-muted/30 rounded-md break-all text-lg text-foreground">
+        <p className="p-3 bg-muted/30 rounded-md break-all text-xl text-foreground">
             {title}
         </p>
     );
@@ -70,7 +70,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
           htmlContent = text.replace(match[0], `【链接地址：${linkHtml}】`);
       }
 
-      const finalHtml = `<span style="color: #FFFFFF;">${htmlContent}</span>`;
+      const finalHtml = `<p style="color: #FFFFFF; font-size: 16px;">${htmlContent}</p>`;
       
       try {
         const htmlBlob = new Blob([finalHtml], { type: 'text/html' });
