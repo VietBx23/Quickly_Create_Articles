@@ -26,20 +26,24 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let textToCopy = text;
 
     if (type === 'content') {
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = text;
-
-        // Replace all <a> tags with their href attribute
-        tempDiv.querySelectorAll('a').forEach(a => {
-            const href = a.getAttribute('href');
-            if (href) {
-                a.parentNode?.replaceChild(document.createTextNode(href), a);
-            }
-        });
+        // Step 1: Replace <a> tags with their href URL.
+        // This regex captures the href value and replaces the whole <a> tag with it.
+        textToCopy = text.replace(/<a\s+(?:[^>]*?\s+)?href="([^"]*)"[^>]*>.*?<\/a>/gi, '$1');
         
-        // Use innerText to get the structured text with newlines
-        textToCopy = tempDiv.innerText;
+        // Step 2: Convert <p> and <br> tags to newlines for structure.
+        textToCopy = textToCopy.replace(/<\/p>/gi, '\n');
+        textToCopy = textToCopy.replace(/<br\s*\/?>/gi, '\n');
+
+        // Step 3: Remove all remaining HTML tags.
+        textToCopy = textToCopy.replace(/<[^>]+>/g, '');
+
+        // Step 4: Decode HTML entities (like &nbsp;) and trim whitespace.
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = textToCopy;
+        textToCopy = tempDiv.textContent || tempDiv.innerText || '';
+        textToCopy = textToCopy.trim();
     }
+
 
     navigator.clipboard.writeText(textToCopy).then(
       () => {
