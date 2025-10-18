@@ -137,7 +137,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                       </div>
                   </div>
                    <div className="pb-4">
-                        <div className="p-3 bg-muted/30 rounded-md break-all text-lg text-foreground">
+                        <div className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
                             {item.title}
                         </div>
                     </div>
