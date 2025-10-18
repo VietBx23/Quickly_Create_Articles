@@ -61,15 +61,21 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     if (type === 'title') {
         const regex = /(【链接地址：)([^】]+)(】)/;
         const match = text.match(regex);
-        let htmlToCopy = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        
+        // Escape the base text first
+        let htmlContent = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         if (match) {
             const domain = match[2];
             const url = domain.startsWith('http') ? domain : `https://${domain}`;
-            const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
-            
-            htmlToCopy = htmlToCopy.replace(match[0].replace(/</g, '&lt;').replace(/>/g, '&gt;'), `【链接地址：${linkHtml}】`);
+            // The link should also be white and underlined
+            const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #FFFFFF; text-decoration: underline;">${domain}</a>`;
+            const escapedMatch = match[0].replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            htmlContent = htmlContent.replace(escapedMatch, `【链接地址：${linkHtml}】`);
         }
+
+        // Wrap the entire content in a span with white color style
+        const htmlToCopy = `<span style="color: #FFFFFF;">${htmlContent}</span>`;
       
       try {
         const blob = new Blob([htmlToCopy], { type: 'text/html' });
@@ -82,7 +88,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             description: `标题内容已复制为 HTML。`,
           });
           setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        }, (err) => {
+        }, () => {
            // Fallback to plain text if HTML copy fails
            navigator.clipboard.writeText(text).then(() => {
                 setCopiedStates(prev => ({ ...prev, [key]: true }));
