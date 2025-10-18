@@ -6,6 +6,7 @@ import { Copy, Check } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import showdown from 'showdown';
 
 declare const ClipboardItem: any;
 
@@ -19,18 +20,28 @@ interface MarkdownResultProps {
   isLoading: boolean;
 }
 
+const converter = new showdown.Converter();
+
 export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
 
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
-    navigator.clipboard.writeText(text).then(
+    let textToCopy = text;
+
+    if (type === 'content') {
+      const markdown = converter.makeMarkdown(text);
+      // A simple regex to remove markdown image tags and other link syntaxes if needed
+      textToCopy = markdown.replace(/!\[.*?\]\(.*?\)/g, '').replace(/\[(.*?)\]\(.*?\)/g, '$1');
+    }
+
+    navigator.clipboard.writeText(textToCopy).then(
       () => {
         setCopiedStates(prev => ({ ...prev, [key]: true }));
         toast({
           title: 'Đã sao chép vào Clipboard!',
-          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
+          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép dưới dạng văn bản thuần túy.`,
         });
         setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
       },
@@ -95,7 +106,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                         onClick={() => handleCopy(item.content, 'content', index)}
                       >
                         {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
+                        <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Text'}</span>
                       </Button>
                    </div>
                   <div 
@@ -111,3 +122,5 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
+
+    

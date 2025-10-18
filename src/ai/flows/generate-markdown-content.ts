@@ -28,7 +28,9 @@ const GenerateMarkdownContentOutputSchema = z.object({
   content: z.string().describe('The generated markdown content.'),
 });
 
-export type GenerateMarkdownContentOutput = z.infer<typeof GenerateMarkdownContentOutputSchema>;
+export type GenerateMarkdownContentOutput = z.infer<
+  typeof GenerateMarkdownContentOutputSchema
+>;
 
 function generateRandomString(length: number): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -65,10 +67,10 @@ const MIDDLE_BLOCKS = [
 ];
 
 const CTA_BLOCKS = [
-    (domain: string) => `<h2><a href="https://${domain}" target="_blank" rel="noopener noreferrer">👉 Nhấn vào đây để khám phá ${domain} ngay!</a></h2>`,
-    (domain: string) => `<h2><a href="https://${domain}" target="_blank" rel="noopener noreferrer">🚀 Truy cập ${domain} để bắt đầu hành trình của bạn!</a></h2>`,
-    (domain: string) => `<h2><a href="https://${domain}" target="_blank" rel="noopener noreferrer">🔥 Trải nghiệm ngay tại ${domain} để không bỏ lỡ!</a></h2>`,
-    (domain: string) => `<h2><a href="https://${domain}" target="_blank" rel="noopener noreferrer">💎 Gia nhập cộng đồng ưu tú tại ${domain}!</a></h2>`,
+    (domain: string) => `<h2>👉 Nhấn vào đây để khám phá <a href="https://${domain}" target="_blank" rel="noopener noreferrer">${domain}</a> ngay!</h2>`,
+    (domain: string) => `<h2>🚀 Truy cập <a href="https://${domain}" target="_blank" rel="noopener noreferrer">${domain}</a> để bắt đầu hành trình của bạn!</h2>`,
+    (domain: string) => `<h2>🔥 Trải nghiệm ngay tại <a href="https://${domain}" target="_blank" rel="noopener noreferrer">${domain}</a> để không bỏ lỡ!</h2>`,
+    (domain: string) => `<h2>💎 Gia nhập cộng đồng ưu tú tại <a href="https://${domain}" target="_blank" rel="noopener noreferrer">${domain}</a>!</h2>`,
 ];
 
 const CLOSING_BLOCKS = [
