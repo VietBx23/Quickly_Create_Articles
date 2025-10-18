@@ -103,7 +103,9 @@ const generateMarkdownContentFlow = ai.defineFlow(
     
     const randomChars = Math.random().toString(36).substring(2, 8);
     
-    const title = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
+    // Create two separate titles
+    const displayTitleForH1 = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
+    const fullTitleForCopying = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')} - ${displayTitleForH1}`;
     // --- End New Title Generation Logic ---
     
     // --- Dynamic Content Assembly ---
@@ -121,12 +123,14 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const allKeywords = [input.primaryKeyword, ...input.secondaryKeywords];
     const keywordAggregation = `🔍 关键词聚合：${allKeywords.join('、')}`;
 
-    const fullContent = `<h1>${title}</h1>${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
+    const fullContent = `<h1>${displayTitleForH1}</h1>${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
     // --- End Dynamic Content Assembly ---
 
     return {
-        title: title,
+        title: fullTitleForCopying,
         content: fullContent,
     };
   }
 );
+
+    
