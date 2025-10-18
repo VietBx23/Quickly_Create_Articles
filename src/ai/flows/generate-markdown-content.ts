@@ -105,7 +105,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const seoTitlePart = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
     const uniqueIdPart = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
     
-    const displayTitleForH1 = seoTitlePart;
+    const displayTitleForH1 = `${input.primaryKeyword} -【链接地址：<a href="${input.domain}" target="_blank" rel="noopener noreferrer">${displayDomain}</a>】- ${sks.join(' - ')}`;
     const fullTitleForCopying = `${seoTitlePart} - ${uniqueIdPart}`;
     
     const getRandomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
@@ -130,3 +130,5 @@ const generateMarkdownContentFlow = ai.defineFlow(
     };
   }
 );
+
+    
