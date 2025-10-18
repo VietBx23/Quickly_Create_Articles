@@ -57,12 +57,11 @@ const articlePrompt = ai.definePrompt({
         primaryKeyword: z.string(),
         secondaryKeyword: z.string(),
         domain: z.string(),
-        titleWithLink: z.string(),
       }),
     },
     output: {
       schema: z.object({
-        articleBody: z.string().describe('The full article content in HTML format.'),
+        articleBody: z.string().describe('The article content in HTML format, without the H1 title.'),
       }),
     },
     config: {
@@ -86,32 +85,30 @@ const articlePrompt = ai.definePrompt({
       ],
     },
     prompt: `
-      You are an expert SEO content writer. Your task is to write a compelling, high-quality article in Vietnamese.
+      You are an HTML generation assistant. Your task is to write a compelling article body in Vietnamese and format it as HTML.
 
       **Instructions:**
-      1.  **Start with the Title:** The article MUST begin with the exact H1 title provided. Do not change it.
-          - Title: <h1>{{{titleWithLink}}}</h1>
-      2.  **Main Body:**
-          - Write a detailed and engaging article.
+      1.  **Main Body:**
+          - Write a detailed and engaging article body.
           - Naturally incorporate the **Primary Keyword: "{{primaryKeyword}}"** and the **Secondary Keyword: "{{secondaryKeyword}}"** throughout the text.
-          - The tone should be professional, trustworthy, and persuasive.
-          - Structure the article with paragraphs, and use <strong> for emphasis on key points.
-      3.  **Call to Action (CTA):**
-          - At the end of the article, you MUST include a strong and clear call to action.
+          - The tone should be professional and trustworthy.
+          - Structure the article with paragraphs using <p> tags, and use <strong> for emphasis on key points.
+      2.  **Call to Action (CTA):**
+          - At the very end of the content, you MUST include a strong call to action.
           - This CTA must direct users to visit the provided domain.
-          - The link MUST be exactly: <a href="{{domain}}">Click here to visit</a>. Make it stand out. For example, you can wrap it in an <h2> or <p> tag with bold text.
-      4.  **Format:**
-          - The entire output MUST be a single block of well-formatted HTML. Do not use markdown.
-          - Use <p> tags for paragraphs.
+          - The link MUST be exactly: <a href="{{domain}}">{{domain}}</a>. Make it stand out, for example, by wrapping it in an <h2> or <p> tag with bold text.
+      3.  **Format:**
+          - The entire output MUST be a single block of HTML containing only the article body (paragraphs and the final CTA).
+          - DO NOT include the <h1> title tag in your output.
 
-      **Example Structure:**
-      <h1>[Your Provided Title]</h1>
+      **Example Output Structure:**
       <p>Introduction mentioning the keywords...</p>
       <p>More details, benefits, and information...</p>
       <p>Concluding thoughts...</p>
       <h2><a href="{{domain}}"><strong>👉👉 Truy cập ngay! 👈👈</strong></a></h2>
     `,
 });
+
 
 const generateMarkdownContentFlow = ai.defineFlow(
   {
@@ -130,16 +127,15 @@ const generateMarkdownContentFlow = ai.defineFlow(
     // Create the H1 title with the link inside, to be used in the article body
     const titleWithLink = `${input.primaryKeyword} -【链接地址：<a href="${input.domain}" style="color: #1155cc; text-decoration: underline;">${displayDomain}</a>】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
 
-    // Call the AI to generate the article body
+    // Call the AI to generate ONLY the article body
     const {output} = await articlePrompt({
         primaryKeyword: input.primaryKeyword,
         secondaryKeyword: input.secondaryKeyword,
         domain: input.domain,
-        titleWithLink: titleWithLink,
     });
     
-    // The prompt now generates the H1 tag itself, so we just use the output directly.
-    const fullContent = output!.articleBody;
+    // Combine the manually created H1 with the AI-generated body
+    const fullContent = `<h1>${titleWithLink}</h1>${output!.articleBody}`;
 
     return {title: title, content: fullContent};
   }
