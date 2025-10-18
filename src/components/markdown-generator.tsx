@@ -76,19 +76,16 @@ export function MarkdownGenerator() {
     for (let i = 0; i < totalKeywords; i++) {
         const mainSecondaryKeyword = allSecondaryKeywords[i];
         
-        // Create a pool of other keywords to pick from randomly
         const otherKeywords = [...allSecondaryKeywords.slice(0, i), ...allSecondaryKeywords.slice(i + 1)];
         
-        // Pick 2 random keywords
         const randomKeywords = [];
-        let retries = 0; // Prevent infinite loops
+        let retries = 0; 
         while (randomKeywords.length < 2 && otherKeywords.length > 0 && retries < 10) {
             const randomIndex = Math.floor(Math.random() * otherKeywords.length);
             randomKeywords.push(otherKeywords.splice(randomIndex, 1)[0]);
             retries++;
         }
 
-        // If not enough random keywords, duplicate the main one or another from the list
         while (randomKeywords.length < 2) {
              const fallbackKeyword = allSecondaryKeywords.length > 1 ? allSecondaryKeywords[(i + 1) % allSecondaryKeywords.length] : mainSecondaryKeyword;
              randomKeywords.push(fallbackKeyword);
@@ -211,14 +208,16 @@ export function MarkdownGenerator() {
                             </div>
                             <div className="flex flex-wrap gap-2 pt-2">
                                 {DOMAINS.map((domain) => (
-                                    <Button
-                                        key={domain}
-                                        type="button"
-                                        variant={field.value === `https://${domain}` ? 'default' : 'outline'}
-                                        onClick={() => form.setValue('domain', `https://${domain}`, { shouldValidate: true })}
-                                    >
-                                        {domain}
-                                    </Button>
+                                     <a href={`https://${domain}`} target="_blank" rel="noopener noreferrer" key={domain} onClick={(e) => e.preventDefault()}>
+                                        <Button
+                                            type="button"
+                                            variant={field.value === `https://${domain}` ? 'default' : 'outline'}
+                                            onClick={() => form.setValue('domain', `https://${domain}`, { shouldValidate: true })}
+                                            className="w-full"
+                                        >
+                                            {domain}
+                                        </Button>
+                                    </a>
                                 ))}
                             </div>
                             <FormMessage />
@@ -277,5 +276,3 @@ export function MarkdownGenerator() {
     </>
   );
 }
-
-    

@@ -18,6 +18,33 @@ interface MarkdownResultProps {
   isLoading: boolean;
 }
 
+const TitleWithClickableLink = ({ title }: { title: string }) => {
+    const regex = /(【链接地址：)(.*?)(】)/;
+    const parts = title.split(regex);
+    
+    if (parts.length > 3) {
+      const url = `https://${parts[2]}`;
+      return (
+        <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
+          {parts[0]}
+          {parts[1]}
+          <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+            {parts[2]}
+          </a>
+          {parts[3]}
+          {parts[4]}
+        </p>
+      );
+    }
+  
+    return (
+      <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
+        {title}
+      </p>
+    );
+};
+
+
 export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
@@ -131,9 +158,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                       </div>
                   </div>
                    <div className="py-4">
-                        <div className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
-                            {item.title}
-                        </div>
+                        <TitleWithClickableLink title={item.title} />
                     </div>
                 <AccordionContent>
                   <div className="space-y-4 pt-4 border-t border-dashed">
@@ -150,4 +175,3 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
-
