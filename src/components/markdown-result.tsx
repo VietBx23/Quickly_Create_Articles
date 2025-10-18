@@ -26,8 +26,11 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let textToCopy = text;
 
     if (type === 'content') {
-        // Replace </p> with a newline, then strip all other HTML tags
-        textToCopy = text
+        // Special handling for links: replace <a href="URL">...</a> with the URL itself.
+        textToCopy = text.replace(/<a\s+(?:[^>]*?\s+)?href="([^"]*)"[^>]*>.*?<\/a>/gi, '$1');
+        
+        // Replace </p> and <br> with a newline, then strip all other HTML tags
+        textToCopy = textToCopy
             .replace(/<\/p>/gi, '\n') // Ensure paragraph breaks become newlines
             .replace(/<br\s*\/?>/gi, '\n') // Handle <br> tags
             .replace(/<[^>]+>/g, '') // Strip all other tags
