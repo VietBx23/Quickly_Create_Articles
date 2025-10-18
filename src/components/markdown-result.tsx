@@ -26,12 +26,19 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let textToCopy = text;
 
     if (type === 'content') {
-        textToCopy = text
-            .replace(/<a\s+(?:[^>]*?\s+)?href="([^"]*)"[^>]*>.*?<\/a>/gi, '$1')
-            .replace(/<\/p>/gi, '\n') 
-            .replace(/<br\s*\/?>/gi, '\n')
-            .replace(/<[^>]+>/g, '') 
-            .trim();
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = text;
+
+        // Replace all <a> tags with their href attribute
+        tempDiv.querySelectorAll('a').forEach(a => {
+            const href = a.getAttribute('href');
+            if (href) {
+                a.parentNode?.replaceChild(document.createTextNode(href), a);
+            }
+        });
+        
+        // Use innerText to get the structured text with newlines
+        textToCopy = tempDiv.innerText;
     }
 
     navigator.clipboard.writeText(textToCopy).then(
