@@ -89,7 +89,6 @@ const generateMarkdownContentFlow = ai.defineFlow(
   async input => {
     const displayDomain = input.domain.replace(/^https?:\/\//, '');
 
-    // Pad secondary keywords if less than 3 are provided
     const sks = [...input.secondaryKeywords];
     while (sks.length < 3) {
       sks.push(sks[sks.length - 1] || input.primaryKeyword);
@@ -105,16 +104,12 @@ const generateMarkdownContentFlow = ai.defineFlow(
     
     const seoTitlePart = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
     const uniqueIdPart = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
-
-    // This is the title for the H1 tag inside the article
+    
     const displayTitleForH1 = seoTitlePart;
-    // This is the full title for copying
     const fullTitleForCopying = `${seoTitlePart} - ${uniqueIdPart}`;
     
-    // --- Dynamic Content Assembly ---
     const getRandomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
     
-    // Shuffle middle blocks to get more variety
     const shuffledMiddleBlocks = [...MIDDLE_BLOCKS].sort(() => 0.5 - Math.random());
 
     const intro = getRandomItem(INTRO_BLOCKS)(input.primaryKeyword, sks);
@@ -126,9 +121,8 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const allKeywords = [input.primaryKeyword, ...input.secondaryKeywords];
     const keywordAggregation = `🔍 关键词聚合：${allKeywords.join('、')}`;
 
-    const styledTitle = `<p style="font-size: 30px; text-align: center; font-weight: bold;">${displayTitleForH1}</p>`;
+    const styledTitle = `<p><strong>${displayTitleForH1}</strong></p>`;
     const fullContent = `${styledTitle}${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
-    // --- End Dynamic Content Assembly ---
 
     return {
         title: fullTitleForCopying,
@@ -136,4 +130,3 @@ const generateMarkdownContentFlow = ai.defineFlow(
     };
   }
 );
-
