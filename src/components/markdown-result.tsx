@@ -59,18 +59,21 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     const key = `${type}-${index}`;
     
     if (type === 'title') {
-      const regex = /(【链接地址：)([^】]+)(】)/;
-      const match = text.match(regex);
-      let htmlToCopy = text;
+        const regex = /(【链接地址：)([^】]+)(】)/;
+        const match = text.match(regex);
+        let htmlToCopy = text;
 
-      if (match) {
-        const domain = match[2];
-        const url = domain.startsWith('http') ? domain : `https://${domain}`;
-        const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
-        
-        const fullMatch = `【链接地址：${domain}】`;
-        htmlToCopy = text.replace(fullMatch, `【链接地址：${linkHtml}】`);
-      }
+        if (match) {
+            const domain = match[2];
+            const url = domain.startsWith('http') ? domain : `https://${domain}`;
+            const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
+            
+            const fullMatch = `【链接地址：${domain}】`;
+            // Escape special characters for regex replacement
+            const titleWithPlaceholder = text.replace(fullMatch, '___LINK_PLACEHOLDER___');
+            const escapedTitle = titleWithPlaceholder.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            htmlToCopy = escapedTitle.replace('___LINK_PLACEHOLDER___', `【链接地址：${linkHtml}】`);
+        }
       
       try {
         const blob = new Blob([htmlToCopy], { type: 'text/html' });
