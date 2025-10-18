@@ -61,18 +61,14 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     if (type === 'title') {
         const regex = /(【链接地址：)([^】]+)(】)/;
         const match = text.match(regex);
-        let htmlToCopy = text;
+        let htmlToCopy = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         if (match) {
             const domain = match[2];
             const url = domain.startsWith('http') ? domain : `https://${domain}`;
             const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
             
-            const fullMatch = `【链接地址：${domain}】`;
-            // Escape special characters for regex replacement
-            const titleWithPlaceholder = text.replace(fullMatch, '___LINK_PLACEHOLDER___');
-            const escapedTitle = titleWithPlaceholder.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            htmlToCopy = escapedTitle.replace('___LINK_PLACEHOLDER___', `【链接地址：${linkHtml}】`);
+            htmlToCopy = htmlToCopy.replace(match[0].replace(/</g, '&lt;').replace(/>/g, '&gt;'), `【链接地址：${linkHtml}】`);
         }
       
       try {
@@ -192,7 +188,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                       </div>
                   </div>
                   <div className="py-4">
-                      <TitleWithClickableLink title={item.title} />
+                    <TitleWithClickableLink title={item.title} />
                   </div>
                 <AccordionContent>
                   <div className="space-y-4 pt-4 border-t border-dashed">
