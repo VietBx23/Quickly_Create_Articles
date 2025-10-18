@@ -96,7 +96,7 @@ const articlePrompt = ai.definePrompt({
       2.  **Call to Action (CTA):**
           - At the very end of the content, you MUST include a strong call to action.
           - This CTA must direct users to visit the provided domain.
-          - The link MUST be exactly: <a href="{{domain}}">{{domain}}</a>. Make it stand out, for example, by wrapping it in an <h2> or <p> tag with bold text.
+          - The link MUST be exactly: <h2><a href="{{domain}}"><strong>👉👉 Truy cập ngay! 👈👈</strong></a></h2>.
       3.  **Format:**
           - The entire output MUST be a single block of HTML containing only the article body (paragraphs and the final CTA).
           - DO NOT include the <h1> title tag in your output.
