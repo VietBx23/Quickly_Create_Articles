@@ -25,6 +25,18 @@ const FormSchema = z.object({
 const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "184.run", "6677.one"];
 const PRIMARY_KEYWORDS = ['黑料网', '六合彩内部资料', '六合'];
 
+const defaultSecondaryKeywords = [
+  "亚洲精品国产精品乱码视色",
+  "亚洲国产欧美在线观看片不卡",
+  "中文字幕乱码人妻一区二区三区",
+  "国产又色又爽又黄的免费",
+  "久久精品视频在线看",
+  "亚洲精品少妇一区二区",
+  "精品久久久噜噜噜久久久",
+  "天天躁夜夜躁狠狠综合",
+  "欧美自拍亚洲综合丝袜"
+].join('\n');
+
 export function MarkdownGenerator() {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<MarkdownResultItem[]>([]);
@@ -35,7 +47,7 @@ export function MarkdownGenerator() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       primaryKeyword: '黑料网',
-      secondaryKeyword: '',
+      secondaryKeyword: defaultSecondaryKeywords,
       domain: 'https://za51.run',
       value: '',
     },
@@ -194,7 +206,7 @@ export function MarkdownGenerator() {
                         <div className="relative">
                           <List className="absolute left-3 top-4 h-5 w-5 text-muted-foreground" />
                           <FormControl>
-                            <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={5} className="pl-10 pt-3" />
+                            <Textarea placeholder="ví dụ: địa chỉ trực tuyến mới nhất (mỗi dòng một từ)" {...field}  rows={10} className="pl-10 pt-3" />
                           </FormControl>
                         </div>
                         <FormDescription>
@@ -237,3 +249,5 @@ export function MarkdownGenerator() {
     </>
   );
 }
+
+    
