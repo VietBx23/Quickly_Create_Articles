@@ -6,9 +6,6 @@ import { Copy, Check } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
-import showdown from 'showdown';
-
-declare const ClipboardItem: any;
 
 export interface MarkdownResultItem {
   title: string;
@@ -20,8 +17,6 @@ interface MarkdownResultProps {
   isLoading: boolean;
 }
 
-const converter = new showdown.Converter();
-
 export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
@@ -31,13 +26,11 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     let textToCopy = text;
 
     if (type === 'content') {
-        const markdown = converter.makeMarkdown(text);
-        // This regex will remove image tags, but keep the text from links.
-        // It converts [link text](url) to "link text". We want to keep the URL for autolinking.
-        // A better approach is to let the browser render the HTML and get the innerText.
+        // Create a temporary div to render the HTML
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = text;
-        textToCopy = tempDiv.innerText;
+        // Get the plain text content
+        textToCopy = tempDiv.innerText || tempDiv.textContent || '';
     }
 
     navigator.clipboard.writeText(textToCopy).then(
@@ -126,3 +119,5 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
+
+    
