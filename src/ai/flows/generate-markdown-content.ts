@@ -44,11 +44,16 @@ function generateRandomString(length: number): string {
 }
 
 const TEMPLATES = [
-  "Chào mừng bạn đến với thế giới của <strong>{{primaryKeyword}}</strong>! Chúng tôi tự hào là nơi cung cấp những trải nghiệm độc đáo và nội dung hàng đầu. Nếu bạn đang tìm kiếm <em>{{secondaryKeyword}}</em>, bạn đã đến đúng nơi. Khám phá ngay để không bỏ lỡ những cập nhật mới nhất và hấp dẫn nhất chỉ có tại đây.",
-  "Bạn có phải là một người hâm mộ của <strong>{{primaryKeyword}}</strong>? Trang web của chúng tôi là điểm đến lý tưởng dành cho bạn. Chúng tôi chuyên sâu về lĩnh vực này và luôn mang đến những thông tin nóng hổi, đặc biệt là về <em>{{secondaryKeyword}}</em>. Hãy cùng chúng tôi đắm chìm vào những trải nghiệm không thể quên.",
-  "Khám phá vũ trụ vô tận của <strong>{{primaryKeyword}}</strong> ngay hôm nay! Tại đây, mọi thông tin bạn cần, đặc biệt là các nội dung độc quyền về <em>{{secondaryKeyword}}</em>, đều được cập nhật liên tục. Chúng tôi cam kết mang đến cho bạn chất lượng và sự đa dạng không nơi nào có được.",
-  "Bạn đang tìm kiếm thông tin về <strong>{{primaryKeyword}}</strong>? Đừng tìm đâu xa! Chúng tôi cung cấp một kho tàng nội dung phong phú, từ những điều cơ bản đến các chủ đề nâng cao như <em>{{secondaryKeyword}}</em>. Hãy để chúng tôi trở thành người bạn đồng hành đáng tin cậy của bạn trên hành trình khám phá này.",
-  "Tại sao nên chọn chúng tôi khi bạn quan tâm đến <strong>{{primaryKeyword}}</strong>? Vì chúng tôi không chỉ cung cấp thông tin, mà còn mang đến những góc nhìn chuyên sâu và độc đáo, đặc biệt với những ai yêu thích <em>{{secondaryKeyword}}</em>. Trải nghiệm sự khác biệt và đẳng cấp ngay hôm nay!"
+  `Chào mừng bạn đến với thế giới của <strong>{{primaryKeyword}}</strong>! Chúng tôi tự hào là điểm đến hàng đầu cho những ai đam mê và tìm kiếm những trải nghiệm độc đáo. Nếu bạn đặc biệt quan tâm đến <em>{{secondaryKeyword}}</em>, thì bạn đã tìm đúng nơi rồi đấy.
+  <br><br>Tại đây, chúng tôi không ngừng cập nhật những nội dung mới nhất, nóng hổi nhất, đảm bảo bạn sẽ luôn đi đầu xu hướng. Hãy dành thời gian khám phá kho tàng kiến thức và giải trí mà chúng tôi đã dày công xây dựng, bạn sẽ không phải thất vọng.`,
+  `Bạn có phải là một người hâm mộ cuồng nhiệt của <strong>{{primaryKeyword}}</strong>? Trang web của chúng tôi chính là thiên đường dành cho bạn. Chúng tôi chuyên sâu về lĩnh vực này và luôn mang đến những thông tin chính xác, cập nhật, đặc biệt là các nội dung độc quyền liên quan đến <em>{{secondaryKeyword}}</em>.
+  <br><br>Hãy cùng chúng tôi đắm chìm vào những giờ phút giải trí khó quên, nơi mọi thông tin đều được kiểm chứng và trình bày một cách hấp dẫn. Cộng đồng của chúng tôi luôn chào đón những thành viên mới có cùng chung đam mê.`,
+  `Khám phá vũ trụ vô tận của <strong>{{primaryKeyword}}</strong> ngay hôm nay! Tại đây, mọi thông tin bạn cần, từ cơ bản đến nâng cao, đặc biệt là các phân tích chuyên sâu về <em>{{secondaryKeyword}}</em>, đều được cập nhật liên tục và nhanh chóng.
+  <br><br>Chúng tôi cam kết mang đến cho bạn chất lượng và sự đa dạng không nơi nào có được. Đội ngũ chuyên gia của chúng tôi luôn làm việc không ngừng nghỉ để cung cấp cho bạn những góc nhìn mới lạ và thông tin giá trị nhất.`,
+  `Bạn đang tìm kiếm thông tin đáng tin cậy về <strong>{{primaryKeyword}}</strong>? Đừng tìm đâu xa! Chúng tôi tự hào cung cấp một kho tàng nội dung phong phú và đa dạng, bao gồm cả những chủ đề nóng hổi như <em>{{secondaryKeyword}}</em>.
+  <br><br>Hãy để chúng tôi trở thành người bạn đồng hành đáng tin cậy trên hành trình khám phá và chinh phục kiến thức của bạn. Với giao diện thân thiện và nội dung chất lượng, chúng tôi tin rằng bạn sẽ có những trải nghiệm tuyệt vời nhất.`,
+  `Tại sao nên chọn chúng tôi khi bạn quan tâm đến <strong>{{primaryKeyword}}</strong>? Bởi vì chúng tôi không chỉ cung cấp thông tin, mà còn mang đến những góc nhìn chuyên sâu, độc đáo và những phân tích mà bạn không thể tìm thấy ở nơi khác. Đặc biệt nếu bạn là người yêu thích <em>{{secondaryKeyword}}</em>.
+  <br><br>Hãy trải nghiệm sự khác biệt và đẳng cấp mà chúng tôi mang lại. Chúng tôi tin rằng chất lượng nội dung và sự tận tâm của đội ngũ sẽ là lý do giữ chân bạn ở lại với chúng tôi lâu dài.`
 ];
 
 
@@ -73,12 +78,12 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const title = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
     const titleWithLink = `<h1>${input.primaryKeyword} -【链接地址：<a href="${input.domain}" style="color: #1155cc; text-decoration: underline;">${displayDomain}</a>】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}</h1>`;
 
-    // 2. Since AI generation is failing, use a static template but select one randomly.
+    // 2. Select a random template for the body
     const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
     const randomTemplate = TEMPLATES[randomIndex];
     const articleBody = `<p>${randomTemplate
-      .replace('{{primaryKeyword}}', input.primaryKeyword)
-      .replace('{{secondaryKeyword}}', input.secondaryKeyword)}</p>`;
+      .replace(/{{primaryKeyword}}/g, input.primaryKeyword)
+      .replace(/{{secondaryKeyword}}/g, input.secondaryKeyword)}</p>`;
     
     // 3. Manually create the Call To Action
     const callToAction = `<h2><a href="${input.domain}"><strong>👉👉 Truy cập ngay! 👈👈</strong></a></h2>`;
@@ -89,3 +94,4 @@ const generateMarkdownContentFlow = ai.defineFlow(
     return {title: title, content: fullContent};
   }
 );
+
