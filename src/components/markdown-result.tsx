@@ -25,7 +25,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
     if (parts.length > 3) {
       const url = `https://${parts[2]}`;
       return (
-        <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
+        <p className="p-3 bg-muted/30 rounded-md break-all text-2xl text-foreground">
           {parts[0]}
           {parts[1]}
           <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
@@ -38,7 +38,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
     }
   
     return (
-      <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
+      <p className="p-3 bg-muted/30 rounded-md break-all text-2xl text-foreground">
         {title}
       </p>
     );
@@ -175,3 +175,4 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
+
