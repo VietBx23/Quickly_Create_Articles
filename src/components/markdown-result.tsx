@@ -47,10 +47,9 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     }
     
     if (type === 'content') {
-        // Remove h1 and strong tags but keep a and p tags
+        // Replace h1 with its content followed by a line break, and remove strong tags
         const cleanedHtml = text
-            .replace(/<h1>/gi, '<p>') // Replace h1 with p to preserve structure
-            .replace(/<\/h1>/gi, '</p>')
+            .replace(/<h1>(.*?)<\/h1>/gi, '$1\n') // extract content and add newline
             .replace(/<strong>/gi, '')
             .replace(/<\/strong>/gi, '');
 
@@ -120,7 +119,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
          <Accordion type="single" collapsible className="w-full space-y-4">
             {results.map((item, index) => (
               <AccordionItem value={`item-${index}`} key={index} className="border border-border/20 rounded-lg bg-background/50 px-4">
-                 <div className="flex justify-between items-center w-full py-4">
+                 <div className="flex justify-between items-center w-full pt-4">
                      <h3 className="font-bold text-lg text-primary text-left">STT {index + 1}</h3>
                       <div className="flex gap-2 items-center">
                           <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.title, 'title', index); }}>
@@ -136,7 +135,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                            </AccordionTrigger>
                       </div>
                   </div>
-                   <div className="pb-4">
+                   <div className="py-4">
                         <div className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
                             {item.title}
                         </div>
