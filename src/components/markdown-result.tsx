@@ -27,7 +27,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
 
     if (type === 'content') {
         // Step 1: Replace <a> tags with their href URL.
-        // This regex captures the href value and replaces the whole <a> tag with it.
+        // This ensures the full, clickable URL is in the text.
         textToCopy = text.replace(/<a\s+(?:[^>]*?\s+)?href="([^"]*)"[^>]*>.*?<\/a>/gi, '$1');
         
         // Step 2: Convert <p> and <br> tags to newlines for structure.
@@ -38,10 +38,13 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         textToCopy = textToCopy.replace(/<[^>]+>/g, '');
 
         // Step 4: Decode HTML entities (like &nbsp;) and trim whitespace.
+        // This is a robust way to handle entities without a library.
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = textToCopy;
         textToCopy = tempDiv.textContent || tempDiv.innerText || '';
-        textToCopy = textToCopy.trim();
+        
+        // Step 5: Clean up extra newlines
+        textToCopy = textToCopy.replace(/\n\s*\n/g, '\n').trim();
     }
 
 
