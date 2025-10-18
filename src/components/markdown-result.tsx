@@ -31,7 +31,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
         const url = domain.startsWith('http') ? domain : `https://${domain}`;
 
         return (
-            <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
+            <p className="p-3 bg-muted/30 rounded-md break-all text-lg text-foreground">
                 {prefix}
                 {linkPrefix}
                 <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
@@ -44,7 +44,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
     }
 
     return (
-        <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
+        <p className="p-3 bg-muted/30 rounded-md break-all text-lg text-foreground">
             {title}
         </p>
     );
@@ -67,9 +67,14 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
         const domain = match[2];
         const url = domain.startsWith('http') ? domain : `https://${domain}`;
         const link = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
-        htmlToCopy = text.replace(match[0], `${match[1]}${link}${match[3]}`);
+        // Escape characters for the replacement string
+        const escapedPrefix = match[1].replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const escapedDomain = match[2].replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const escapedSuffix = match[3].replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const replacementRegex = new RegExp(`${escapedPrefix}${escapedDomain}${escapedSuffix}`);
+        htmlToCopy = text.replace(replacementRegex, `${match[1]}${link}${match[3]}`);
       }
-
+      
       try {
         const blob = new Blob([htmlToCopy], { type: 'text/html' });
         const clipboardItem = new ClipboardItem({ 'text/html': blob });
