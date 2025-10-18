@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Copy, Check } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import { Separator } from './ui/separator';
+
 
 export interface MarkdownResultItem {
   title: string;
@@ -23,54 +24,64 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
 
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
-
-    if (type === 'content') {
-        // "Clean" the HTML by removing unwanted tags but keeping <a> and <p>
-        const processedHtml = text
-            .replace(/<\/?h[1-6][^>]*>/gi, '') // Remove h1-h6 tags
-            .replace(/<\/?strong>/gi, '');     // Remove strong tags
-
-        // Use the Clipboard API to write rich text (HTML)
-        const blob = new Blob([processedHtml], { type: 'text/html' });
-        const clipboardItem = new ClipboardItem({ 'text/html': blob });
-
-        navigator.clipboard.write([clipboardItem]).then(() => {
-            setCopiedStates(prev => ({ ...prev, [key]: true }));
-            toast({
-                title: 'Đã sao chép vào Clipboard!',
-                description: `Nội dung bài viết đã được sao chép dưới dạng HTML.`,
-            });
-            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        }, (err) => {
-            toast({
-                variant: 'destructive',
-                title: 'Sao chép thất bại',
-                description: 'Không thể sao chép nội dung. Vui lòng thử lại.',
-            });
-            console.error('Lỗi sao chép:', err);
-        });
-        return; // Exit after handling content copy
+    
+    // For title, copy as plain text
+    if (type === 'title') {
+      navigator.clipboard.writeText(text).then(
+        () => {
+          setCopiedStates(prev => ({ ...prev, [key]: true }));
+          toast({
+            title: 'Đã sao chép vào Clipboard!',
+            description: `Nội dung tiêu đề đã được sao chép.`,
+          });
+          setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+        },
+        (err) => {
+          toast({
+            variant: 'destructive',
+            title: 'Sao chép thất bại',
+            description: 'Không thể sao chép nội dung. Vui lòng thử lại.',
+          });
+          console.error('Lỗi sao chép:', err);
+        }
+      );
+      return;
     }
+    
+    // For content, copy as rich text (HTML)
+    if (type === 'content') {
+        const processedHtml = text
+            .replace(/<\/?h1[^>]*>/gi, '') 
+            .replace(/<\/?strong>/gi, '');
 
-    // For 'title', copy as plain text
-    navigator.clipboard.writeText(text).then(
-      () => {
-        setCopiedStates(prev => ({ ...prev, [key]: true }));
-        toast({
-          title: 'Đã sao chép vào Clipboard!',
-          description: `Nội dung tiêu đề đã được sao chép.`,
-        });
-        setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-      },
-      (err) => {
-        toast({
-          variant: 'destructive',
-          title: 'Sao chép thất bại',
-          description: 'Không thể sao chép nội dung. Vui lòng thử lại.',
-        });
-        console.error('Lỗi sao chép:', err);
-      }
-    );
+        try {
+            const blob = new Blob([processedHtml], { type: 'text/html' });
+            const clipboardItem = new ClipboardItem({ 'text/html': blob });
+
+            navigator.clipboard.write([clipboardItem]).then(() => {
+                setCopiedStates(prev => ({ ...prev, [key]: true }));
+                toast({
+                    title: 'Đã sao chép vào Clipboard!',
+                    description: `Nội dung bài viết đã được sao chép dưới dạng HTML.`,
+                });
+                setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+            }, (err) => {
+                toast({
+                    variant: 'destructive',
+                    title: 'Sao chép thất bại',
+                    description: 'Không thể sao chép nội dung HTML. Vui lòng thử lại.',
+                });
+                console.error('Lỗi sao chép:', err);
+            });
+        } catch (e) {
+             toast({
+                    variant: 'destructive',
+                    title: 'Lỗi không xác định',
+                    description: 'Trình duyệt của bạn có thể không hỗ trợ sao chép HTML.',
+                });
+             console.error('Lỗi Clipboard API:', e);
+        }
+    }
   };
   
   if (isLoading) {
@@ -102,39 +113,41 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   return (
     <Card className="bg-card/60 backdrop-blur-xl border-border/20">
       <CardHeader>
-        <CardTitle>Markdown đã tạo của bạn</CardTitle>
-        <CardDescription>Đây là nội dung được tạo. Nhấp vào một mục để xem và sao chép nội dung.</CardDescription>
+        <CardTitle>Kết quả đã tạo</CardTitle>
+        <CardDescription>Đã tạo {results.length} bài viết. Dưới đây là danh sách kết quả.</CardDescription>
       </CardHeader>
-      <CardContent>
-        <Accordion type="single" collapsible className="w-full">
-          {results.map((item, index) => (
-            <AccordionItem value={`item-${index}`} key={index}>
-              <AccordionTrigger>{item.title}</AccordionTrigger>
-              <AccordionContent>
-                <div className="p-4 bg-muted/50 rounded-md relative mt-2">
-                   <div className="flex justify-end gap-2 mb-2">
-                     <Button variant="ghost" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
-                        {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        <span className="ml-2">{copiedStates[`title-${index}`] ? 'Đã sao chép' : 'Sao chép Tiêu đề'}</span>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleCopy(item.content, 'content', index)}
-                      >
-                        {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
-                      </Button>
-                   </div>
-                  <div 
-                      className="prose prose-sm dark:prose-invert max-w-none rounded-md border border-border/20 p-4" 
-                      dangerouslySetInnerHTML={{ __html: item.content }}
-                  />
+      <CardContent className="space-y-6">
+        {results.map((item, index) => (
+          <div key={index} className="space-y-4">
+            <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                    <h3 className="font-bold text-lg text-primary">STT {index + 1}</h3>
+                    <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => handleCopy(item.title, 'title', index)}>
+                            {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                            <span className="ml-2">{copiedStates[`title-${index}`] ? 'Đã sao chép' : 'Sao chép Tiêu đề'}</span>
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => handleCopy(item.content, 'content', index)}>
+                            {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                            <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
+                        </Button>
+                    </div>
                 </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+                 <div className="p-3 bg-muted/30 rounded-md text-sm font-mono break-all">
+                    {item.title}
+                 </div>
+            </div>
+            
+            <div className="space-y-2">
+                <div 
+                    className="prose prose-sm dark:prose-invert max-w-none rounded-md border border-border/20 p-4 bg-background" 
+                    dangerouslySetInnerHTML={{ __html: item.content }}
+                />
+            </div>
+            
+            {index < results.length - 1 && <Separator className="my-6" />}
+          </div>
+        ))}
       </CardContent>
     </Card>
   );

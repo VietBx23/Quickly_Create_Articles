@@ -37,15 +37,6 @@ const defaultSecondaryKeywords = [
   "欧美自拍亚洲综合丝袜"
 ].join('\n');
 
-function chunkArray<T>(array: T[], size: number): T[][] {
-    const chunkedArr: T[][] = [];
-    for (let i = 0; i < array.length; i += size) {
-        chunkedArr.push(array.slice(i, i + size));
-    }
-    return chunkedArr;
-}
-
-
 export function MarkdownGenerator() {
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<MarkdownResultItem[]>([]);
@@ -78,44 +69,64 @@ export function MarkdownGenerator() {
       return;
     }
     
-    const keywordGroups = chunkArray(allSecondaryKeywords, 3);
     let successfulCount = 0;
+    const totalKeywords = allSecondaryKeywords.length;
 
-    for (const group of keywordGroups) {
-      if (group.length === 0) continue;
-
-      try {
-        const result = await handleGenerateMarkdown({
-          primaryKeyword: data.primaryKeyword,
-          secondaryKeywords: group,
-          domain: data.domain,
-          value: data.value,
-        });
-
-        if (result.success && result.data) {
-          setResults(prevResults => [...prevResults, result.data!]);
-          successfulCount++;
-        } else {
-          toast({
-            variant: "destructive",
-            title: `Tạo thất bại cho nhóm: "${group.join(', ')}"`,
-            description: result.error || "Đã xảy ra lỗi không xác định.",
-          });
+    for (let i = 0; i < totalKeywords; i++) {
+        const mainSecondaryKeyword = allSecondaryKeywords[i];
+        
+        // Create a pool of other keywords to pick from randomly
+        const otherKeywords = [...allSecondaryKeywords.slice(0, i), ...allSecondaryKeywords.slice(i + 1)];
+        
+        // Pick 2 random keywords
+        const randomKeywords = [];
+        let retries = 0; // Prevent infinite loops
+        while (randomKeywords.length < 2 && otherKeywords.length > 0 && retries < 10) {
+            const randomIndex = Math.floor(Math.random() * otherKeywords.length);
+            randomKeywords.push(otherKeywords.splice(randomIndex, 1)[0]);
+            retries++;
         }
-      } catch (error) {
-        toast({
-            variant: "destructive",
-            title: `Tạo thất bại cho nhóm: "${group.join(', ')}"`,
-            description: "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại.",
-          });
-        console.error(`Generation error for group ${group.join(', ')}:`, error);
-      }
+
+        // If not enough random keywords, duplicate the main one
+        while (randomKeywords.length < 2) {
+            randomKeywords.push(mainSecondaryKeyword);
+        }
+
+        const keywordGroup = [mainSecondaryKeyword, ...randomKeywords];
+
+        try {
+            const result = await handleGenerateMarkdown({
+                primaryKeyword: data.primaryKeyword,
+                secondaryKeywords: keywordGroup,
+                domain: data.domain,
+                value: data.value,
+            });
+
+            if (result.success && result.data) {
+                setResults(prevResults => [...prevResults, result.data!]);
+                successfulCount++;
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: `Tạo thất bại cho từ khóa: "${mainSecondaryKeyword}"`,
+                    description: result.error || "Đã xảy ra lỗi không xác định.",
+                });
+            }
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: `Tạo thất bại cho từ khóa: "${mainSecondaryKeyword}"`,
+                description: "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại.",
+            });
+            console.error(`Generation error for keyword ${mainSecondaryKeyword}:`, error);
+        }
     }
+
 
     if (successfulCount > 0) {
         toast({
           title: "Hoàn thành!",
-          description: `Đã tạo thành công markdown cho ${successfulCount} trên ${keywordGroups.length} nhóm từ khóa.`,
+          description: `Đã tạo thành công markdown cho ${successfulCount} trên ${totalKeywords} từ khóa.`,
         });
     }
 
@@ -224,7 +235,7 @@ export function MarkdownGenerator() {
                           </FormControl>
                         </div>
                         <FormDescription>
-                          Nhập một từ khóa phụ mỗi dòng. Hệ thống sẽ nhóm 3 từ khóa một để tạo bài viết.
+                          Mỗi từ khóa phụ một dòng. Hệ thống sẽ tạo một bài viết cho mỗi từ khóa.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -263,5 +274,3 @@ export function MarkdownGenerator() {
     </>
   );
 }
-
-    
