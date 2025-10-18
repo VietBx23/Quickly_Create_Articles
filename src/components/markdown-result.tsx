@@ -28,7 +28,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
         const domain = match[2];
         const linkSuffix = match[3];
         const suffix = title.substring(match.index + match[0].length);
-        const url = `https://${domain}`;
+        const url = domain.startsWith('http') ? domain : `https://${domain}`;
 
         return (
             <p className="p-3 bg-muted/30 rounded-md break-all text-base text-foreground">
@@ -59,24 +59,47 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     const key = `${type}-${index}`;
     
     if (type === 'title') {
-      navigator.clipboard.writeText(text).then(
-        () => {
+      const regex = /(【链接地址：)([^】]+)(】)/;
+      const match = text.match(regex);
+      let htmlToCopy = text;
+
+      if (match) {
+        const domain = match[2];
+        const url = domain.startsWith('http') ? domain : `https://${domain}`;
+        const link = `<a href="${url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
+        htmlToCopy = text.replace(match[0], `${match[1]}${link}${match[3]}`);
+      }
+
+      try {
+        const blob = new Blob([htmlToCopy], { type: 'text/html' });
+        const clipboardItem = new ClipboardItem({ 'text/html': blob });
+
+        navigator.clipboard.write([clipboardItem]).then(() => {
           setCopiedStates(prev => ({ ...prev, [key]: true }));
           toast({
             title: '已复制到剪贴板！',
-            description: `标题内容已复制。`,
+            description: `标题内容已复制为 HTML。`,
           });
           setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
-        },
-        (err) => {
+        }, (err) => {
+           // Fallback to plain text if HTML copy fails
+           navigator.clipboard.writeText(text).then(() => {
+                setCopiedStates(prev => ({ ...prev, [key]: true }));
+                toast({
+                    title: '已复制为纯文本！',
+                    description: `标题内容已复制。`,
+                });
+                setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+           });
+        });
+      } catch (e) {
           toast({
             variant: 'destructive',
             title: '复制失败',
             description: '无法复制内容。请再试一次。',
           });
-          console.error('复制错误:', err);
-        }
-      );
+          console.error('Clipboard API 错误:', e);
+      }
       return;
     }
     
@@ -181,5 +204,3 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
-
-    
