@@ -23,7 +23,7 @@ const FormSchema = z.object({
 });
 
 const DOMAINS = ["za51.run", "za52.run", "za53.run", "uu1.run", "uu2.run", "uu3.run", "181.run", "182.run", "183.run", "184.run", "6677.one"];
-const PRIMARY_KEYWORDS = ['黑料网', '六合彩内部资料', '六合'];
+const PRIMARY_KEYWORDS = ['黑料网', '六合彩内部资料', '六合','2026年世界杯'];
 
 const defaultSecondaryKeywords = [
   "亚洲精品国产精品乱码视色",
