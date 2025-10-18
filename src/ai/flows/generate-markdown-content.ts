@@ -11,7 +11,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import * as os from 'os';
 
 const GenerateMarkdownContentInputSchema = z.object({
   primaryKeyword: z.string().describe('The primary keyword.'),
@@ -50,56 +49,6 @@ export async function generateMarkdownContent(
   return generateMarkdownContentFlow(input);
 }
 
-const articlePrompt = ai.definePrompt({
-    name: 'articlePrompt',
-    input: {
-      schema: z.object({
-        primaryKeyword: z.string(),
-        secondaryKeyword: z.string(),
-      }),
-    },
-    output: {
-      schema: z.object({
-        articleBody: z.string().describe('The article content in HTML format, including paragraphs with <p> tags. It should NOT contain any H1 title or any final call-to-action links.'),
-      }),
-    },
-    config: {
-      safetySettings: [
-        {
-          category: 'HARM_CATEGORY_HATE_SPEECH',
-          threshold: 'BLOCK_ONLY_HIGH',
-        },
-        {
-          category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-          threshold: 'BLOCK_ONLY_HIGH',
-        },
-        {
-          category: 'HARM_CATEGORY_HARASSMENT',
-          threshold: 'BLOCK_ONLY_HIGH',
-        },
-        {
-          category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-          threshold: 'BLOCK_ONLY_HIGH',
-        },
-      ],
-    },
-    prompt: `
-      You are an HTML generation assistant. Your task is to write a compelling article body in Vietnamese and format it as HTML.
-
-      **Instructions:**
-      1.  **Main Body:**
-          - Write a detailed and engaging article body.
-          - Naturally incorporate the **Primary Keyword: "{{primaryKeyword}}"** and the **Secondary Keyword: "{{secondaryKeyword}}"** throughout the text.
-          - The tone should be professional and trustworthy.
-          - Structure the article with paragraphs using <p> tags, and use <strong> for emphasis on key points.
-      2.  **Format:**
-          - The entire output MUST be a single block of HTML containing ONLY the article body (paragraphs).
-          - DO NOT include any <h1> title tag in your output.
-          - DO NOT include any final call to action or any <a> links.
-    `,
-});
-
-
 const generateMarkdownContentFlow = ai.defineFlow(
   {
     name: 'generateMarkdownContentFlow',
@@ -115,17 +64,14 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const title = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
     const titleWithLink = `<h1>${input.primaryKeyword} -【链接地址：<a href="${input.domain}" style="color: #1155cc; text-decoration: underline;">${displayDomain}</a>】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}</h1>`;
 
-    // 2. Call the AI to generate ONLY the article body
-    const {output} = await articlePrompt({
-        primaryKeyword: input.primaryKeyword,
-        secondaryKeyword: input.secondaryKeyword,
-    });
+    // 2. Since AI generation is failing, use a static template.
+    const articleBody = `<p>Chào mừng bạn đến với trang web của chúng tôi. Chúng tôi tự hào giới thiệu dịch vụ hàng đầu về <strong>${input.primaryKeyword}</strong>. Tại đây, bạn sẽ tìm thấy những nội dung đặc sắc và độc quyền, bao gồm cả <em>${input.secondaryKeyword}</em>. Chúng tôi liên tục cập nhật để mang đến cho bạn những trải nghiệm mới mẻ và hấp dẫn nhất. Hãy khám phá ngay để không bỏ lỡ bất kỳ thông tin quan trọng nào.</p>`;
     
     // 3. Manually create the Call To Action
     const callToAction = `<h2><a href="${input.domain}"><strong>👉👉 Truy cập ngay! 👈👈</strong></a></h2>`;
 
-    // 4. Combine the manually created H1, the AI-generated body, and the manually-created CTA
-    const fullContent = `${titleWithLink}${output!.articleBody}${callToAction}`;
+    // 4. Combine the manually created H1, the static body, and the manually-created CTA
+    const fullContent = `${titleWithLink}${articleBody}${callToAction}`;
 
     return {title: title, content: fullContent};
   }
