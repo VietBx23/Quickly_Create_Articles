@@ -23,39 +23,42 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
 
   const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
-    let textToCopy = text;
 
     if (type === 'content') {
-        // Create a temporary div to parse the HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = text;
+        // "Clean" the HTML by removing unwanted tags but keeping <a> and <p>
+        const processedHtml = text
+            .replace(/<\/?h[1-6][^>]*>/gi, '') // Remove h1-h6 tags
+            .replace(/<\/?strong>/gi, '');     // Remove strong tags
 
-        // Find all links and ensure their text is the href
-        // This is a safeguard, though the generator already does this.
-        tempDiv.querySelectorAll('a').forEach(a => {
-            a.textContent = a.href;
+        // Use the Clipboard API to write rich text (HTML)
+        const blob = new Blob([processedHtml], { type: 'text/html' });
+        const clipboardItem = new ClipboardItem({ 'text/html': blob });
+
+        navigator.clipboard.write([clipboardItem]).then(() => {
+            setCopiedStates(prev => ({ ...prev, [key]: true }));
+            toast({
+                title: 'Đã sao chép vào Clipboard!',
+                description: `Nội dung bài viết đã được sao chép dưới dạng HTML.`,
+            });
+            setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
+        }, (err) => {
+            toast({
+                variant: 'destructive',
+                title: 'Sao chép thất bại',
+                description: 'Không thể sao chép nội dung. Vui lòng thử lại.',
+            });
+            console.error('Lỗi sao chép:', err);
         });
-
-        // Get the innerHTML, which is now "cleaner"
-        let processedHtml = tempDiv.innerHTML;
-
-        // Convert <p> tags to newlines for basic structure
-        processedHtml = processedHtml.replace(/<p>/gi, '').replace(/<\/p>/gi, '\n');
-        
-        // Remove other block-level tags but keep their content
-        processedHtml = processedHtml.replace(/<\/?(h1|h2|strong|b)>/gi, '');
-
-        // Clean up excessive newlines
-        textToCopy = processedHtml.replace(/\n\s*\n/g, '\n').trim();
+        return; // Exit after handling content copy
     }
 
-
-    navigator.clipboard.writeText(textToCopy).then(
+    // For 'title', copy as plain text
+    navigator.clipboard.writeText(text).then(
       () => {
         setCopiedStates(prev => ({ ...prev, [key]: true }));
         toast({
           title: 'Đã sao chép vào Clipboard!',
-          description: `Nội dung ${type === 'title' ? 'tiêu đề' : 'bài viết'} đã được sao chép.`,
+          description: `Nội dung tiêu đề đã được sao chép.`,
         });
         setTimeout(() => setCopiedStates(prev => ({ ...prev, [key]: false })), 2000);
       },
@@ -120,7 +123,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                         onClick={() => handleCopy(item.content, 'content', index)}
                       >
                         {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Text'}</span>
+                        <span className="ml-2">{copiedStates[`content-${index}`] ? 'Đã sao chép' : 'Sao chép Nội dung'}</span>
                       </Button>
                    </div>
                   <div 
