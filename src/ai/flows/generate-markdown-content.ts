@@ -6,7 +6,7 @@
  *
  * - generateMarkdownContent - A function that generates markdown content.
  * - GenerateMarkdownContentInput - The input type for the generateMarkdownContent function.
- * - GenerateMarkdownContentOutput - The return type for the generateMarkdownContent function.
+ * - GenerateMarkdownContentOutput - The return type for the generateMarkdown-content function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -43,6 +43,15 @@ function generateRandomString(length: number): string {
     return result;
 }
 
+const TEMPLATES = [
+  "Chào mừng bạn đến với thế giới của <strong>{{primaryKeyword}}</strong>! Chúng tôi tự hào là nơi cung cấp những trải nghiệm độc đáo và nội dung hàng đầu. Nếu bạn đang tìm kiếm <em>{{secondaryKeyword}}</em>, bạn đã đến đúng nơi. Khám phá ngay để không bỏ lỡ những cập nhật mới nhất và hấp dẫn nhất chỉ có tại đây.",
+  "Bạn có phải là một người hâm mộ của <strong>{{primaryKeyword}}</strong>? Trang web của chúng tôi là điểm đến lý tưởng dành cho bạn. Chúng tôi chuyên sâu về lĩnh vực này và luôn mang đến những thông tin nóng hổi, đặc biệt là về <em>{{secondaryKeyword}}</em>. Hãy cùng chúng tôi đắm chìm vào những trải nghiệm không thể quên.",
+  "Khám phá vũ trụ vô tận của <strong>{{primaryKeyword}}</strong> ngay hôm nay! Tại đây, mọi thông tin bạn cần, đặc biệt là các nội dung độc quyền về <em>{{secondaryKeyword}}</em>, đều được cập nhật liên tục. Chúng tôi cam kết mang đến cho bạn chất lượng và sự đa dạng không nơi nào có được.",
+  "Bạn đang tìm kiếm thông tin về <strong>{{primaryKeyword}}</strong>? Đừng tìm đâu xa! Chúng tôi cung cấp một kho tàng nội dung phong phú, từ những điều cơ bản đến các chủ đề nâng cao như <em>{{secondaryKeyword}}</em>. Hãy để chúng tôi trở thành người bạn đồng hành đáng tin cậy của bạn trên hành trình khám phá này.",
+  "Tại sao nên chọn chúng tôi khi bạn quan tâm đến <strong>{{primaryKeyword}}</strong>? Vì chúng tôi không chỉ cung cấp thông tin, mà còn mang đến những góc nhìn chuyên sâu và độc đáo, đặc biệt với những ai yêu thích <em>{{secondaryKeyword}}</em>. Trải nghiệm sự khác biệt và đẳng cấp ngay hôm nay!"
+];
+
+
 export async function generateMarkdownContent(
   input: GenerateMarkdownContentInput
 ): Promise<GenerateMarkdownContentOutput> {
@@ -64,8 +73,12 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const title = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
     const titleWithLink = `<h1>${input.primaryKeyword} -【链接地址：<a href="${input.domain}" style="color: #1155cc; text-decoration: underline;">${displayDomain}</a>】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}</h1>`;
 
-    // 2. Since AI generation is failing, use a static template.
-    const articleBody = `<p>Chào mừng bạn đến với trang web của chúng tôi. Chúng tôi tự hào giới thiệu dịch vụ hàng đầu về <strong>${input.primaryKeyword}</strong>. Tại đây, bạn sẽ tìm thấy những nội dung đặc sắc và độc quyền, bao gồm cả <em>${input.secondaryKeyword}</em>. Chúng tôi liên tục cập nhật để mang đến cho bạn những trải nghiệm mới mẻ và hấp dẫn nhất. Hãy khám phá ngay để không bỏ lỡ bất kỳ thông tin quan trọng nào.</p>`;
+    // 2. Since AI generation is failing, use a static template but select one randomly.
+    const randomIndex = Math.floor(Math.random() * TEMPLATES.length);
+    const randomTemplate = TEMPLATES[randomIndex];
+    const articleBody = `<p>${randomTemplate
+      .replace('{{primaryKeyword}}', input.primaryKeyword)
+      .replace('{{secondaryKeyword}}', input.secondaryKeyword)}</p>`;
     
     // 3. Manually create the Call To Action
     const callToAction = `<h2><a href="${input.domain}"><strong>👉👉 Truy cập ngay! 👈👈</strong></a></h2>`;
