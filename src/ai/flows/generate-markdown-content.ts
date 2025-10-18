@@ -56,12 +56,11 @@ const articlePrompt = ai.definePrompt({
       schema: z.object({
         primaryKeyword: z.string(),
         secondaryKeyword: z.string(),
-        domain: z.string(),
       }),
     },
     output: {
       schema: z.object({
-        articleBody: z.string().describe('The article content in HTML format, without the H1 title.'),
+        articleBody: z.string().describe('The article content in HTML format, including paragraphs with <p> tags. It should NOT contain any H1 title or any final call-to-action links.'),
       }),
     },
     config: {
@@ -93,19 +92,10 @@ const articlePrompt = ai.definePrompt({
           - Naturally incorporate the **Primary Keyword: "{{primaryKeyword}}"** and the **Secondary Keyword: "{{secondaryKeyword}}"** throughout the text.
           - The tone should be professional and trustworthy.
           - Structure the article with paragraphs using <p> tags, and use <strong> for emphasis on key points.
-      2.  **Call to Action (CTA):**
-          - At the very end of the content, you MUST include a strong call to action.
-          - This CTA must direct users to visit the provided domain.
-          - The link MUST be exactly: <h2><a href="{{domain}}"><strong>👉👉 Truy cập ngay! 👈👈</strong></a></h2>.
-      3.  **Format:**
-          - The entire output MUST be a single block of HTML containing only the article body (paragraphs and the final CTA).
-          - DO NOT include the <h1> title tag in your output.
-
-      **Example Output Structure:**
-      <p>Introduction mentioning the keywords...</p>
-      <p>More details, benefits, and information...</p>
-      <p>Concluding thoughts...</p>
-      <h2><a href="{{domain}}"><strong>👉👉 Truy cập ngay! 👈👈</strong></a></h2>
+      2.  **Format:**
+          - The entire output MUST be a single block of HTML containing ONLY the article body (paragraphs).
+          - DO NOT include any <h1> title tag in your output.
+          - DO NOT include any final call to action or any <a> links.
     `,
 });
 
@@ -121,21 +111,21 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const randomChars = generateRandomString(6);
     const displayDomain = input.domain.replace(/^https?:\/\//, '');
 
-    // Generate the original title (as per user's request to keep it)
+    // 1. Manually create the title and H1 tag
     const title = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
+    const titleWithLink = `<h1>${input.primaryKeyword} -【链接地址：<a href="${input.domain}" style="color: #1155cc; text-decoration: underline;">${displayDomain}</a>】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}</h1>`;
 
-    // Create the H1 title with the link inside, to be used in the article body
-    const titleWithLink = `${input.primaryKeyword} -【链接地址：<a href="${input.domain}" style="color: #1155cc; text-decoration: underline;">${displayDomain}</a>】- ${input.secondaryKeyword} - ${today}- ${input.value}|881比鸭 - ${randomChars}`;
-
-    // Call the AI to generate ONLY the article body
+    // 2. Call the AI to generate ONLY the article body
     const {output} = await articlePrompt({
         primaryKeyword: input.primaryKeyword,
         secondaryKeyword: input.secondaryKeyword,
-        domain: input.domain,
     });
     
-    // Combine the manually created H1 with the AI-generated body
-    const fullContent = `<h1>${titleWithLink}</h1>${output!.articleBody}`;
+    // 3. Manually create the Call To Action
+    const callToAction = `<h2><a href="${input.domain}"><strong>👉👉 Truy cập ngay! 👈👈</strong></a></h2>`;
+
+    // 4. Combine the manually created H1, the AI-generated body, and the manually-created CTA
+    const fullContent = `${titleWithLink}${output!.articleBody}${callToAction}`;
 
     return {title: title, content: fullContent};
   }
