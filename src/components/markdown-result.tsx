@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -47,10 +48,8 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     }
     
     if (type === 'content') {
-        const styledHtml = text.replace(/<h4>/g, '<h4 style="font-size: 30px; text-align: center;">');
-
         try {
-            const blob = new Blob([styledHtml], { type: 'text/html' });
+            const blob = new Blob([text], { type: 'text/html' });
             const clipboardItem = new ClipboardItem({ 'text/html': blob });
 
             navigator.clipboard.write([clipboardItem]).then(() => {
@@ -151,3 +150,4 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     </Card>
   );
 }
+
