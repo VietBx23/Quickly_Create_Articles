@@ -47,13 +47,10 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     }
     
     if (type === 'content') {
-        const cleanedHtml = text
-            .replace(/<h4>(.*?)<\/h4>/gi, '$1\n')
-            .replace(/<strong>/gi, '')
-            .replace(/<\/strong>/gi, '');
+        const styledHtml = text.replace(/<h4>/g, '<h4 style="font-size: 30px; text-align: center;">');
 
         try {
-            const blob = new Blob([cleanedHtml], { type: 'text/html' });
+            const blob = new Blob([styledHtml], { type: 'text/html' });
             const clipboardItem = new ClipboardItem({ 'text/html': blob });
 
             navigator.clipboard.write([clipboardItem]).then(() => {
