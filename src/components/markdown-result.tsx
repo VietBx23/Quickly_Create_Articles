@@ -31,7 +31,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
         const url = domain.startsWith('http') ? domain : `https://${domain}`;
 
         return (
-            <p className="p-3 bg-muted/30 rounded-md break-all text-lg text-foreground">
+            <p className="break-all text-lg text-foreground">
                 {prefix}
                 {linkPrefix}
                 <a href={url} target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:text-foreground/80">
