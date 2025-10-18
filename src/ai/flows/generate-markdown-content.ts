@@ -100,7 +100,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const day = today.getDate().toString().padStart(2, '0');
     const dateStr = `${year}-${month}-${day}`;
     
-    const randomChars = Math.random().toString(36).substring(2, 6);
+    const randomChars = Math.random().toString(36).substring(2, 8);
     
     const seoTitlePart = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
     const uniqueIdPart = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
@@ -120,8 +120,8 @@ const generateMarkdownContentFlow = ai.defineFlow(
 
     const allKeywords = [input.primaryKeyword, ...input.secondaryKeywords];
     const keywordAggregation = `🔍 关键词聚合：${allKeywords.join('、')}`;
-
-    const styledTitle = `<p><strong>${displayTitleForH1}</strong></p>`;
+    
+    const styledTitle = `<p style="font-size: 20px;"><strong>${displayTitleForH1}</strong></p>`;
     const fullContent = `${styledTitle}${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
 
     return {

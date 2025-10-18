@@ -32,7 +32,7 @@ const TitleWithClickableLink = ({ title }: { title: string }) => {
             {parts[2]}
           </a>
           {parts[3]}
-          {parts[4]}
+          {parts.slice(4).join('')}
         </h5>
       );
     }
@@ -76,22 +76,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     
     if (type === 'content') {
         try {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = text;
-            
-            const pTag = tempDiv.querySelector('p');
-            if (pTag) {
-                const pTagContent = pTag.innerHTML;
-                const newTextNode = document.createTextNode(pTagContent);
-                tempDiv.replaceChild(newTextNode, pTag);
-                const lineBreak = document.createElement('br');
-                tempDiv.insertBefore(lineBreak, tempDiv.firstChild);
-                 const lineBreak2 = document.createElement('br');
-                tempDiv.insertBefore(lineBreak2, tempDiv.firstChild);
-            }
-
-            const processedHtml = tempDiv.innerHTML;
-            const blob = new Blob([processedHtml], { type: 'text/html' });
+            const blob = new Blob([text], { type: 'text/html' });
             const clipboardItem = new ClipboardItem({ 'text/html': blob });
 
             navigator.clipboard.write([clipboardItem]).then(() => {
