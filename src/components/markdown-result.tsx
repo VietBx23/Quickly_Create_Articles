@@ -157,9 +157,9 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                            </AccordionTrigger>
                       </div>
                   </div>
-                   <div className="py-4">
-                        <TitleWithClickableLink title={item.title} />
-                    </div>
+                  <div className="py-4">
+                      <TitleWithClickableLink title={item.title} />
+                  </div>
                 <AccordionContent>
                   <div className="space-y-4 pt-4 border-t border-dashed">
                       <div 
