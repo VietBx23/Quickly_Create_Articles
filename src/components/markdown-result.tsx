@@ -47,9 +47,8 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     }
     
     if (type === 'content') {
-        // Replace h1 with its content followed by a line break, and remove strong tags
         const cleanedHtml = text
-            .replace(/<h1>(.*?)<\/h1>/gi, '$1\n') // extract content and add newline
+            .replace(/<h4>(.*?)<\/h4>/gi, '$1\n')
             .replace(/<strong>/gi, '')
             .replace(/<\/strong>/gi, '');
 

@@ -95,7 +95,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
       sks.push(sks[sks.length - 1] || input.primaryKeyword);
     }
     
-    // --- New Title Generation Logic ---
+    // --- Title Generation Logic ---
     const today = new Date();
     const year = today.getFullYear();
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -104,7 +104,6 @@ const generateMarkdownContentFlow = ai.defineFlow(
     
     const randomChars = Math.random().toString(36).substring(2, 8);
     
-    // Create two separate titles
     const seoTitlePart = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
     const uniqueIdPart = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
 
@@ -129,7 +128,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const allKeywords = [input.primaryKeyword, ...input.secondaryKeywords];
     const keywordAggregation = `🔍 关键词聚合：${allKeywords.join('、')}`;
 
-    const fullContent = `<h1>${displayTitleForH1}</h1>${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
+    const fullContent = `<h4>${displayTitleForH1}</h4>${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
     // --- End Dynamic Content Assembly ---
 
     return {
