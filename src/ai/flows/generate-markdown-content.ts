@@ -63,6 +63,21 @@ const INTRO_BLOCKS = [
     (pk: string, sks: string[]) => `<p>🎧 戴上耳机，沉浸在 <strong>${pk}</strong> 的 ${sks[0]} 世界中。</p><p>我们为您提供高质量的 ${sks[1]} 音频和 ${sks[2]} 视频内容。</p>`,
     (pk: string, sks: string[]) => `<p>✨ 每一天，<strong>${pk}</strong> 都为您带来新的 ${sks[0]} 惊喜。</p><p>不要错过我们关于 ${sks[1]} 和 ${sks[2]} 的每日更新。</p>`,
     (pk: string, sks: string[]) => `<p>🔥 点燃您对 ${sks[0]} 的热情，就在 <strong>${pk}</strong>！</p><p>我们有您想看的一切，从 ${sks[1]} 到 ${sks[2]}。</p>`,
+    ...Array.from({length: 200}, (_, i) => {
+        const templates = [
+            (pk: string, sks: string[]) => `<p>欢迎来到 <strong>${pk}</strong> 的世界！我们专注于提供最顶级的 ${sks[0]} 内容，并确保您能在这里找到关于 ${sks[1]} 和 ${sks[2]} 的一切。</p>`,
+            (pk: string, sks: string[]) => `<p>在 <strong>${pk}</strong>，我们深知您对 ${sks[0]} 的热爱。因此，我们打造了一个汇集 ${sks[1]} 和 ${sks[2]} 精华的平台。</p>`,
+            (pk: string, sks: string[]) => `<p>寻找高质量的 ${sks[0]} 内容？<strong>${pk}</strong> 是您的不二之选。我们拥有丰富的 ${sks[1]} 资源和独家的 ${sks[2]} 报道。</p>`,
+            (pk: string, sks: string[]) => `<p><strong>${pk}</strong> 不仅仅是一个内容平台，更是一个充满活力的社群。在这里，您可以与同样喜爱 ${sks[0]} 的朋友交流，分享您对 ${sks[1]} 和 ${sks[2]} 的看法。</p>`,
+            (pk: string, sks: string[]) => `<p>我们的使命是为用户提供无与伦比的娱乐体验。<strong>${pk}</strong> 汇集了关于 ${sks[0]} 的海量资源，同时我们也在不断开拓 ${sks[1]} 和 ${sks[2]} 的新领域。</p>`,
+            (pk: string, sks: string[]) => `<p>技术驱动未来，<strong>${pk}</strong> 采用最先进的流媒体技术，为您提供 ${sks[0]} 的高清画质。无论您在寻找 ${sks[1]} 还是 ${sks[2]}，都能享受极致的视听盛宴。</p>`,
+            (pk: string, sks: string[]) => `<p>在 <strong>${pk}</strong>，安全与隐私至关重要。我们保护您的数据，让您可以无忧无虑地探索 ${sks[0]} 的世界，尽情享受 ${sks[1]} 的乐趣，并安全地讨论 ${sks[2]}。</p>`,
+            (pk: string, sks: string[]) => `<p><strong>${pk}</strong> 的移动应用让娱乐触手可及。随时随地观看 ${sks[0]}，追踪 ${sks[1]} 的最新动态，不错过任何关于 ${sks[2]} 的精彩瞬间。</p>`,
+            (pk: string, sks: string[]) => `<p>我们为 <strong>${pk}</strong> 的会员提供独家福利。订阅我们的服务，即可解锁更多关于 ${sks[0]} 的高级内容，参与 ${sks[1]} 的专属活动，并获取 ${sks[2]} 的独家折扣。</p>`,
+            (pk: string, sks: string[]) => `<p>内容为王，<strong>${pk}</strong> 深谙此道。我们与顶尖内容创作者合作，为您带来独家的 ${sks[0]} 系列。我们的 ${sks[1]} 和 ${sks[2]} 内容库也在持续增长中。</p>`,
+        ];
+        return templates[i % templates.length];
+    }),
 ];
 
 const MIDDLE_BLOCKS = [
@@ -125,7 +140,7 @@ const CLOSING_BLOCKS = [
     (pk: string, sks: string[]) => `<p>🔔 订阅我们的更新，第一时间获取关于 ${sks[0]} 的最新内容。</p><p><strong>${pk}</strong> 将成为您获取 ${sks[1]} 和 ${sks[2]} 资讯的首选来源。</p><p>加入我们，成为内容潮流的引领者。</p>`,
     (pk: string, sks: string[]) => `<p>🎈 在 <strong>${pk}</strong>，总有值得庆祝的理由。</p><p>我们为 ${sks[0]} 的忠实粉丝准备了特别惊喜。</p><p>无论您喜欢 ${sks[1]} 还是 ${sks[2]}，我们都将为您带来欢乐。</p>`,
     (pk: string, sks: string[]) => `<p>🏆 选择 <strong>${pk}</strong>，选择卓越品质。</p><p>我们是 ${sks[0]} 领域的领导者，致力于提供最佳体验。</p><p>从 ${sks[1]} 到 ${sks[2]}，我们的内容都经过精心挑选，只为满足最挑剔的您。</p>`,
-    ...Array.from({ length: 120 }, (_, i) => {
+    ...Array.from({ length: 272 }, (_, i) => {
         const templates = [
             (pk: string, sks: string[]) => `<p>总而言之，<strong>${pk}</strong> 是您探索 ${sks[i % sks.length]} 的不二之选。我们期待您的加入，共同体验 ${sks[(i + 1) % sks.length]} 和 ${sks[(i + 2) % sks.length]} 的精彩世界。</p>`,
             (pk: string, sks: string[]) => `<p>不要再等待了！立即加入 <strong>${pk}</strong>，开启您的 ${sks[i % sks.length]} 之旅。我们保证，您对 ${sks[(i + 1) % sks.length]} 和 ${sks[(i + 2) % sks.length]} 的热情将在这里得到满足。</p>`,
@@ -175,7 +190,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const randomChars = Math.random().toString(36).substring(2, 8);
     
     const seoTitlePart = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
-    const uniqueIdPart = `${dateStr}-${input.value}|${input.primaryKeyword} - ${randomChars}`;
+    const uniqueIdPart = `${dateStr}-${input.value}|881比鸭 - ${randomChars}`;
     
     const displayTitleForH1 = `${input.primaryKeyword} -【链接地址：<a href="${input.domain}" target="_blank" rel="noopener noreferrer">${displayDomain}</a>】- ${sks.join(' - ')}`;
     const fullTitleForCopying = `${seoTitlePart} - ${uniqueIdPart}`;
@@ -202,6 +217,8 @@ const generateMarkdownContentFlow = ai.defineFlow(
     };
   }
 );
+
+    
 
     
 
