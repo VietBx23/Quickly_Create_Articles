@@ -1,4 +1,3 @@
-
 'use server';
 
 /**
@@ -133,7 +132,7 @@ const CTA_BLOCKS = [
 
 const CLOSING_BLOCKS = [
     (pk: string, sks: string[]) => `<p>🎉 是时候用 <strong>${pk}</strong> 提升您的体验了。</p><p>如果您是 ${sks[0]} 的粉丝，那么这里就是您的最佳选择。</p><p>我们提供从 ${sks[1]} 到 ${sks[2]} 的系列，分类清晰，方便您轻松搜索。</p>`,
-    (pk: string, sks: string[]) => `<p>💯 想象一下，一个只需点击几下即可访问 ${sks[0]} 宝库的地方。</p><p>那就是 <strong>${pk}</strong>。</p><p>像 ${sks[1]} 和 ${sks[2]} 这样多样化的内容与精美的界面相结合，创造了绝佳的体验。</p>`,
+    (pk: string, sks: string[]) => `<p>💯 想象一下，一个只需点击几下即可访问 ${sks[0]} 宝库的地方。</p><p>那就是 <strong>${pk}</strong>。</p><p>像 ${sks[1]} 和 ${sks[2]} 这样多样化的内容 与精美的界面相结合，创造了绝佳的体验。</p>`,
     (pk: string, sks: string[]) => `<p>✨ 有了 <strong>${pk}</strong>，每一天都是新的发现。</p><p>我们不断地从经典的 ${sks[0]} 到现代的 ${sks[1]} 带来独特的内容。</p><p>我们的团队确保您总有新的期待，包括 ${sks[2]} 趋势。</p>`,
     (pk: string, sks: string[]) => `<p>💖 您的满意是 <strong>${pk}</strong> 的第一要务。</p><p>我们提供优质的 ${sks[0]} 内容和 24/7 的客户支持。</p><p>任何有关 ${sks[1]} 或 ${sks[2]} 的问题都将得到迅速解答。现在就加入，感受不同！</p>`,
     (pk: string, sks: string[]) => `<p>👍 不要再犹豫了！<strong>${pk}</strong> 是您娱乐生活方式的完美补充。</p><p>我们有您需要的一切，从 ${sks[0]} 到 ${sks[1]}。</p><p>立即注册，开始探索 ${sks[2]} 的无限可能。</p>`,
@@ -189,16 +188,29 @@ const generateMarkdownContentFlow = ai.defineFlow(
     
     const shuffledMiddleBlocks = [...MIDDLE_BLOCKS].sort(() => 0.5 - Math.random());
 
-    const intro = getRandomItem(INTRO_BLOCKS)(input.primaryKeyword, sks);
-    const middle1 = shuffledMiddleBlocks[0](input.primaryKeyword, sks);
-    const middle2 = shuffledMiddleBlocks[1](input.primaryKeyword, sks);
+    let intro = getRandomItem(INTRO_BLOCKS)(input.primaryKeyword, sks);
+    let middle1 = shuffledMiddleBlocks[0](input.primaryKeyword, sks);
+    let middle2 = shuffledMiddleBlocks[1](input.primaryKeyword, sks);
+    let closing = getRandomItem(CLOSING_BLOCKS)(input.primaryKeyword, sks);
     const cta = getRandomItem(CTA_BLOCKS)(input.domain, displayDomain);
-    const closing = getRandomItem(CLOSING_BLOCKS)(input.primaryKeyword, sks);
-
-    const allKeywords = [input.primaryKeyword, ...input.secondaryKeywords];
-    const keywordAggregation = `🔍 关键词聚合：${allKeywords.join('、')}`;
+    
+    const keywordAggregation = '🔍 关键词聚合：七四猫传送门、成人网址导航站、成人电报导航站、Telegram成人导航、Telegram频道、色情目录、色情导航';
     
     const styledTitle = `<p style="font-size: 20px;"><strong>${displayTitleForH1}</strong></p>`;
+
+    // Function to escape string for regex
+    const escapeRegExp = (string: string) => {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    };
+
+    const pkRegex = new RegExp(`<strong>(${escapeRegExp(input.primaryKeyword)})</strong>`, 'g');
+    const linkReplacement = `<a href="${input.domain}" target="_blank" rel="noopener noreferrer"><strong>$1</strong></a>`;
+
+    intro = intro.replace(pkRegex, linkReplacement);
+    middle1 = middle1.replace(pkRegex, linkReplacement);
+    middle2 = middle2.replace(pkRegex, linkReplacement);
+    closing = closing.replace(pkRegex, linkReplacement);
+    
     const fullContent = `${styledTitle}${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
 
     return {
@@ -207,5 +219,4 @@ const generateMarkdownContentFlow = ai.defineFlow(
     };
   }
 );
-
     
