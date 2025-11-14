@@ -183,7 +183,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     
     // Create the HTML version of the title
     const linkedPk = `<a href="${input.domain}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${input.primaryKeyword}</a>`;
-    const titleHtml = `${linkedPk} - ${sks.join(' - ')}`;
+    const titleHtml = `<p style="color: #0e101a;font-size: 20px;">${linkedPk} - ${sks.join(' - ')}</p>`;
     
     // Create the plain text version of the title
     const plainTitle = `${input.primaryKeyword} - ${sks.join(' - ')}`;
@@ -196,7 +196,6 @@ const generateMarkdownContentFlow = ai.defineFlow(
     let middle1 = shuffledMiddleBlocks[0](input.primaryKeyword, sks);
     let middle2 = shuffledMiddleBlocks[1](input.primaryKeyword, sks);
     let closing = getRandomItem(CLOSING_BLOCKS)(input.primaryKeyword, sks);
-    const cta = getRandomItem(CTA_BLOCKS)(input.domain, displayDomain);
 
     const aggregationKeywords = ['七四猫传送门', '成人网址导航站', '成人电报导航站', 'Telegram成人导航', 'Telegram频道', '色情目录', '色情导航'];
     const linkedAggregationKeywords = aggregationKeywords.map(kw => `<a href="${input.domain}" target="_blank" rel="noopener noreferrer"><strong>${kw}</strong></a>`).join('、');
@@ -215,7 +214,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     middle2 = middle2.replace(pkRegex, linkReplacement);
 closing = closing.replace(pkRegex, linkReplacement);
     
-    const fullContent = `${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
+    const fullContent = `${intro}${middle1}${middle2}${closing}<p>${keywordAggregation}</p>`;
 
     return {
         title: titleHtml,
