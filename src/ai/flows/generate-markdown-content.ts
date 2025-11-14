@@ -181,19 +181,9 @@ const generateMarkdownContentFlow = ai.defineFlow(
       sks.push(sks[sks.length - 1] || input.primaryKeyword);
     }
     
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-    const dateStr = `${year}-${month}-${day}`;
-    
-    const randomChars = Math.random().toString(36).substring(2, 8);
-    
-    const seoTitlePart = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
-    const uniqueIdPart = `${dateStr}-${input.value}|881比鸭 - ${randomChars}`;
+    const fullTitleForCopying = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
     
     const displayTitleForH1 = `${input.primaryKeyword} -【链接地址：<a href="${input.domain}" target="_blank" rel="noopener noreferrer">${displayDomain}</a>】- ${sks.join(' - ')}`;
-    const fullTitleForCopying = `${seoTitlePart} - ${uniqueIdPart}`;
     
     const getRandomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
     
@@ -217,9 +207,5 @@ const generateMarkdownContentFlow = ai.defineFlow(
     };
   }
 );
-
-    
-
-    
 
     
