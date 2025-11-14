@@ -22,7 +22,7 @@ interface MarkdownResultProps {
 const TitleWithClickableLink = ({ title }: { title: string }) => {
     return (
         <div 
-          className="text-foreground" 
+          className="text-black dark:text-white"
           style={{ fontSize: '20px' }}
           dangerouslySetInnerHTML={{ __html: title }} 
         />
@@ -141,7 +141,10 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
             {results.map((item, index) => (
               <AccordionItem value={`item-${index}`} key={index} className="border border-border/20 rounded-lg bg-background/50 px-4">
                  <div className="flex justify-between items-center w-full pt-4">
-                     <h3 className="font-bold text-lg text-left">STT {index + 1}</h3>
+                      <div className="flex flex-col gap-2">
+                         <h3 className="font-bold text-lg text-left">STT {index + 1}</h3>
+                         <TitleWithClickableLink title={item.title} />
+                      </div>
                       <div className="flex gap-2 items-center">
                           <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.title, item.plainTitle, 'title', index); }}>
                               {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -157,7 +160,6 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                       </div>
                   </div>
                   <div className="py-4">
-                     <TitleWithClickableLink title={item.title} />
                   </div>
                 <AccordionContent>
                   <div className="space-y-4 pt-4 border-t border-dashed">

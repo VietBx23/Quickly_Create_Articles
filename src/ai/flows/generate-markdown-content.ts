@@ -202,8 +202,6 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const aggregationKeywords = ['七四猫传送门', '成人网址导航站', '成人电报导航站', 'Telegram成人导航', 'Telegram频道', '色情目录', '色情导航'];
     const linkedAggregationKeywords = aggregationKeywords.map(kw => `<a href="${input.domain}" target="_blank" rel="noopener noreferrer"><strong>${kw}</strong></a>`).join('、');
     const keywordAggregation = `🔍 关键词聚合：${linkedAggregationKeywords}`;
-    
-    const styledTitle = `<p style="font-size: 20px;"><strong><a href="${input.domain}" target="_blank" rel="noopener noreferrer">${input.primaryKeyword}</a> - ${sks.join(' - ')}</strong></p>`;
 
     // Function to escape string for regex
     const escapeRegExp = (string: string) => {
@@ -216,9 +214,9 @@ const generateMarkdownContentFlow = ai.defineFlow(
     intro = intro.replace(pkRegex, linkReplacement);
     middle1 = middle1.replace(pkRegex, linkReplacement);
     middle2 = middle2.replace(pkRegex, linkReplacement);
-    closing = closing.replace(pkRegex, linkReplacement);
+closing = closing.replace(pkRegex, linkReplacement);
     
-    const fullContent = `${styledTitle}${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
+    const fullContent = `${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
 
     return {
         title: fullTitleForCopying,
