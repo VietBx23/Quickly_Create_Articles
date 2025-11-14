@@ -193,8 +193,10 @@ const generateMarkdownContentFlow = ai.defineFlow(
     let middle2 = shuffledMiddleBlocks[1](input.primaryKeyword, sks);
     let closing = getRandomItem(CLOSING_BLOCKS)(input.primaryKeyword, sks);
     const cta = getRandomItem(CTA_BLOCKS)(input.domain, displayDomain);
-    
-    const keywordAggregation = '🔍 关键词聚合：七四猫传送门、成人网址导航站、成人电报导航站、Telegram成人导航、Telegram频道、色情目录、色情导航';
+
+    const aggregationKeywords = ['七四猫传送门', '成人网址导航站', '成人电报导航站', 'Telegram成人导航', 'Telegram频道', '色情目录', '色情导航'];
+    const linkedAggregationKeywords = aggregationKeywords.map(kw => `<a href="${input.domain}" target="_blank" rel="noopener noreferrer">${kw}</a>`).join('、');
+    const keywordAggregation = `🔍 关键词聚合：${linkedAggregationKeywords}`;
     
     const styledTitle = `<p style="font-size: 20px;"><strong>${displayTitleForH1}</strong></p>`;
 
