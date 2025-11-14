@@ -10,6 +10,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 export interface MarkdownResultItem {
   title: string;
+  plainTitle: string;
   content: string;
 }
 
@@ -19,34 +20,12 @@ interface MarkdownResultProps {
 }
 
 const TitleWithClickableLink = ({ title }: { title: string }) => {
-    const regex = /(【链接地址：)([^】]+)(】)/;
-    const match = title.match(regex);
-
-    if (match && match.index !== undefined) {
-        const prefix = title.substring(0, match.index);
-        const linkPrefix = match[1];
-        const domain = match[2];
-        const linkSuffix = match[3];
-        const suffix = title.substring(match.index + match[0].length);
-        const url = domain.startsWith('http') ? domain : `https://${domain}`;
-
-        return (
-            <p className="break-all text-foreground" style={{ fontSize: '20px' }}>
-                {prefix}
-                {linkPrefix}
-                <a href={url} target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:text-foreground/80">
-                    {domain}
-                </a>
-                {linkSuffix}
-                {suffix}
-            </p>
-        );
-    }
-
     return (
-        <p className="p-3 bg-muted/30 rounded-md break-all text-foreground" style={{ fontSize: '20px' }}>
-            {title}
-        </p>
+        <div 
+          className="text-foreground" 
+          style={{ fontSize: '20px' }}
+          dangerouslySetInnerHTML={{ __html: title }} 
+        />
     );
 };
 
@@ -55,26 +34,13 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
 
-  const handleCopy = (text: string, type: 'title' | 'content', index: number) => {
+  const handleCopy = (htmlText: string, plainText: string, type: 'title' | 'content', index: number) => {
     const key = `${type}-${index}`;
     
     if (type === 'title') {
-      const regex = /(【链接地址：)([^】]+)(】)/;
-      const match = text.match(regex);
-      let htmlContent = text;
-
-      if (match) {
-          const domain = match[2];
-          const url = domain.startsWith('http') ? domain : `https://${domain}`;
-          const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #FFFFFF; text-decoration: underline;">${domain}</a>`;
-          htmlContent = text.replace(match[0], `【链接地址：${linkHtml}】`);
-      }
-
-      const finalHtml = `<p style="color: #FFFFFF; font-size: 32px;">${htmlContent}</p>`;
-      
       try {
-        const htmlBlob = new Blob([finalHtml], { type: 'text/html' });
-        const textBlob = new Blob([text], { type: 'text/plain' });
+        const htmlBlob = new Blob([htmlText], { type: 'text/html' });
+        const textBlob = new Blob([plainText], { type: 'text/plain' });
         
         const clipboardItem = new ClipboardItem({
             'text/html': htmlBlob,
@@ -109,7 +75,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     
     if (type === 'content') {
         try {
-            const blob = new Blob([text], { type: 'text/html' });
+            const blob = new Blob([htmlText], { type: 'text/html' });
             const clipboardItem = new ClipboardItem({ 'text/html': blob });
 
             navigator.clipboard.write([clipboardItem]).then(() => {
@@ -177,11 +143,11 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                  <div className="flex justify-between items-center w-full pt-4">
                      <h3 className="font-bold text-lg text-left">STT {index + 1}</h3>
                       <div className="flex gap-2 items-center">
-                          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.title, 'title', index); }}>
+                          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.title, item.plainTitle, 'title', index); }}>
                               {copiedStates[`title-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
                               <span className="ml-2 hidden sm:inline">{copiedStates[`title-${index}`] ? '已复制' : '复制标题'}</span>
                           </Button>
-                          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.content, 'content', index); }}>
+                          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.content, item.content, 'content', index); }}>
                               {copiedStates[`content-${index}`] ? <Check className="text-green-500 h-4 w-4" /> : <Copy className="h-4 w-4" />}
                               <span className="ml-2 hidden sm:inline">{copiedStates[`content-${index}`] ? '已复制' : '复制内容'}</span>
                           </Button>
@@ -191,7 +157,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                       </div>
                   </div>
                   <div className="py-4">
-                    <TitleWithClickableLink title={item.title} />
+                     <TitleWithClickableLink title={item.title} />
                   </div>
                 <AccordionContent>
                   <div className="space-y-4 pt-4 border-t border-dashed">

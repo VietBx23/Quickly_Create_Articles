@@ -23,7 +23,8 @@ export type GenerateMarkdownContentInput = z.infer<
 >;
 
 const GenerateMarkdownContentOutputSchema = z.object({
-  title: z.string().describe('The generated title.'),
+  title: z.string().describe('The generated title for copy/paste (HTML format).'),
+  plainTitle: z.string().describe('The generated title for plain text fallback.'),
   content: z.string().describe('The generated markdown content.'),
 });
 
@@ -62,7 +63,7 @@ const INTRO_BLOCKS = [
     (pk: string, sks: string[]) => `<p>🎧 戴上耳机，沉浸在 <strong>${pk}</strong> 的 ${sks[0]} 世界中。</p><p>我们为您提供高质量的 ${sks[1]} 音频和 ${sks[2]} 视频内容。</p>`,
     (pk: string, sks: string[]) => `<p>✨ 每一天，<strong>${pk}</strong> 都为您带来新的 ${sks[0]} 惊喜。</p><p>不要错过我们关于 ${sks[1]} 和 ${sks[2]} 的每日更新。</p>`,
     (pk: string, sks: string[]) => `<p>🔥 点燃您对 ${sks[0]} 的热情，就在 <strong>${pk}</strong>！</p><p>我们有您想看的一切，从 ${sks[1]} 到 ${sks[2]}。</p>`,
-    ...Array.from({length: 200}, (_, i) => {
+    ...Array.from({length: 500}, (_, i) => {
         const templates = [
             (pk: string, sks: string[]) => `<p>欢迎来到 <strong>${pk}</strong> 的世界！我们专注于提供最顶级的 ${sks[0]} 内容，并确保您能在这里找到关于 ${sks[1]} 和 ${sks[2]} 的一切。</p>`,
             (pk: string, sks: string[]) => `<p>在 <strong>${pk}</strong>，我们深知您对 ${sks[0]} 的热爱。因此，我们打造了一个汇集 ${sks[1]} 和 ${sks[2]} 精华的平台。</p>`,
@@ -100,7 +101,7 @@ const MIDDLE_BLOCKS = [
     (pk: string, sks: string[]) => `<p>⚡️ 体验闪电般的加载速度。<strong>${pk}</strong> 的服务器遍布全球，确保您无论身在何处都能快速访问。</p><p>观看 ${sks[0]} 内容无需等待，享受即时播放的快感。</p><p>无论是 ${sks[1]} 还是 ${sks[2]}，我们都为您提供最佳的访问体验。</p>`,
     (pk: string, sks: string[]) => `<p>👨‍🏫 获取专家级的指导和教程。在 <strong>${pk}</strong>，我们不仅提供娱乐，还提供知识。</p><p>学习关于 ${sks[0]} 的技巧，或深入了解 ${sks[1]} 的背景知识。</p><p>我们的教育内容将帮助您成为 ${sks[2]} 领域的专家。</p>`,
     (pk: string, sks: string[]) => `<p>📅 关注 <strong>${pk}</strong> 的活动日历，不要错过任何精彩直播。</p><p>我们定期举办关于 ${sks[0]} 的在线活动和名人访谈。</p><p>与您最喜爱的 ${sks[1]} 明星互动，或参加 ${sks[2]} 的独家首映。</p>`,
-    ...Array.from({ length: 180 }, (_, i) => {
+    ...Array.from({ length: 500 }, (_, i) => {
         const templates = [
             (pk: string, sks: string[]) => `<p>在<strong>${pk}</strong>，我们为您呈现最优质的 ${sks[i % sks.length]} 内容。我们的平台致力于提供 ${sks[(i + 1) % sks.length]} 的极致体验，同时确保您能轻松找到关于 ${sks[(i + 2) % sks.length]} 的一切。</p>`,
             (pk: string, sks: string[]) => `<p><strong>${pk}</strong> 的核心优势在于其多样化的内容库。从 ${sks[i % sks.length]} 到 ${sks[(i + 1) % sks.length]}，我们无所不包。我们的技术团队确保了 ${sks[(i + 2) % sks.length]} 的流畅播放。</p>`,
@@ -139,7 +140,7 @@ const CLOSING_BLOCKS = [
     (pk: string, sks: string[]) => `<p>🔔 订阅我们的更新，第一时间获取关于 ${sks[0]} 的最新内容。</p><p><strong>${pk}</strong> 将成为您获取 ${sks[1]} 和 ${sks[2]} 资讯的首选来源。</p><p>加入我们，成为内容潮流的引领者。</p>`,
     (pk: string, sks: string[]) => `<p>🎈 在 <strong>${pk}</strong>，总有值得庆祝的理由。</p><p>我们为 ${sks[0]} 的忠实粉丝准备了特别惊喜。</p><p>无论您喜欢 ${sks[1]} 还是 ${sks[2]}，我们都将为您带来欢乐。</p>`,
     (pk: string, sks: string[]) => `<p>🏆 选择 <strong>${pk}</strong>，选择卓越品质。</p><p>我们是 ${sks[0]} 领域的领导者，致力于提供最佳体验。</p><p>从 ${sks[1]} 到 ${sks[2]}，我们的内容都经过精心挑选，只为满足最挑剔的您。</p>`,
-    ...Array.from({ length: 272 }, (_, i) => {
+    ...Array.from({ length: 500 }, (_, i) => {
         const templates = [
             (pk: string, sks: string[]) => `<p>总而言之，<strong>${pk}</strong> 是您探索 ${sks[i % sks.length]} 的不二之选。我们期待您的加入，共同体验 ${sks[(i + 1) % sks.length]} 和 ${sks[(i + 2) % sks.length]} 的精彩世界。</p>`,
             (pk: string, sks: string[]) => `<p>不要再等待了！立即加入 <strong>${pk}</strong>，开启您的 ${sks[i % sks.length]} 之旅。我们保证，您对 ${sks[(i + 1) % sks.length]} 和 ${sks[(i + 2) % sks.length]} 的热情将在这里得到满足。</p>`,
@@ -180,9 +181,13 @@ const generateMarkdownContentFlow = ai.defineFlow(
       sks.push(sks[sks.length - 1] || input.primaryKeyword);
     }
     
-    const fullTitleForCopying = `${input.primaryKeyword} -【链接地址：${displayDomain}】- ${sks.join(' - ')}`;
+    // Create the HTML version of the title
+    const linkedPk = `<a href="${input.domain}" target="_blank" rel="noopener noreferrer" style="color: #FFFFFF; text-decoration: none;">${input.primaryKeyword}</a>`;
+    const titleHtml = `${linkedPk} - ${sks.join(' - ')}`;
+    const fullTitleForCopying = `<p style="color: #FFFFFF; font-size: 20px;">${titleHtml}</p>`;
     
-    const displayTitleForH1 = `${input.primaryKeyword} -【链接地址：<a href="${input.domain}" target="_blank" rel="noopener noreferrer">${displayDomain}</a>】- ${sks.join(' - ')}`;
+    // Create the plain text version of the title
+    const plainTitle = `${input.primaryKeyword} - ${sks.join(' - ')}`;
     
     const getRandomItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
     
@@ -198,7 +203,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
     const linkedAggregationKeywords = aggregationKeywords.map(kw => `<a href="${input.domain}" target="_blank" rel="noopener noreferrer"><strong>${kw}</strong></a>`).join('、');
     const keywordAggregation = `🔍 关键词聚合：${linkedAggregationKeywords}`;
     
-    const styledTitle = `<p style="font-size: 20px;"><strong>${displayTitleForH1}</strong></p>`;
+    const styledTitle = `<p style="font-size: 20px;"><strong><a href="${input.domain}" target="_blank" rel="noopener noreferrer">${input.primaryKeyword}</a> - ${sks.join(' - ')}</strong></p>`;
 
     // Function to escape string for regex
     const escapeRegExp = (string: string) => {
@@ -217,6 +222,7 @@ const generateMarkdownContentFlow = ai.defineFlow(
 
     return {
         title: fullTitleForCopying,
+        plainTitle: plainTitle,
         content: fullContent,
     };
   }
