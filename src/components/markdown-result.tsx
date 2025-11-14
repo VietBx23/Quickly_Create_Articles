@@ -39,7 +39,10 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
     
     if (type === 'title') {
       try {
-        const htmlBlob = new Blob([htmlText], { type: 'text/html' });
+        // Create a version of the title with white color for copying
+        const titleForCopying = `<p style="color: #FFFFFF; font-size: 20px;">${htmlText}</p>`;
+        
+        const htmlBlob = new Blob([titleForCopying], { type: 'text/html' });
         const textBlob = new Blob([plainText], { type: 'text/plain' });
         
         const clipboardItem = new ClipboardItem({
@@ -143,7 +146,6 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                  <div className="flex justify-between items-center w-full pt-4">
                       <div className="flex flex-col gap-2">
                          <h3 className="font-bold text-lg text-left">STT {index + 1}</h3>
-                         <TitleWithClickableLink title={item.title} />
                       </div>
                       <div className="flex gap-2 items-center">
                           <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleCopy(item.title, item.plainTitle, 'title', index); }}>
@@ -160,6 +162,7 @@ export function MarkdownResult({ results, isLoading }: MarkdownResultProps) {
                       </div>
                   </div>
                   <div className="py-4">
+                    <TitleWithClickableLink title={item.title} />
                   </div>
                 <AccordionContent>
                   <div className="space-y-4 pt-4 border-t border-dashed">

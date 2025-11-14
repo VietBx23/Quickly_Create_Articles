@@ -182,9 +182,8 @@ const generateMarkdownContentFlow = ai.defineFlow(
     }
     
     // Create the HTML version of the title
-    const linkedPk = `<a href="${input.domain}" target="_blank" rel="noopener noreferrer" style="color: #FFFFFF; text-decoration: none;">${input.primaryKeyword}</a>`;
+    const linkedPk = `<a href="${input.domain}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${input.primaryKeyword}</a>`;
     const titleHtml = `${linkedPk} - ${sks.join(' - ')}`;
-    const fullTitleForCopying = `<p style="color: #FFFFFF; font-size: 20px;">${titleHtml}</p>`;
     
     // Create the plain text version of the title
     const plainTitle = `${input.primaryKeyword} - ${sks.join(' - ')}`;
@@ -219,7 +218,7 @@ closing = closing.replace(pkRegex, linkReplacement);
     const fullContent = `${intro}${middle1}${cta}${middle2}${closing}<p>${keywordAggregation}</p>`;
 
     return {
-        title: fullTitleForCopying,
+        title: titleHtml,
         plainTitle: plainTitle,
         content: fullContent,
     };
